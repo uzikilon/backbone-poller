@@ -1,3 +1,6 @@
+// (c) 2012 Uzi Kilon, Splunk Inc.
+// Backbone Poller may be freely distributed under the MIT license.
+
 (function(ns, _){
     
     var Models = {
