@@ -23,7 +23,7 @@ var options = {
 	// defalut delay is 1000ms
     delay: 3000, 
     // condition for keeping polling active (when this stops being true, polling will stop)
-    condition: function(){
+    condition: function(model){
         return model.get('active') === true;
     },
     // callback to execute when the condition function is not true anymore, or when calling stop()
