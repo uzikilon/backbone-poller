@@ -5,58 +5,50 @@ While some browsers servers support long polling (comet) and Web Sockets, for ba
 It can be sufficient to run a standard http request every few seconds to keep the client synced with the server.
 Backbone poller allows you to do it without extending you base backbone models or collections and is 100% compliant with any Backbone models or collections.
 
-Collection Usage:
+Basic Collection Usage:
 -------
 ``` javascript
-var condition = function(collection) {
-    return true; // poll forever
-};
-// optional options
-var options = {
-    delay: 3000, // default is 1000 ms
-    success: function(){ 
-        console.info('successful fetch!');
-    }, 
-    error: function(){ 
-        console.error('oops! something went wrong');
-    },
-    data: {fields: "*", sort: "name desc"}
-}
-var poller = new Splunk.helpers.model.Poller(collection, condition, options);
+var poller = new Poller(collection);
+poller.start();
+```
+
+Basic Model Usage:
+-------
+``` javascript
+var poller = new Poller(model);
 poller.start();
 
-// to stop the poller and run the 'complete' callback
+// To stop the poller
 poller.stop();
 ```
 
-
-Model Usage:
+Advanced Options:
 -------
 ``` javascript
-var condition = function(model) {
-    return model.get('isActive') === true; // poll while model is active
-};
-
 var options = {
-    delay: 3000,
+	// defalut delay is 1000ms
+    delay: 3000, 
+    // condition for keeping polling active (when this stops being true, polling will stop)
+    condition: function(){
+        return model.get('active') === true;
+    },
+    // callback to execute when the condition function is not true anymore, or when calling stop()
     complete: function() { 
-        console.info('hurray! we are done!')
+        console.info('hurray! we are done!'); 
     },
+    // callback to execute on every successfull fetch
     success: function(){ 
-        console.info('another successful fetch!');
+        console.info('another successful fetch!'); 
     },
+    // callback to execute on fetch error
     error: function(){ 
-        console.error('oops! something went wrong');
-    },
+        console.error('oops! something went wrong'); 
+    }
 }
+var poller = new Poller(model, options);
 
-var poller = new Splunk.helpers.model.Poller(model, condition, options);
-poller.start();
-
-// To stop the poller and run the 'complete' callback
-poller.stop();
-
-// or when condition is not true anymore
-model.set('isActive', false);
-
+// to stop (and run the complete callback):
+this.stop();
+// or
+model.set('active', false);
 ```

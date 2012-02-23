@@ -19,14 +19,14 @@
     // private members
     var _model, _condition, _options, _delay;
     
-    var Poller = function Poller(model, condition, options) {
+    var Poller = function Poller(model, options) {
         if( Models.registered(model) ) {
             throw 'can ony run one poller instance per model'; 
         }
         
-        _model = model;
-        _condition = condition;
+        model = model;
         _options = options || {};
+        _condition = options.condition || function(){return true};
         _delay = _options.delay || DEFAULT_DELAY;
         
         this.stop(); // register and set running state to false
