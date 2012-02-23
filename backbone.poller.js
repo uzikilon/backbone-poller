@@ -27,7 +27,7 @@
             throw 'conflict: poller for this model was already initialized'; 
         }
         
-        model = model;
+        _model = model;
         _options = options || {};
         _condition = options.condition || function(){return true};
         _delay = _options.delay || DEFAULT_DELAY;
