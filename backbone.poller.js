@@ -24,7 +24,7 @@
     
     var Poller = function Poller(model, options) {
         if( Models.registered(model) ) {
-            throw 'can ony run one poller instance per model'; 
+            throw 'conflict: poller for this model was already initialized'; 
         }
         
         model = model;
@@ -41,7 +41,7 @@
     _.extend(Poller.prototype, {
         start: function(){
             if(this.active()) {
-                throw 'can only start a poller once';
+                throw 'poller is actice';
             }
             Models.activate(_model, true); // set running state to true
             run(this);
