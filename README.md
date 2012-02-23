@@ -11,16 +11,14 @@ Backbone poller helps with these cases:
 - Allows you to poll without extending you base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
 
-Basic Usage:
-------------
+### Basic Usage:
 ``` javascript
 var poller = new Poller(model_or_collection);
 poller.start();
 poller.stop();
 ```
 
-Advanced Options:
------------------
+### Advanced Options:
 ``` javascript
 var options = {
 	// defalut delay is 1000ms
