@@ -8,8 +8,8 @@ for instance, basic operations such as checking for new messages in a mailbox.
 
 Backbone poller helps with these cases:
 
-* Allows you to poll without extending you base backbone models or collections
-* Is 100% compliant with any Backbone model or collection.
+- Allows you to poll without extending you base backbone models or collections
+- Is 100% compliant with any Backbone model or collection.
 
 Basic Usage:
 ------------
