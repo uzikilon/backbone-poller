@@ -43,9 +43,11 @@ var options = {
     // callback to execute on fetch error
     error: function(){ 
         console.error('oops! something went wrong'); 
-    }
+    },
+    // data to be passed to a collectoin fetch request
+    data: {fields: "*", sort: "name asc"}
 }
-var poller = new Poller(model, options);
+var poller = new Poller(model_or_collection, options);
 
 // to stop (and run the complete callback):
 this.stop();
