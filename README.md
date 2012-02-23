@@ -8,20 +8,11 @@ In many cases it is sufficient to run a standard http request every few seconds 
 * Backbone poller allows you to poll without extending you base backbone models or collections
 * Backbone poller is 100% compliant with any Backbone model or collection.
 
-Basic Collection Usage:
+Basic Usage:
 -------
 ``` javascript
-var poller = new Poller(collection);
+var poller = new Poller(model_or_collection);
 poller.start();
-```
-
-Basic Model Usage:
--------
-``` javascript
-var poller = new Poller(model);
-poller.start();
-
-// To stop the poller
 poller.stop();
 ```
 
