@@ -1,5 +1,5 @@
 Backbone Poller
-----------
+===============
 Backbone poller is an simple utility that allows polling on any Backbone model or collection.
 
 While some browsers servers support long polling (comet) and Web Sockets, for basic operations such as checking for new messages in a mailbox,
@@ -9,7 +9,7 @@ In many cases it is sufficient to run a standard http request every few seconds 
 * Backbone poller is 100% compliant with any Backbone model or collection.
 
 Basic Usage:
--------
+------------
 ``` javascript
 var poller = new Poller(model_or_collection);
 poller.start();
@@ -17,7 +17,7 @@ poller.stop();
 ```
 
 Advanced Options:
--------
+-----------------
 ``` javascript
 var options = {
 	// defalut delay is 1000ms
