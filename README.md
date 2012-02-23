@@ -1,6 +1,9 @@
 Backbone Poller
 ----------
-Backpone poller is an simple utility that allows polling on any bacbone model or collection
+Backbone poller is an simple utility that allows polling on any Backbone model or collection.
+While some browsers servers support long polling (comet) and Web Sockets, for basic operations such as checking for new messages in a mailbox,
+It can be sufficient to run a standard http request every few seconds to keep the client synced with the server.
+Backbone poller allows you to do it without extending you base backbone models or collections and is 100% compliant with any Backbone models or collections.
 
 Collection Usage:
 -------
