@@ -11,6 +11,9 @@ Backbone poller helps with these cases:
 - Allows you to poll without extending you base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
 
+## Background:
+http://kilon.org/blog/2012/02/backbone-poller/
+
 ### Basic Usage:
 ``` javascript
 var poller = new Poller(model_or_collection);
