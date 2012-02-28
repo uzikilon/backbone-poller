@@ -3,24 +3,10 @@
 
 (function(ns, _){
     
-    // constants
+ // constants
     var DEFAULT_DELAY = 1000;
     var DEFAULT_CONDITION = function() {
         return true; 
-    };
-    
-    /**
-     * Registered models state
-     * @deprecated
-     */
-    var Models = {
-        models: {},
-        activate: function(model, active){
-            this.models[model.cid] = active;
-        },
-        active: function(model){
-            return this.models[model.cid] === true;
-        }
     };
     
     /**
@@ -45,16 +31,16 @@
             return this;
         },
         start: function(){
-            Models.activate(this.model, true); // set running state to true
+            this.__active = true;
             run(this);
             return this;
         },
         stop: function(){
-            Models.activate(this.model, false); // set running state to false
+            this.__active = false;
             return this;
         },
         active: function(){
-            return Models.active(this.model);
+            return this.__active === true;
         }
     });
     
@@ -94,10 +80,8 @@
     var PollingManager = {
         pollers: {},
         poll: function(model, options) {
-            var poller;
-            if(typeof this.pollers[model.cid] !== 'undefined') {
-                // we have an instance;
-                poller = this.pollers[model.cid];
+            var poller = this.pollers[model.cid];
+            if(typeof poller !== 'undefined') {
                 poller.set(model, options);
             }
             else {
