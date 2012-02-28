@@ -3,26 +3,28 @@
 
 (function(ns, _){
     
+    // constants
+    var DEFAULT_DELAY = 1000;
+    
+    /**
+     * Registered models state
+     */
     var Models = {
         models: {},
         activate: function(model, active){
             this.models[model.cid] = active;
-        },
-        registered: function(model){
-            return typeof this.models[model.cid] !== 'undefined'; 
         },
         active: function(model){
             return this.models[model.cid] === true;
         }
     };
     
-    // constants
-    var DEFAULT_DELAY = 1000;
-    
+    /**
+     * Poller
+     */
     var Poller = function Poller(model, options) {
         this.initialize(model, options);
-    };
-    
+    }
     _.extend(Poller.prototype, {
         initialize: function(model, options) {
             this.model = model;
@@ -77,6 +79,35 @@
         }
     }
     
+    /**
+     * Polling Manager
+     */
+    var PollingManager = {
+        pollers: {},
+        poll: function(model, options) {
+            var poller;
+            if(typeof this.pollers[model.cid] !== 'undefined') {
+                // we have an instance;
+                poller = this.pollers[model.cid];
+                poller.initialize(model, options);
+            }
+            else {
+                poller = this.pollers[model.cid] = new Poller(model, options)
+            }
+            poller.start();
+            return poller;
+        },
+        stop: function(model) {
+            var poller = this.pollers[model.cid];
+            if(typeof pollers[model.cid] !== 'undefined') {
+                poller.stop();
+                return true;
+            }
+            return false;
+        }
+    }
+    
     ns.Poller = Poller;
+    ns.PollingManager = PollingManager;
     
 }(this, _));
