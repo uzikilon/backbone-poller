@@ -5,6 +5,9 @@
     
     // constants
     var DEFAULT_DELAY = 1000;
+    var DEFAULT_CONDITION = function() {
+        return true; 
+    };
     
     /**
      * Registered models state
@@ -31,7 +34,7 @@
             this.model = model;
             
             this.options = options;
-            this.condition = this.options.condition || function(){return true};
+            this.condition = this.options.condition || DEFAULT_CONDITION;
             this.delay = this.options.delay || DEFAULT_DELAY;
             
             if ( this.model instanceof Backbone.Model ) {
