@@ -8,6 +8,7 @@
     
     /**
      * Registered models state
+     * @deprecated
      */
     var Models = {
         models: {},
@@ -55,15 +56,19 @@
     
     // private methods
     function run(poller) {
-        if ( (poller.active() !== true) || (poller.condition(poller.model) !== true) ) {
-            defer(poller.options.complete);
-            poller.stop(); // set running state to false
-            return ; 
+        if ( poller.active() !== true ) {
+            return ;
         }
         poller.model.fetch({
             success: function() {
                 defer(poller.options.success);
-                setTimeout(function(){ run(poller); }, poller.delay);
+                if((poller.condition(poller.model) !== true) {
+                    defer(poller.options.complete);
+                    poller.stop(); // set running state to false
+                }
+                else {
+                    setTimeout(function(){ run(poller); }, poller.delay);
+                }
             },
             error: function(){
                 defer(poller.options.error);
