@@ -27,10 +27,10 @@
      * Poller
      */
     var Poller = function Poller(model, options) {
-        this.initialize(model, options);
+        this.set(model, options);
     }
     _.extend(Poller.prototype, {
-        initialize: function(model, options) {
+        set: function(model, options) {
             this.model = model;
             
             this.options = options;
@@ -98,7 +98,7 @@
             if(typeof this.pollers[model.cid] !== 'undefined') {
                 // we have an instance;
                 poller = this.pollers[model.cid];
-                poller.initialize(model, options);
+                poller.set(model, options);
             }
             else {
                 poller = this.pollers[model.cid] = new Poller(model, options);
@@ -114,10 +114,6 @@
             return false;
         }
     }
-    /**
-     * @deprecated
-     */
-    ns.Poller = Poller;
     
     ns.PollingManager = PollingManager;
     
