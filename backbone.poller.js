@@ -83,20 +83,25 @@
     var PollingManager = {
         pollers: {},
         poll: function(model, options) {
-            var poller = this.pollers[model.cid];
+            var isNew = true, poller = this.pollers[model];
             if( typeof poller !== 'undefined' ) {
-                poller.set(model, options);
+                if (poller.model === model) {
+                    poller.set(model, options);
+                    isNew = false;
+                }
             }
-            else {
-                poller = this.pollers[model.cid] = new Poller(model, options);
+            if(isNew) {
+                poller = this.pollers[model] = new Poller(model, options);
             }
             return poller.start();
         },
         stop: function(model) {
-            var poller = this.pollers[model.cid];
-            if( typeof this.pollers[model.cid] !== 'undefined' ) {
-                poller.stop();
-                return true;
+            var poller = this.pollers[model];
+            if( typeof this.pollers[model] !== 'undefined' ) {
+                if (poller.model === model) {
+                    poller.stop();
+                    return true;
+                }
             }
             return false;
         }
