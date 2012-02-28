@@ -83,25 +83,20 @@
     var PollingManager = {
         pollers: {},
         poll: function(model, options) {
-            var isNew = true, poller = this.pollers[model];
-            if( typeof poller !== 'undefined' ) {
-                if (poller.model === model) {
-                    poller.set(model, options);
-                    isNew = false;
-                }
+            var poller = this.pollers[model];
+            if( typeof poller !== 'undefined' && poller.model === model ) {
+                poller.set(model, options);
             }
-            if(isNew) {
+            else {
                 poller = this.pollers[model] = new Poller(model, options);
             }
             return poller.start();
         },
         stop: function(model) {
             var poller = this.pollers[model];
-            if( typeof this.pollers[model] !== 'undefined' ) {
-                if (poller.model === model) {
-                    poller.stop();
-                    return true;
-                }
+            if( typeof poller !== 'undefined' && poller.model === model ) {
+                poller.stop();
+                return true;
             }
             return false;
         }
