@@ -62,7 +62,7 @@
         poller.model.fetch({
             success: function() {
                 defer(poller.options.success);
-                if((poller.condition(poller.model) !== true) {
+                if(poller.condition(poller.model) !== true) {
                     defer(poller.options.complete);
                     poller.stop(); // set running state to false
                 }
@@ -115,6 +115,7 @@
      * @deprecated
      */
     ns.Poller = Poller;
+    
     ns.PollingManager = PollingManager;
     
 }(this, _));
