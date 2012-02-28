@@ -12,70 +12,65 @@
             return typeof this.models[model.cid] !== 'undefined'; 
         },
         active: function(model){
-            return this.registered(model) && this.models[model.cid] === true;
+            return this.models[model.cid] === true;
         }
     };
     
     // constants
     var DEFAULT_DELAY = 1000;
     
-    // private members
-    var _model, _condition, _options, _delay;
-    
     var Poller = function Poller(model, options) {
-        if( Models.registered(model) ) {
-            throw 'conflict: poller for this model was already initialized'; 
-        }
-        
-        _model = model;
-        _options = options || {};
-        _condition = options.condition || function(){return true};
-        _delay = _options.delay || DEFAULT_DELAY;
-        
-        this.stop(); // register and set running state to false
-        
-        if ( _model instanceof Backbone.Model ) {
-            _model.on('destroy', this.stop, this);
-        }
-    }
+        this.initialize(model, options);
+    };
+    
     _.extend(Poller.prototype, {
-        start: function(){
-            if(this.active()) {
-                throw 'poller is actice';
+        initialize: function(model, options) {
+            this.model = model;
+            
+            this.options = options;
+            this.condition = this.options.condition || function(){return true};
+            this.delay = this.options.delay || DEFAULT_DELAY;
+            
+            if ( this.model instanceof Backbone.Model ) {
+                this.model.on('destroy', this.stop, this);
             }
-            Models.activate(_model, true); // set running state to true
+            
+            this.stop(); // register and set running state to false
+        },
+        start: function(){
+            Models.activate(this.model, true); // set running state to true
             run(this);
             return this;
         },
         stop: function(){
-            Models.activate(_model, false); // set running state to false
+            Models.activate(this.model, false); // set running state to false
             return this;
         },
         active: function(){
-            return Models.active(_model);
+            return Models.active(this.model);
         }
     });
     
     // private methods
     function run(poller) {
-        if ( (poller.active() !== true) || (_condition(_model) !== true) ) {
-            defer(_options.complete);
+        if ( (poller.active() !== true) || (poller.condition(poller.model) !== true) ) {
+            defer(poller.options.complete);
             poller.stop(); // set running state to false
             return ; 
         }
-        _model.fetch({
+        poller.model.fetch({
             success: function() {
-                defer(_options.success);
-                setTimeout(function(){ run(poller); }, _delay);
+                defer(poller.options.success);
+                setTimeout(function(){ run(poller); }, poller.delay);
             },
             error: function(){
-                defer(_options.error);
+                defer(poller.options.error);
                 poller.stop(); // set running state to false
             },
-            data: _options.data || {}
+            data: poller.options.data || {}
         });
     }
-    // run callbacks asynchronously
+    // run callback asynchronously
     function defer(func) {
         if(typeof func === 'function') {
             _.defer(func);
