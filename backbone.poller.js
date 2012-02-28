@@ -35,6 +35,7 @@
         },
         start: function(){
             this.options.active = true;
+            run(this);
             return this;
         },
         stop: function(){
