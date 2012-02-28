@@ -40,7 +40,10 @@
         },
         stop: function(){
             this.options.active = false;
-            this.xhr = null;
+            if(this.xhr && this.xhr.abort) {
+                this.xhr.abort();
+                this.xhr = null;
+            }
             return this;
         },
         active: function(){
@@ -51,6 +54,7 @@
     // private methods
     function run(poller) {
         if ( poller.active() !== true ) {
+            window.clearTimeout(poller.timeoutId);
             return ;
         }
         poller.xhr = poller.model.fetch({
@@ -61,7 +65,7 @@
                     poller.stop();
                 }
                 else {
-                    window.setTimeout(function(){ run(poller); }, poller.delay);
+                    poller.timeoutId = window.setTimeout(function(){ run(poller); }, poller.delay);
                 }
             },
             error: function(){
