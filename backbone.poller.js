@@ -19,7 +19,7 @@
         set: function(model, options) {
             this.model = model;
             
-            this.options = options || {};
+            this.options = _.clone(options || {});
             
             this.condition = this.options.condition || DEFAULT_CONDITION;
             this.delay = this.options.delay || DEFAULT_DELAY;
@@ -32,16 +32,16 @@
             return this;
         },
         start: function(){
-            this.__active = true;
+            this.options.active = true;
             run(this);
             return this;
         },
         stop: function(){
-            this.__active = false;
+            this.options.active = false;
             return this;
         },
         active: function(){
-            return this.__active === true;
+            return this.options.active === true;
         }
     });
     
