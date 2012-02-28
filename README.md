@@ -51,6 +51,8 @@ var poller = PollingManager.poll(model_or_collection, options);
 
 // to stop
 poller.stop();
+// or
+PollingManager.stop(model_or_collection);
 // or make the conditinal function return false
 model.set('active', false);
 
@@ -61,8 +63,6 @@ if (poller.active()) {
 
 // alter options
 poller = PollingManager.poll(model_or_collection, [other_options]);
-// or
-PollingManager.stop(model_or_collection);
 // or
 poller.set(model_or_collection, [other_options]);
 
