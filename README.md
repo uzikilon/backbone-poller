@@ -1,5 +1,4 @@
-Backbone Poller
-===============
+# Backbone Poller
 Backbone poller is an simple utility that allows polling on any Backbone model or collection.
 
 Some modern browsers and servers support Web Sockets oe long polling (comet) and allow advanced polling models update options.
@@ -16,9 +15,12 @@ http://kilon.org/blog/2012/02/backbone-poller/
 
 ### Basic Usage:
 ``` javascript
-var poller = new Poller(model_or_collection);
-poller.start();
+// to initialize:
+var poller = PollingManager.poll(model_or_collection);
+
+// to stop:
 poller.stop();
+
 ```
 
 ### Advanced Options:
@@ -45,10 +47,23 @@ var options = {
     // data to be passed to a collectoin fetch request
     data: {fields: "*", sort: "name asc"}
 }
-var poller = new Poller(model_or_collection, options);
+var poller = PollingManager.poll(model_or_collection, options);
 
-// to stop (and run the complete callback):
-this.stop();
-// or
+// to stop
+poller.stop();
+// or make the conditinal function return false
 model.set('active', false);
+
+// check if poller is running
+if (poller.active()) {
+// ...
+}
+
+// alter options
+poller = PollingManager.poll(model_or_collection, [other_options]);
+// or
+PollingManager.stop(model_or_collection);
+// or
+poller.set(model_or_collection, [other_options]);
+
 ```
