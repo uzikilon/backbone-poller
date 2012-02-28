@@ -106,7 +106,9 @@
             return false;
         }
     }
-    
+    /**
+     * @deprecated
+     */
     ns.Poller = Poller;
     ns.PollingManager = PollingManager;
     
