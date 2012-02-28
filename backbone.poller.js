@@ -3,7 +3,7 @@
 
 (function(ns, _){
     
- // constants
+    // constants
     var DEFAULT_DELAY = 1000;
     var DEFAULT_CONDITION = function() {
         return true; 
@@ -53,9 +53,9 @@
         poller.model.fetch({
             success: function() {
                 defer(poller.options.success);
-                if(poller.condition(poller.model) !== true) {
+                if( poller.condition(poller.model) !== true ) {
                     defer(poller.options.complete);
-                    poller.stop(); // set running state to false
+                    poller.stop();
                 }
                 else {
                     setTimeout(function(){ run(poller); }, poller.delay);
@@ -63,14 +63,14 @@
             },
             error: function(){
                 defer(poller.options.error);
-                poller.stop(); // set running state to false
+                poller.stop();
             },
             data: poller.options.data || {}
         });
     }
     // run callback asynchronously
     function defer(func) {
-        if(typeof func === 'function') {
+        if( typeof func === 'function' ) {
             _.defer(func);
         }
     }
@@ -82,7 +82,7 @@
         pollers: {},
         poll: function(model, options) {
             var poller = this.pollers[model.cid];
-            if(typeof poller !== 'undefined') {
+            if( typeof poller !== 'undefined' ) {
                 poller.set(model, options);
             }
             else {
@@ -92,7 +92,7 @@
         },
         stop: function(model) {
             var poller = this.pollers[model.cid];
-            if(typeof pollers[model.cid] !== 'undefined') {
+            if( typeof pollers[model.cid] !== 'undefined' ) {
                 poller.stop();
                 return true;
             }
