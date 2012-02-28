@@ -19,7 +19,8 @@
         set: function(model, options) {
             this.model = model;
             
-            this.options = options;
+            this.options = options || {};
+            
             this.condition = this.options.condition || DEFAULT_CONDITION;
             this.delay = this.options.delay || DEFAULT_DELAY;
             
