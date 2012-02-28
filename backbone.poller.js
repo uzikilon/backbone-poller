@@ -42,8 +42,8 @@
             this.options.active = false;
             if(this.xhr && this.xhr.abort) {
                 this.xhr.abort();
-                this.xhr = null;
             }
+            this.xhr = null;
             return this;
         },
         active: function(){
