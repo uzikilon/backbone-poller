@@ -35,11 +35,11 @@
         },
         start: function(){
             this.options.active = true;
-            run(this);
             return this;
         },
         stop: function(){
             this.options.active = false;
+            this.xhr = null;
             return this;
         },
         active: function(){
@@ -52,7 +52,7 @@
         if ( poller.active() !== true ) {
             return ;
         }
-        poller.model.fetch({
+        poller.xhr = poller.model.fetch({
             success: function() {
                 defer(poller.options.success);
                 if( poller.condition(poller.model) !== true ) {
