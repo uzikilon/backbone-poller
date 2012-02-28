@@ -39,6 +39,7 @@
             }
             
             this.stop(); // register and set running state to false
+            return this;
         },
         start: function(){
             Models.activate(this.model, true); // set running state to true
@@ -97,10 +98,9 @@
                 poller.initialize(model, options);
             }
             else {
-                poller = this.pollers[model.cid] = new Poller(model, options)
+                poller = this.pollers[model.cid] = new Poller(model, options);
             }
-            poller.start();
-            return poller;
+            return poller.start();
         },
         stop: function(model) {
             var poller = this.pollers[model.cid];
