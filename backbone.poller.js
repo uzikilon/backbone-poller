@@ -85,21 +85,31 @@
     /**
      * Polling Manager
      */
+    var pollers = {};
+    pollers.find = function(model){
+        var finalPoller;
+        _.each(this, function(poller){
+            if(poller.model === model) {
+                finalPoller = poller;
+            }
+        });
+        return finalPoller;
+    }
+    
     var PollingManager = {
-        pollers: {},
         poll: function(model, options) {
-            var poller = this.pollers[model];
-            if( typeof poller !== 'undefined' && poller.model === model ) {
+            var poller = pollers.find(model);
+            if( poller ) {
                 poller.set(model, options);
             }
             else {
-                poller = this.pollers[model] = new Poller(model, options);
+                poller = pollers[model] = new Poller(model, options);
             }
             return poller.start();
         },
         stop: function(model) {
-            var poller = this.pollers[model];
-            if( typeof poller !== 'undefined' && poller.model === model ) {
+            var poller = pollers.find(model);
+            if( poller ) {
                 poller.stop();
                 return true;
             }
