@@ -85,7 +85,7 @@
     /**
      * Polling Manager
      */
-    var pollers = {};
+    var pollers = [];
     pollers.find = function(model){
         var finalPoller;
         _.each(this, function(poller){
@@ -94,7 +94,7 @@
             }
         });
         return finalPoller;
-    }
+    };
     
     var PollingManager = {
         poll: function(model, options) {
@@ -103,7 +103,8 @@
                 poller.set(model, options);
             }
             else {
-                poller = pollers[model] = new Poller(model, options);
+                poller = new Poller(model, options)
+                pollers.push(poller);
             }
             return poller.start();
         },
