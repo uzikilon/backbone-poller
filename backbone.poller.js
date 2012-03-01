@@ -19,10 +19,9 @@
     };
     _.extend(Poller.prototype, {
         set: function(model, options) {
+            
             this.model = model;
-            
             this.options = _.clone(options || {});
-            
             this.condition = this.options.condition || DEFAULT_CONDITION;
             this.delay = this.options.delay || DEFAULT_DELAY;
             
@@ -30,8 +29,7 @@
                 this.model.on('destroy', this.stop, this);
             }
             
-            this.stop(); // register and set running state to false
-            return this;
+            return this.stop();
         },
         start: function(){
             this.options.active = true;
