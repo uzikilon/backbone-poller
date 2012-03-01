@@ -113,6 +113,9 @@
                 return true;
             }
             return false;
+        },
+        size: function(){
+            return pollers.length;
         }
     };
     
