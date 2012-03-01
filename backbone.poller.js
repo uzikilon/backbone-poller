@@ -90,7 +90,7 @@
     var PollingManager = {
         get: function(model) {
             return _.find(pollers, function(poller){ 
-                return poller.model === model 
+                return poller.model === model;
             });
         },
         poll: function(model, options) {
@@ -99,7 +99,7 @@
                 poller.set(model, options);
             }
             else {
-                poller = new Poller(model, options)
+                poller = new Poller(model, options);
                 pollers.push(poller);
             }
             return poller.start();
