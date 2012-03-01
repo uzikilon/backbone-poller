@@ -89,7 +89,9 @@
     
     var PollingManager = {
         get: function(model) {
-            return _.find(pollers, function(poller){  return poller.model === model });
+            return _.find(pollers, function(poller){ 
+                return poller.model === model 
+            });
         },
         poll: function(model, options) {
             var poller = this.get(model);
