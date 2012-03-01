@@ -86,17 +86,13 @@
      * Polling Manager
      */
     var pollers = [];
-    pollers.find = function(model){
-        for( var i=0; i<this.length; i++ ) {
-            if(this[i].model === model) {
-                return this[i];
-            }
-        }
-    };
     
     var PollingManager = {
+        get: function(model) {
+            return _.find(pollers, function(poller){  return poller.model === model });
+        },
         poll: function(model, options) {
-            var poller = pollers.find(model);
+            var poller = this.get(model);
             if( poller ) {
                 poller.set(model, options);
             }
@@ -107,7 +103,7 @@
             return poller.start();
         },
         stop: function(model) {
-            var poller = pollers.find(model);
+            var poller = this.get(model);
             if( poller ) {
                 poller.stop();
                 return true;
