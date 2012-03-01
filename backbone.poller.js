@@ -40,7 +40,7 @@
         },
         stop: function(){
             this.options.active = false;
-            if(this.xhr && this.xhr.abort) {
+            if(this.xhr && typeof this.xhr.abort === 'function') {
                 this.xhr.abort();
             }
             this.xhr = null;
