@@ -87,13 +87,11 @@
      */
     var pollers = [];
     pollers.find = function(model){
-        var finalPoller;
-        _.each(this, function(poller){
-            if(poller.model === model) {
-                finalPoller = poller;
+        for( var i=0; i<this.length; i++ ) {
+            if(this[i].model === model) {
+                return this[i];
             }
-        });
-        return finalPoller;
+        }
     };
     
     var PollingManager = {
