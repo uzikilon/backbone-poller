@@ -47,7 +47,16 @@ var options = {
     // data to be passed to a collectoin fetch request
     data: {fields: "*", sort: "name asc"}
 }
-var poller = PollingManager.poll(model_or_collection, options);
+var poller = PollingManager.start(model_or_collection, options);
+
+// We can assign callbacks later on
+poller.on('success', function(){
+    console.info('another successful fetch!'); 
+});
+poller.on('complete', function(){
+    console.info('hurray! we are done!');
+});
+
 
 // to stop
 poller.stop();
@@ -62,7 +71,7 @@ if (poller.active()) {
 }
 
 // alter options
-poller = PollingManager.poll(model_or_collection, [other_options]);
+poller = PollingManager.start(model_or_collection, [other_options]);
 // or
 poller.set(model_or_collection, [other_options]);
 
