@@ -32,6 +32,9 @@
             return this.stop();
         },
         start: function(){
+            if(this.active() === true) {
+                return ;
+            }
             this.options.active = true;
             run(this);
             return this;
