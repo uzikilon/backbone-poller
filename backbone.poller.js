@@ -88,7 +88,7 @@
             data: poller.options.data || {}
         });
     }
-
+    
     /**
      * Polling Manager
      */
@@ -100,7 +100,16 @@
                 return poller.model === model;
             });
         },
-        poll: function(model, options) {
+        /**
+         * @Deprecated
+         */
+        poll: function() {
+            if(window.console) {
+                window.console.watn("PollingManager.poll() is deprecated. use start() insted");
+            }
+            return this.start.apply(this, arguments);
+        },
+        start: function(model, options) {
             var poller = this.get(model);
             if( poller ) {
                 poller.set(model, options);
