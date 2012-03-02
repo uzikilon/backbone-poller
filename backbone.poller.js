@@ -35,11 +35,14 @@
             
             return this.stop({silent: true});
         },
-        start: function(){
+        start: function(options){
             if(this.active() === true) {
                 return this;
             }
-            this.trigger('start');
+            options = options || {};
+            if(!options.silent) {
+                this.trigger('start');
+            }
             this.options.active = true;
             run(this);
             return this;
@@ -106,7 +109,7 @@
                 poller = new Poller(model, options);
                 pollers.push(poller);
             }
-            return poller.start();
+            return poller.start({silent: true});
         },
         stop: function(model) {
             var poller = this.get(model);
