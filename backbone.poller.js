@@ -22,13 +22,12 @@
             this.model = model;
             this.options = _.extend(_.clone(defaults), options || {});
             
-            var self = this;
             _.each(eventTypes, function(eventName){
-                var handler = self.options[eventName];
+                var handler = this.options[eventName];
                 if(typeof handler === 'function') {
-                    self.on(eventName, handler, self);
+                    this.on(eventName, handler, this);
                 }
-            });
+            }, this);
             
             if ( this.model instanceof Backbone.Model ) {
                 this.model.on('destroy', this.stop, this);
@@ -73,7 +72,7 @@
                 poller.trigger('success');
                 if( poller.options.condition(poller.model) !== true ) {
                     poller.trigger('complete');
-                    poller.stop();
+                    poller.stop({silent: true});
                 }
                 else {
                     poller.timeoutId = window.setTimeout(function(){ run(poller); }, poller.options.delay);
@@ -81,7 +80,7 @@
             },
             error: function(){
                 poller.trigger('error');
-                poller.stop();
+                poller.stop({silent: true});
             },
             data: poller.options.data || {}
         });
