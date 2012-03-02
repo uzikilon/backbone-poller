@@ -37,7 +37,7 @@
         },
         start: function(){
             if(this.active() === true) {
-                return ;
+                return this;
             }
             this.trigger('start');
             this.options.active = true;
