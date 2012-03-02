@@ -5,11 +5,11 @@
     
     "use strict";
     
-    // constants
-    var DEFAULT_DELAY = 1000;
-    var DEFAULT_CONDITION = function() {
-        return true; 
+    var defaults = {
+        delay: 1000,
+        condition: function(){return true;}
     };
+    var eventTypes = ['start', 'stop', 'success', 'error', 'complete'];
     
     /**
      * Poller
@@ -17,29 +17,39 @@
     var Poller = function Poller(model, options) {
         this.set(model, options);
     };
-    _.extend(Poller.prototype, {
+    _.extend(Poller.prototype, Backbone.Events, {
         set: function(model, options) {
-            
             this.model = model;
-            this.options = _.clone(options || {});
-            this.condition = this.options.condition || DEFAULT_CONDITION;
-            this.delay = this.options.delay || DEFAULT_DELAY;
+            this.options = _.extend(_.clone(defaults), options || {});
+            
+            var self = this;
+            _.each(eventTypes, function(eventName){
+                var handler = self.options[eventName];
+                if(typeof handler === 'function') {
+                    self.on(eventName, handler, self);
+                }
+            });
             
             if ( this.model instanceof Backbone.Model ) {
                 this.model.on('destroy', this.stop, this);
             }
             
-            return this.stop();
+            return this.stop({silent: true});
         },
         start: function(){
             if(this.active() === true) {
                 return ;
             }
+            this.trigger('start');
             this.options.active = true;
             run(this);
             return this;
         },
-        stop: function(){
+        stop: function(options){
+            options = options || {};
+            if(!options.silent) {
+                this.trigger('stop');
+            }
             this.options.active = false;
             if(this.xhr && typeof this.xhr.abort === 'function') {
                 this.xhr.abort();
@@ -60,29 +70,23 @@
         }
         poller.xhr = poller.model.fetch({
             success: function() {
-                defer(poller.options.success);
-                if( poller.condition(poller.model) !== true ) {
-                    defer(poller.options.complete);
+                poller.trigger('success');
+                if( poller.options.condition(poller.model) !== true ) {
+                    poller.trigger('complete');
                     poller.stop();
                 }
                 else {
-                    poller.timeoutId = window.setTimeout(function(){ run(poller); }, poller.delay);
+                    poller.timeoutId = window.setTimeout(function(){ run(poller); }, poller.options.delay);
                 }
             },
             error: function(){
-                defer(poller.options.error);
+                poller.trigger('error');
                 poller.stop();
             },
             data: poller.options.data || {}
         });
     }
-    // run callback asynchronously
-    function defer(func) {
-        if( typeof func === 'function' ) {
-            _.defer(func);
-        }
-    }
-    
+
     /**
      * Polling Manager
      */
@@ -90,7 +94,7 @@
     
     var PollingManager = {
         get: function(model) {
-            return _.find(pollers, function(poller){ 
+            return _.find(pollers, function(poller){
                 return poller.model === model;
             });
         },
