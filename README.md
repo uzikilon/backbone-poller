@@ -16,7 +16,7 @@ http://kilon.org/blog/2012/02/backbone-poller/
 ### Basic Usage:
 ``` javascript
 // to initialize:
-var poller = PollingManager.poll(model_or_collection);
+var poller = PollingManager.strat(model_or_collection);
 
 // to stop:
 poller.stop();
