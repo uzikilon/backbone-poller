@@ -84,6 +84,7 @@
             error: function(){
                 poller.trigger('error');
                 poller.stop({silent: true});
+            }
         });
         poller.xhr = poller.model.fetch(options);
     }
@@ -98,15 +99,6 @@
             return _.find(pollers, function(poller){
                 return poller.model === model;
             });
-        },
-        /**
-         * @Deprecated
-         */
-        poll: function() {
-            if(window.console) {
-                window.console.warn("PollingManager.poll() is deprecated. use start() insted");
-            }
-            return this.start.apply(this, arguments);
         },
         start: function(model, options) {
             var poller = this.get(model);
