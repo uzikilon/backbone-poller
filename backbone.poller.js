@@ -70,7 +70,7 @@
             window.clearTimeout(poller.timeoutId);
             return ;
         }
-        poller.xhr = poller.model.fetch({
+        var options = _.extend({}, poller.options, {
             success: function() {
                 poller.trigger('success');
                 if( poller.options.condition(poller.model) !== true ) {
@@ -84,9 +84,8 @@
             error: function(){
                 poller.trigger('error');
                 poller.stop({silent: true});
-            },
-            data: poller.options.data || {}
         });
+        poller.xhr = poller.model.fetch(options);
     }
     
     /**
