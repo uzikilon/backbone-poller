@@ -115,17 +115,6 @@
             }
             return poller;
         },
-        start: function(model, options) {
-            return this.getPoller(model, options).start({silent: true});
-        },
-        stop: function(model) {
-            var poller = this.find(model);
-            if( poller ) {
-                poller.stop();
-                return true;
-            }
-            return false;
-        },
         size: function(){
             return pollers.length;
         }
