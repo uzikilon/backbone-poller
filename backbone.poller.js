@@ -95,13 +95,14 @@
     var pollers = [];
     
     var PollingManager = {
-        get: function(model) {
+        find: function(model) {
             return _.find(pollers, function(poller){
                 return poller.model === model;
             });
         },
-        start: function(model, options) {
-            var poller = this.get(model);
+        getPoller: function(model, options){
+            var poller = this.find(model);
+            var options = options || {};
             if( poller ) {
                 poller.set(model, options);
             }
@@ -109,10 +110,16 @@
                 poller = new Poller(model, options);
                 pollers.push(poller);
             }
-            return poller.start({silent: true});
+            if(options.autostart === true) {
+                poller.start({silent: true});
+            }
+            return poller;
+        },
+        start: function(model, options) {
+            return this.getPoller(model, options).start({silent: true});
         },
         stop: function(model) {
-            var poller = this.get(model);
+            var poller = this.find(model);
             if( poller ) {
                 poller.stop();
                 return true;
