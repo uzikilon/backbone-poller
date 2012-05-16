@@ -86,6 +86,7 @@
                 poller.stop({silent: true});
             }
         });
+        poller.trigger('fetch');
         poller.xhr = poller.model.fetch(options);
     }
     
