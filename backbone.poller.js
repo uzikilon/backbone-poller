@@ -9,7 +9,7 @@
         delay: 1000,
         condition: function(){return true;}
     };
-    var eventTypes = ['start', 'stop', 'success', 'error', 'complete'];
+    var eventTypes = ['start', 'stop', 'success', 'error', 'complete', 'fetch'];
     
     /**
      * Poller
