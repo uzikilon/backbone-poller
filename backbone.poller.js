@@ -56,22 +56,19 @@
             if(this.xhr && typeof this.xhr.abort === 'function') {
                 this.xhr.abort();
             }
-            this.clearTimeout();
             this.xhr = null;
+            window.clearTimeout(this.timeoutId);
             return this;
         },
         active: function(){
             return this.options.active === true;
-        },
-        clearTimeout: function() {
-            window.clearTimeout(this.timeoutId);
         }
     });
     
     // private methods
     function run(poller) {
         if ( poller.active() !== true ) {
-            poller.clearTimeout();
+            poller.stop({silent: true});
             return ;
         }
         var options = _.extend({}, poller.options, {
@@ -105,9 +102,9 @@
                 return poller.model === model;
             });
         },
-        getPoller: function(model, opts){
+        getPoller: function(model, options){
             var poller = this.find(model);
-            var options = opts || {};
+            options = options || {};
             if( poller ) {
                 poller.set(model, options);
             }
