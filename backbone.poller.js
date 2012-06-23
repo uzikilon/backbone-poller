@@ -22,7 +22,7 @@ function(ns, _, Backbone) {
   _.extend(Poller.prototype, Backbone.Events, {
     set: function(model, options) {
       this.model = model;
-      this.options = _.extend(_.clone(defaults), options || {});
+      this.options = _.extend({}, defaults, options || {});
 
       _.each(eventTypes, function(eventName) {
         var handler = this.options[eventName];
