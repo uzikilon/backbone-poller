@@ -37,15 +37,15 @@ var options = {
         return model.get('active') === true;
     },
     // callback to execute when the condition function is not true anymore, or when calling stop()
-    complete: function() { 
+    complete: function(model) { 
         console.info('hurray! we are done!'); 
     },
     // callback to execute on every successful fetch
-    success: function(){ 
+    success: function(model){ 
         console.info('another successful fetch!'); 
     },
     // callback to execute on fetch error
-    error: function(){ 
+    error: function(model){ 
         console.error('oops! something went wrong'); 
     },
     // data to be passed to a collection fetch request
@@ -54,10 +54,10 @@ var options = {
 var poller = PollingManager.getPoller(model_or_collection, options);
 
 // We can assign callbacks later on
-poller.on('success', function(){
+poller.on('success', function(model){
     console.info('another successful fetch!'); 
 });
-poller.on('complete', function(){
+poller.on('complete', function(model){
     console.info('hurray! we are done!');
 });
 poller.start()
