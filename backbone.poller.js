@@ -85,8 +85,8 @@
                 }
             },
             error: function(){
-                poller.trigger('error', poller.model);
                 poller.stop({silent: true});
+                poller.trigger('error', poller.model);
             }
         });
         poller.trigger('fetch', poller.model);
