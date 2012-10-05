@@ -1,6 +1,6 @@
-describe("Triggering the right events", function(){
+describe("Accepting options and invoking in time", function(){
   Backbone.sync = function(method, model, options){
-    options.success(model.toJSON());
+    options.success();
   };
 
   beforeEach(function() {
@@ -20,58 +20,15 @@ describe("Triggering the right events", function(){
     PollingManager.reset();
   });
 
-  it("Should fire a start event once", function() {
-    var counter = 0,
-        startSpy = sinon.spy(),
-        fetchSpy = sinon.spy(this.collection, 'fetch');
-
-    this.cPoller.on('start', startSpy);
-    this.cPoller.on('start', function(){ counter += 1; });
-
-    this.cPoller.start();
-
-    waitsFor(function(){
-      return startSpy.calledOnce;
-    });
-
-    expect(counter).toEqual(1);
-    expect(this.cPoller.active()).toBeTruthy();
-
-
-    waitsFor(function(){
-      return fetchSpy.calledThrice;
-    });
-
-    runs(function () {
-      expect(counter).toEqual(1);
-      expect(this.cPoller.active()).toBeTruthy();
-    });
-
-  });
-
-  it("Should fire a stop event", function() {
-    var stopSpy = sinon.spy();
-    this.cPoller.on('stop', stopSpy).start().stop();
-
-    waitsFor(function(){
-      return stopSpy.calledOnce;
-    });
-
-    runs(function () {
-      expect(this.cPoller.active()).toBeFalsy();
-    });
-
-  });
-
-  it("Should fire a fetch event before each fetch", function() {
+  it("Should run the 'fetch' option before each fetch", function() {
     var pFetchSpy = sinon.spy();
     var mFetchSpy = sinon.spy(this.model, 'fetch');
     
-    this.mPoller.on('fetch', pFetchSpy);
+    this.mPoller.set(this.model, {fetch: pFetchSpy, delay: 50});
     this.mPoller.start();
 
     waitsFor(function(){
-      return pFetchSpy.callCount === 1;
+      return pFetchSpy.callCount === 3;
     });
 
     runs(function () {
@@ -80,10 +37,10 @@ describe("Triggering the right events", function(){
 
   });
 
-  it("Should fire a success event after each successfull fetch", function() {
+  it("Should run the 'success' option after each successfull fetch", function() {
     var spy = sinon.spy();
     
-    this.mPoller.on('success', spy);
+    this.mPoller.set(this.model, {fetch: spy, delay: 50});
     this.mPoller.start();
 
     waitsFor(function(){
@@ -97,19 +54,18 @@ describe("Triggering the right events", function(){
   });
 
 
-  it("Should fire a complete event when condition is satisfied", function() {
+  it("Should run the 'complete' option when condition is satisfied", function() {
       
     var counter = 0,
         spy = sinon.spy(),
         options = {
           delay: 50,
+          complete: spy,
           condition: function(model){
             return ++counter < 5;
           }
         },
-        poller = PollingManager.getPoller(this.model, options);
-
-    poller.on('complete', spy).start();
+        poller = PollingManager.getPoller(this.model, options).start();
 
     waitsFor(function(){
       return spy.calledOnce;
@@ -122,16 +78,14 @@ describe("Triggering the right events", function(){
 
   });
 
-  it("Should fire an error event when fetch fails", function() {
+  it("Should run the 'error' option when fetch fails", function() {
       
     this.model.sync = function(method, model, options){
       options.error("ERROR");
     };
 
     var spy = sinon.spy();
-    var poller = this.mPoller.on('error', spy);
-
-    poller.start();
+    var poller = this.mPoller.set(this.model, {error: spy}).start();
 
     waitsFor(function(){
       return spy.calledOnce;
