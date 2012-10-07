@@ -16,11 +16,11 @@ http://kilon.org/blog/2012/02/backbone-poller/
 ### Basic Usage:
 ``` javascript
 // to initialize:
-var poller = PollingManager.getPoller(model_or_collection);
+var poller = Backbone.Poller.get(model_or_collection);
 poller.start()
 
 // or
-var poller = PollingManager.getPoller(model_or_collection).start()
+var poller = Backbone.Poller.get(model_or_collection).start()
 
 // to stop:
 poller.stop();
@@ -51,7 +51,7 @@ var options = {
     // data to be passed to a collection fetch request
     data: {fields: "*", sort: "name asc"}
 }
-var poller = PollingManager.getPoller(model_or_collection, options);
+var poller = Backbone.Poller.get(model_or_collection, options);
 
 // We can assign callbacks later on
 poller.on('success', function(model){
@@ -74,7 +74,7 @@ if (poller.active()) {
 }
 
 // alter options
-poller = PollingManager.getPoller(model_or_collection, [other_options]).start();
+poller = Backbone.Poller.get(model_or_collection, [other_options]).start();
 // or
 poller.set([other_options]).start();
 

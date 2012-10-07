@@ -8,8 +8,8 @@ describe("Base poller operations", function() {
     this.model = new Backbone.Model();
     this.collection = new Backbone.Collection();
 
-    this.mPoller = PollingManager.getPoller(this.model, {delay: 50});
-    this.cPoller = PollingManager.getPoller(this.collection, {delay: 50});
+    this.mPoller = Backbone.Poller.get(this.model, {delay: 50});
+    this.cPoller = Backbone.Poller.get(this.collection, {delay: 50});
   });
 
   afterEach(function(){
@@ -25,9 +25,9 @@ describe("Base poller operations", function() {
 
   it("Should create one instance per model", function() {
     expect(PollingManager.size()).toEqual(2);
-    var mPoller1 = PollingManager.getPoller(this.model);
-    var mPoller2 = PollingManager.getPoller(this.model);
-    var mPoller3 = PollingManager.getPoller(this.model);
+    var mPoller1 = Backbone.Poller.get(this.model);
+    var mPoller2 = Backbone.Poller.get(this.model);
+    var mPoller3 = Backbone.Poller.get(this.model);
     expect(PollingManager.size()).toEqual(2);
   });
 
@@ -49,7 +49,7 @@ describe("Base poller operations", function() {
   it("Should stop when condition is satisfied", function() {
     var bool = true,
     options = { delay: 50, condition: function(model){ return bool; } },
-    poller = PollingManager.getPoller(this.model, options).start();
+    poller = Backbone.Poller.get(this.model, options).start();
 
     expect(poller.active()).toBe(true);
 

@@ -6,8 +6,8 @@ describe("Accepting options and invoking in time", function(){
   beforeEach(function() {
     this.model = new Backbone.Model();
     this.collection = new Backbone.Collection();
-    this.mPoller = PollingManager.getPoller(this.model, {delay: 50});
-    this.cPoller = PollingManager.getPoller(this.collection, {delay: 50});
+    this.mPoller = Backbone.Poller.get(this.model, {delay: 50});
+    this.cPoller = Backbone.Poller.get(this.collection, {delay: 50});
   });
 
   afterEach(function(){

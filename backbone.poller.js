@@ -99,26 +99,30 @@
      */
      var pollers = [];
 
-     var PollingManager = {
+     Backbone.Poller = {
       find: function(model) {
         return _.find(pollers, function(poller){
           return poller.model === model;
         });
       },
-      getPoller: function(model, options){
+      get: function(model, options) {
         var poller = this.find(model);
-        options = options || {};
-        if( poller ) {
-          poller.set(options);
-        }
-        else {
+        if( ! poller ) {
           poller = new Poller(model, options);
           pollers.push(poller);
         }
-        if(options.autostart === true) {
+        else {
+          poller.set(options);
+        }
+        if( options && options.autostart === true ) {
           poller.start({silent: true});
         }
         return poller;
+      },
+      // Deprecated: Use Backbone.Poller.get()
+      getPoller: function(){
+        console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
+        return this.get.apply(this, arguments);
       },
       size: function(){
         return pollers.length;
@@ -132,6 +136,7 @@
       }
     };
     
-    ns.PollingManager = PollingManager;
+    // Deprecated: Use Backbone.Poller
+    ns.PollingManager = Backbone.Poller;
     
   }(this, this._, this.Backbone);
