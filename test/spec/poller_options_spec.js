@@ -24,7 +24,7 @@ describe("Accepting options and invoking in time", function(){
     var pFetchSpy = sinon.spy();
     var mFetchSpy = sinon.spy(this.model, 'fetch');
     
-    this.mPoller.set(this.model, {fetch: pFetchSpy, delay: 50});
+    this.mPoller.set({fetch: pFetchSpy, delay: 50});
     this.mPoller.start();
 
     waitsFor(function(){
@@ -40,7 +40,7 @@ describe("Accepting options and invoking in time", function(){
   it("Should run the 'success' option after each successfull fetch", function() {
     var spy = sinon.spy();
     
-    this.mPoller.set(this.model, {fetch: spy, delay: 50});
+    this.mPoller.set({fetch: spy, delay: 50});
     this.mPoller.start();
 
     waitsFor(function(){
@@ -55,25 +55,17 @@ describe("Accepting options and invoking in time", function(){
 
 
   it("Should run the 'complete' option when condition is satisfied", function() {
-      
-    var counter = 0,
-        spy = sinon.spy(),
-        options = {
-          delay: 50,
-          complete: spy,
-          condition: function(model){
-            return ++counter < 5;
-          }
-        },
-        poller = PollingManager.getPoller(this.model, options).start();
+    var bool = true,
+        spy = sinon.spy();
 
-    waitsFor(function(){
-      return spy.calledOnce;
-    });
+    this.mPoller.set({ delay: 50, complete: spy, condition: function(model){ return bool; } }).start();
+
+    bool = false;
+    waits(50);
 
     runs(function(){
-      expect(poller.active()).toBe(false);
-      expect(counter).toEqual(5);
+      expect(this.mPoller.active()).toBe(false);
+      expect(spy.calledOnce).toBe(true);
     });
 
   });
@@ -85,7 +77,7 @@ describe("Accepting options and invoking in time", function(){
     };
 
     var spy = sinon.spy();
-    var poller = this.mPoller.set(this.model, {error: spy}).start();
+    var poller = this.mPoller.set({error: spy}).start();
 
     waitsFor(function(){
       return spy.calledOnce;

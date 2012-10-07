@@ -76,6 +76,6 @@ if (poller.active()) {
 // alter options
 poller = PollingManager.getPoller(model_or_collection, [other_options]).start();
 // or
-poller.set(model_or_collection, [other_options]).start();
+poller.set([other_options]).start();
 
 ```

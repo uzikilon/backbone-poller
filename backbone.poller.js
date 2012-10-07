@@ -17,11 +17,11 @@
      * Poller
      */
      var Poller = function Poller(model, options) {
-      this.set(model, options);
+      this.model = model;
+      this.set(options);
     };
     _.extend(Poller.prototype, Backbone.Events, {
-      set: function(model, options) {
-        this.model = model;
+      set: function(options) {
         this.options = _.extend({}, defaults, options || {});
 
         _.each(eventTypes, function(eventName){
@@ -109,7 +109,7 @@
         var poller = this.find(model);
         options = options || {};
         if( poller ) {
-          poller.set(model, options);
+          poller.set(options);
         }
         else {
           poller = new Poller(model, options);

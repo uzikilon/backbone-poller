@@ -98,26 +98,19 @@ describe("Triggering the right events", function(){
 
 
   it("Should fire a complete event when condition is satisfied", function() {
-      
-    var counter = 0,
-        spy = sinon.spy(),
-        options = {
-          delay: 50,
-          condition: function(model){
-            return ++counter < 5;
-          }
-        },
-        poller = PollingManager.getPoller(this.model, options);
+     var bool = true,
+         spy = sinon.spy();
 
-    poller.on('complete', spy).start();
+    this.mPoller.set({ delay: 50, condition: function(model){ return bool; } });
+    this.mPoller.on('complete', spy);
+    this.mPoller.start();
 
-    waitsFor(function(){
-      return spy.calledOnce;
-    });
+    bool = false;
+    waits(50);
 
     runs(function(){
-      expect(poller.active()).toBe(false);
-      expect(counter).toEqual(5);
+      expect(this.mPoller.active()).toBe(false);
+      expect(spy.calledOnce).toBe(true);
     });
 
   });
