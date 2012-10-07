@@ -1,4 +1,4 @@
-describe("Base Poller Operations", function() {
+describe("Base poller operations", function() {
 
   Backbone.sync = function(method, model, options){
     options.success(model.toJSON());
@@ -88,7 +88,7 @@ describe("Base Poller Operations", function() {
     });
   });
 
-  it("Sould have a null xhr object when stopped", function(){
+  it("Sould have a reset the poller's xhr and timeoutId when stopped", function(){
     var poller = this.mPoller;
 
     expect(poller.active()).toBe(false);
