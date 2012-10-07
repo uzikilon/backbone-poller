@@ -22,8 +22,8 @@
     };
     _.extend(Poller.prototype, Backbone.Events, {
       set: function(options) {
+        this.off();
         this.options = _.extend({}, defaults, options || {});
-
         _.each(eventTypes, function(eventName){
           var handler = this.options[eventName];
           if(typeof handler === 'function') {

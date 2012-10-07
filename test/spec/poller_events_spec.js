@@ -1,4 +1,4 @@
-describe("Triggering the right events", function(){
+describe("Handle events", function(){
   Backbone.sync = function(method, model, options){
     options.success(model.toJSON());
   };
@@ -134,6 +134,22 @@ describe("Triggering the right events", function(){
       expect(poller.active()).toBe(false);
     });
 
+  });
+
+  it('Should flush all events when re-setting options', function(){
+    this.mPoller.on('foo', function(){});
+    this.mPoller.on('bar', function(){});
+    this.mPoller.on('baz', function(){});
+
+    var calls = this.mPoller._callbacks || {};
+    expect(_(calls).size()).toBe(3);
+
+    this.mPoller.set({foo: 'bar'});
+
+    runs(function(){
+      var calls = this.mPoller._callbacks || {};
+      expect(_(calls).size()).toBe(0);
+    });
   });
 
 });
