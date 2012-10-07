@@ -1,4 +1,4 @@
-describe("Backbone Poller", function() {
+describe("Base Poller Operations", function() {
 
   Backbone.sync = function(method, model, options){
     options.success(model.toJSON());
@@ -22,67 +22,105 @@ describe("Backbone Poller", function() {
     PollingManager.reset();
   });
 
-  it("Should Not override instances", function() {
-    expect(PollingManager.size()).toEqual(2);
-  });
 
-  it("Should Not create one instance per model", function() {
+  it("Should create one instance per model", function() {
+    expect(PollingManager.size()).toEqual(2);
     var mPoller1 = PollingManager.getPoller(this.model);
     var mPoller2 = PollingManager.getPoller(this.model);
     var mPoller3 = PollingManager.getPoller(this.model);
     expect(PollingManager.size()).toEqual(2);
   });
 
-  it("Should Start", function() {
+  it("Should start when invoking start()", function() {
     var spy = sinon.spy(this.model, "fetch");
-    expect(this.mPoller.active()).toBeFalsy();
+    expect(this.mPoller.active()).toBe(false);
     this.mPoller.start();
-    expect(this.mPoller.active()).toBeTruthy();
+    expect(this.mPoller.active()).toBe(true);
     expect(spy.calledOnce).toEqual(true);
   });
 
-  it("Should Stop wehen calling stop()", function() {
+  it("Should stop when invoking stop()", function() {
     this.mPoller.start();
-    expect(this.mPoller.active()).toBeTruthy();
+    expect(this.mPoller.active()).toBe(true);
     this.mPoller.stop();
-    expect(this.mPoller.active()).toBeFalsy();
+    expect(this.mPoller.active()).toBe(false);
   });
 
-  it("Should Fetch More Than Once When Polling a Model", function() {
+  it("Should stop when condition is satisfied", function() {
+    var bool = true,
+    options = { delay: 50, condition: function(model){ return bool; } },
+    poller = PollingManager.getPoller(this.model, options).start();
+
+    expect(poller.active()).toBe(true);
+
+    bool = false;
+    waits(50);
+
+    runs(function(){
+      expect(poller.active()).toBe(false);
+    });
+
+  });
+
+  it("Should fetch more than once when polling a model", function() {
     var spy = sinon.spy(this.model, "fetch");
     this.mPoller.start();
 
-    waitsFor(function(){
-      return spy.calledThrice;
+    waits(160);
+
+    runs(function(){
+      expect(spy.callCount).toEqual(4);
+      expect(this.mPoller.active()).toBe(true);
     });
+
 
   });
 
-  it("Should Fetch More Than Once When Polling a Collection", function() {
+  it("Should fetch more than once when polling a collection", function() {
     var spy = sinon.spy(this.collection, "fetch");
     this.cPoller.start();
 
-    waitsFor(function(){
-      return spy.calledThrice;
-    });
+    waits(160);
 
     runs(function () {
-      expect(this.cPoller.active()).toBeTruthy();
+      expect(spy.callCount).toEqual(4);
+      expect(this.cPoller.active()).toBe(true);
     });
   });
 
-  it("Should Stop when model is destroyed", function() {
+  it("Sould have a null xhr object when stopped", function(){
+    var poller = this.mPoller;
+
+    expect(poller.active()).toBe(false);
+    expect(poller.xhr).toBeNull();
+    expect(poller.timeoutId).toBeNull();
+
+    poller.start();
+
+    expect(poller.active()).toBe(true);
+    expect(poller.xhr).not.toBeNull();
+    expect(poller.timeoutId).toEqual(jasmine.any(Number));
+
+    poller.stop();
+
+    expect(poller.active()).toBe(false);
+    expect(poller.xhr).toBeNull();
+    expect(poller.timeoutId).toBeNull();
+
+  });
+
+
+  it("Should stop when model is destroyed", function() {
     var spy = sinon.spy();
     this.model.on('destroy', spy);
     this.mPoller.start();
+
+    expect(this.mPoller.active()).toBe(true);
+
     this.model.destroy();
 
-    waitsFor(function(){
-      return spy.calledOnce;
-    });
-
     runs(function () {
-      expect(this.cPoller.active()).toBeFalsy();
+      expect(this.mPoller.active()).toBe(false);
     });
   });
 

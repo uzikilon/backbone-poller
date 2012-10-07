@@ -72,7 +72,7 @@ describe("Accepting options and invoking in time", function(){
     });
 
     runs(function(){
-      expect(poller.active()).toBeFalsy();
+      expect(poller.active()).toBe(false);
       expect(counter).toEqual(5);
     });
 
@@ -92,7 +92,7 @@ describe("Accepting options and invoking in time", function(){
     });
 
     runs(function(){
-      expect(poller.active()).toBeFalsy();
+      expect(poller.active()).toBe(false);
     });
 
   });

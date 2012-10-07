@@ -35,7 +35,7 @@ describe("Triggering the right events", function(){
     });
 
     expect(counter).toEqual(1);
-    expect(this.cPoller.active()).toBeTruthy();
+    expect(this.cPoller.active()).toBe(true);
 
 
     waitsFor(function(){
@@ -44,7 +44,7 @@ describe("Triggering the right events", function(){
 
     runs(function () {
       expect(counter).toEqual(1);
-      expect(this.cPoller.active()).toBeTruthy();
+      expect(this.cPoller.active()).toBe(true);
     });
 
   });
@@ -58,7 +58,7 @@ describe("Triggering the right events", function(){
     });
 
     runs(function () {
-      expect(this.cPoller.active()).toBeFalsy();
+      expect(this.cPoller.active()).toBe(false);
     });
 
   });
@@ -116,7 +116,7 @@ describe("Triggering the right events", function(){
     });
 
     runs(function(){
-      expect(poller.active()).toBeFalsy();
+      expect(poller.active()).toBe(false);
       expect(counter).toEqual(5);
     });
 
@@ -138,7 +138,7 @@ describe("Triggering the right events", function(){
     });
 
     runs(function(){
-      expect(poller.active()).toBeFalsy();
+      expect(poller.active()).toBe(false);
     });
 
   });

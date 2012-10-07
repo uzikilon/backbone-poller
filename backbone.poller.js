@@ -60,6 +60,7 @@
         }
         this.xhr = null;
         window.clearTimeout(this.timeoutId);
+        this.timeoutId = null;
         return this;
       },
       active: function(){
@@ -81,7 +82,7 @@
             poller.stop({silent: true});
           }
           else {
-            poller.timeoutId = window.setTimeout(function(){ run(poller); }, poller.options.delay);
+            poller.timeoutId = _.delay(run, poller.options.delay, poller);
           }
         },
         error: function(){
