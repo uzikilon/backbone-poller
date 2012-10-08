@@ -19,16 +19,59 @@ describe("Base poller operations", function() {
     delete this.model;
     delete this.collection;
 
-    PollingManager.reset();
+    Backbone.Poller.reset();
+  });
+
+
+  function hasManagerAPI(manager){
+    var method, api = ['get', 'size', 'reset'];
+    while(method = api.shift()) {
+      expect(manager[method]).toEqual(jasmine.any(Function));
+    }
+  }
+  
+  function hasPollerAPI(poller){
+    var method, api = ['set', 'active', 'start', 'stop'];
+    while(method = api.shift()) {
+      expect(poller[method]).toEqual(jasmine.any(Function));
+    }
+  }
+  
+  it('Should have legacy support for PollingManager global object', function(){
+    expect(PollingManager).not.toBeUndefined();
+    expect(PollingManager).toEqual(jasmine.any(Object));
+    hasManagerAPI(PollingManager);
+  });
+
+  it('Should have all the merthods on API', function(){
+    hasManagerAPI(Backbone.Poller);
+    hasPollerAPI(this.mPoller);
+    hasPollerAPI(this.cPoller);
+  });
+
+  it('Should delete all polllers when calling reset()', function(){
+    expect(Backbone.Poller.size()).toEqual(2);
+    Backbone.Poller.reset();
+    expect(Backbone.Poller.size()).toEqual(0);
   });
 
 
   it("Should create one instance per model", function() {
-    expect(PollingManager.size()).toEqual(2);
+    expect(Backbone.Poller.size()).toEqual(2);
+    
     var mPoller1 = Backbone.Poller.get(this.model);
     var mPoller2 = Backbone.Poller.get(this.model);
     var mPoller3 = Backbone.Poller.get(this.model);
-    expect(PollingManager.size()).toEqual(2);
+    
+    expect(Backbone.Poller.size()).toEqual(2);
+
+    var newModel = new Backbone.Model();
+    
+    var mPoller4 = Backbone.Poller.get(newModel);
+    expect(Backbone.Poller.size()).toEqual(3);
+
+    var mPoller5 = Backbone.Poller.get(newModel);
+    expect(Backbone.Poller.size()).toEqual(3);
   });
 
   it("Should start when invoking start()", function() {

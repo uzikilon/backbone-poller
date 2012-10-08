@@ -17,7 +17,7 @@ describe("Accepting options and invoking in time", function(){
     delete this.model;
     delete this.collection;
 
-    PollingManager.reset();
+    Backbone.Poller.reset();
   });
 
   it("Should run the 'fetch' option before each fetch", function() {

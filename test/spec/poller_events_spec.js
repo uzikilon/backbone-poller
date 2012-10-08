@@ -17,7 +17,7 @@ describe("Handle events", function(){
     delete this.model;
     delete this.collection;
 
-    PollingManager.reset();
+    Backbone.Poller.reset();
   });
 
   it("Should fire a start event once", function() {
