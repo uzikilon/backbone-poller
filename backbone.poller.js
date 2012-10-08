@@ -24,11 +24,10 @@
       set: function(options) {
         this.off();
         this.options = _.extend({}, defaults, options || {});
+
         _.each(eventTypes, function(eventName){
           var handler = this.options[eventName];
-          if(typeof handler === 'function') {
-            this.on(eventName, handler, this);
-          }
+          _.isFunction(handler) && this.on(eventName, handler, this);
         }, this);
 
         if ( this.model instanceof Backbone.Model ) {
@@ -42,7 +41,7 @@
           return this;
         }
         options = options || {};
-        if(!options.silent) {
+        if( !options.silent ) {
           this.trigger('start', this.model);
         }
         this.options.active = true;
@@ -51,15 +50,13 @@
       },
       stop: function(options){
         options = options || {};
-        if(!options.silent) {
+        if( !options.silent ) {
           this.trigger('stop', this.model);
         }
         this.options.active = false;
-        if(this.xhr && typeof this.xhr.abort === 'function') {
-          this.xhr.abort();
-        }
+        this.xhr && _.isFunction(this.xhr.abort) && this.xhr.abort();
         this.xhr = null;
-        window.clearTimeout(this.timeoutId);
+        clearTimeout(this.timeoutId);
         this.timeoutId = null;
         return this;
       },
@@ -93,7 +90,7 @@
       poller.trigger('fetch', poller.model);
       poller.xhr = poller.model.fetch(options);
     }
-    
+
     /**
      * Polling Manager
      */
@@ -120,7 +117,7 @@
         return poller;
       },
       // Deprecated: Use Backbone.Poller.get()
-      getPoller: function(){
+      getPoller: function() {
         console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
         return this.get.apply(this, arguments);
       },
@@ -128,11 +125,10 @@
         return pollers.length;
       },
       reset: function(){
-        _.each(pollers, function(poller){
+        _.each(pollers, function(poller, key){
           poller.stop();
-          poller = null;
+          delete pollers[key];
         });
-        pollers = [];
       }
     };
     
