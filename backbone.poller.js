@@ -5,27 +5,26 @@
 
 Backbone.Poller = (function(_, Backbone){
 
- "use strict";
+  "use strict";
 
- var defaults = {
+  var defaults = {
     delay: 1000,
     condition: function(){return true;}
   };
   var eventTypes = ['start', 'stop', 'success', 'error', 'complete', 'fetch'];
 
-  var Poller = function (model, options) {
+  function Poller (model, options) {
     this.model = model;
     this.set(options);
-  };
+  }
 
   _.extend(Poller.prototype, Backbone.Events, {
     set: function(options) {
       this.off();
       this.options = _.extend({}, defaults, options || {});
-
-      _.each(eventTypes, function(eventName){
-        var handler = this.options[eventName];
-        _.isFunction(handler) && this.on(eventName, handler, this);
+      _.each(eventTypes, function(name){
+        var callback = this.options[name];
+        _.isFunction(callback) && this.on(name, callback, this);
       }, this);
 
       if ( this.model instanceof Backbone.Model ) {
@@ -35,15 +34,14 @@ Backbone.Poller = (function(_, Backbone){
       return this.stop({silent: true});
     },
     start: function(options){
-      if(this.active() === true) {
-        return this;
+      if( ! this.active() ) {
+        options = options || {};
+        if( !options.silent ) {
+          this.trigger('start', this.model);
+        }
+        this.options.active = true;
+        run(this);
       }
-      options = options || {};
-      if( !options.silent ) {
-        this.trigger('start', this.model);
-      }
-      this.options.active = true;
-      run(this);
       return this;
     },
     stop: function(options){
