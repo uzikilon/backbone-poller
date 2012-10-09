@@ -49,26 +49,6 @@ describe("Base poller operations", function() {
     hasPollerAPI(this.cPoller);
   });
 
-  it('Should set the  options passed to get()', function(){
-    var options = {delay: 1, foo: 'bar'};
-    var poller = Backbone.Poller.get(new Backbone.Model(), options);
-    expect(poller.options.delay).toEqual(1);
-    expect(poller.options.foo).toEqual('bar');
-  });
-
-  it('Should set the  options passed to set()', function(){
-    var options;
-    options = {delay: 1, foo: 'bar'};
-    this.mPoller.set(options);
-    expect(this.mPoller.options.delay).toEqual(1);
-    expect(this.mPoller.options.foo).toEqual('bar');
-
-    options = {delay: 2, foo: 'baz'};
-    this.mPoller.set(options);
-    expect(this.mPoller.options.delay).toEqual(2);
-    expect(this.mPoller.options.foo).toEqual('baz');
-  });
-
   it('Should delete all polllers when calling reset()', function(){
     expect(Backbone.Poller.size()).toEqual(2);
     Backbone.Poller.reset();

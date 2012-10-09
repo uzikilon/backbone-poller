@@ -1,4 +1,4 @@
-describe("Accepting options and invoking in time", function(){
+describe("Accept options and invoking in time", function(){
   Backbone.sync = function(method, model, options){
     options.success();
   };
@@ -18,6 +18,33 @@ describe("Accepting options and invoking in time", function(){
     delete this.collection;
 
     Backbone.Poller.reset();
+  });
+
+  it('Should respect the options passed to Backbone.Poller.get()', function(){
+    var poller, options;
+    options = {delay: 1, foo: 'bar'};
+    poller = Backbone.Poller.get(new Backbone.Model(), options);
+    expect(poller.options.delay).toEqual(1);
+    expect(poller.options.foo).toEqual('bar');
+
+    options = {delay: 2, foo: 'baz'};
+    poller = Backbone.Poller.get(new Backbone.Model(), options);
+    expect(poller.options.delay).toEqual(2);
+    expect(poller.options.foo).toEqual('baz');
+
+  });
+
+  it('Should respect the options passed to poller.set()', function(){
+    var options;
+    options = {delay: 1, foo: 'bar'};
+    this.mPoller.set(options);
+    expect(this.mPoller.options.delay).toEqual(1);
+    expect(this.mPoller.options.foo).toEqual('bar');
+
+    options = {delay: 2, foo: 'baz'};
+    this.mPoller.set(options);
+    expect(this.mPoller.options.delay).toEqual(2);
+    expect(this.mPoller.options.foo).toEqual('baz');
   });
 
   it("Should run the 'fetch' option before each fetch", function() {
