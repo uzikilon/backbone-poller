@@ -13,7 +13,7 @@ describe("Handle events", function(){
   afterEach(function(){
     this.model.destroy();
     this.collection.reset();
-    
+
     delete this.model;
     delete this.collection;
 
@@ -22,8 +22,8 @@ describe("Handle events", function(){
 
   it("Should fire a start event once", function() {
     var counter = 0,
-        startSpy = sinon.spy(),
-        fetchSpy = sinon.spy(this.collection, 'fetch');
+    startSpy = sinon.spy(),
+    fetchSpy = sinon.spy(this.collection, 'fetch');
 
     this.cPoller.on('start', startSpy);
     this.cPoller.on('start', function(){ counter += 1; });
@@ -63,10 +63,10 @@ describe("Handle events", function(){
 
   });
 
-  it("Should fire a fetch event before each fetch", function() {
+  it("Should fire a fetch event before fetchig", function() {
     var pFetchSpy = sinon.spy();
     var mFetchSpy = sinon.spy(this.model, 'fetch');
-    
+
     this.mPoller.on('fetch', pFetchSpy);
     this.mPoller.start();
 
@@ -80,9 +80,48 @@ describe("Handle events", function(){
 
   });
 
+  it("Should fire a fetch event before success", function() {
+    var fetchSpy = sinon.spy();
+    var successSpy = sinon.spy();
+
+    this.mPoller.on('fetch', fetchSpy);
+    this.mPoller.on('success', successSpy);
+    this.mPoller.start();
+
+    waitsFor(function(){
+      return successSpy.callCount === 1;
+    });
+
+    runs(function () {
+      expect(fetchSpy.calledBefore(successSpy)).toEqual(true);
+    });
+  });
+
+  it("Should fire a fetch event before error", function() {
+
+    this.model.sync = function(method, model, options){
+      options.error("ERROR");
+    };
+
+    var fetchSpy = sinon.spy();
+    var errorSpy = sinon.spy();
+
+    this.mPoller.on('fetch', fetchSpy);
+    this.mPoller.on('error', errorSpy);
+    this.mPoller.start();
+
+    waitsFor(function(){
+      return errorSpy.callCount === 1;
+    });
+
+    runs(function () {
+      expect(fetchSpy.calledBefore(errorSpy)).toEqual(true);
+    });
+  });
+
   it("Should fire a success event after each successfull fetch", function() {
     var spy = sinon.spy();
-    
+
     this.mPoller.on('success', spy);
     this.mPoller.start();
 
@@ -98,25 +137,25 @@ describe("Handle events", function(){
 
 
   it("Should fire a complete event when condition is satisfied", function() {
-     var bool = true,
-         spy = sinon.spy();
+   var bool = true,
+   spy = sinon.spy();
 
-    this.mPoller.set({ delay: 50, condition: function(model){ return bool; } });
-    this.mPoller.on('complete', spy);
-    this.mPoller.start();
+   this.mPoller.set({ delay: 50, condition: function(model){ return bool; } });
+   this.mPoller.on('complete', spy);
+   this.mPoller.start();
 
-    bool = false;
-    waits(50);
+   bool = false;
+   waits(50);
 
-    runs(function(){
-      expect(this.mPoller.active()).toBe(false);
-      expect(spy.calledOnce).toBe(true);
-    });
-
+   runs(function(){
+    expect(this.mPoller.active()).toBe(false);
+    expect(spy.calledOnce).toBe(true);
   });
 
+ });
+
   it("Should fire an error event when fetch fails", function() {
-      
+
     this.model.sync = function(method, model, options){
       options.error("ERROR");
     };
