@@ -11,9 +11,11 @@ Backbone.Poller = (function(_, Backbone){
     delay: 1000,
     condition: function(){return true;}
   };
-  var eventTypes = ['start', 'stop', 'success', 'error', 'complete', 'fetch'];
 
-  function Poller (model, options) {
+  // registered events
+  var events = ['start', 'stop', 'success', 'error', 'complete', 'fetch'];
+
+  function Poller(model, options) {
     this.model = model;
     this.set(options);
   }
@@ -22,7 +24,7 @@ Backbone.Poller = (function(_, Backbone){
     set: function(options) {
       this.off();
       this.options = _.extend({}, defaults, options || {});
-      _.each(eventTypes, function(name){
+      _.each(events, function(name){
         var callback = this.options[name];
         _.isFunction(callback) && this.on(name, callback, this);
       }, this);
@@ -33,7 +35,7 @@ Backbone.Poller = (function(_, Backbone){
 
       return this.stop({silent: true});
     },
-    start: function(options){
+    start: function(options) {
       if( ! this.active() ) {
         options = options || {};
         if( !options.silent ) {
@@ -70,8 +72,8 @@ Backbone.Poller = (function(_, Backbone){
       success: function() {
         poller.trigger('success', poller.model);
         if( poller.options.condition(poller.model) !== true ) {
-          poller.trigger('complete', poller.model);
           poller.stop({silent: true});
+          poller.trigger('complete', poller.model);
         }
         else {
           poller.timeoutId = _.delay(run, poller.options.delay, poller);
@@ -87,15 +89,15 @@ Backbone.Poller = (function(_, Backbone){
   }
 
   var pollers = [];
-
-  var PollingManager = {
-    find: function(model) {
-      return _.find(pollers, function(poller){
+  function findPoller(model){
+    return _.find(pollers, function(poller){
         return poller.model === model;
       });
-    },
+  }
+
+  var PollingManager = {
     get: function(model, options) {
-      var poller = this.find(model);
+      var poller = findPoller(model);
       if( ! poller ) {
         poller = new Poller(model, options);
         pollers.push(poller);
@@ -110,7 +112,7 @@ Backbone.Poller = (function(_, Backbone){
     },
     // Deprecated: Use Backbone.Poller.get()
     getPoller: function() {
-      warn('getPoller() is depreacted, Use Backbone.Poller.get()');
+      console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
       return this.get.apply(this, arguments);
     },
     size: function(){
@@ -123,10 +125,6 @@ Backbone.Poller = (function(_, Backbone){
       }
     }
   };
-
-  function warn() {
-    console && console.warn.apply(console, arguments);
-  }
 
   // Expose AMD
   if ( typeof define === "function" && define.amd ) {
