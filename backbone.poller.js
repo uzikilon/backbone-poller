@@ -1,28 +1,84 @@
-// <pre>
-// (c) 2012 Uzi Kilon, Splunk Inc.
-// Backbone Poller 0.2
-// https://github.com/uzikilon/backbone-poller
-// Backbone Poller may be freely distributed under the MIT license.
-// See <a href='http://uzikilon.github.com/backbone-poller/test/SpecRunner.html'>test suite</a>
-// </pre>
+/**
+(c) 2012 Uzi Kilon, Splunk Inc.
+Backbone Poller 0.2
+https://github.com/uzikilon/backbone-poller
+Backbone Poller may be freely distributed under the MIT license.
+*/
+
 
 Backbone.Poller = (function(_, Backbone){
 
   "use strict";
 
+  // Default settings
   var defaults = {
     delay: 1000,
     condition: function(){return true;}
   };
 
+  // Available events
   var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
 
-  // **Poller constructor**
-  // ***new Poller(model[, options])***
-  // <pre>
-  // Returns a new poller instance
-  // This private method is called via Backbone.Poller.get()
-  // </pre>
+  var pollers = [];
+  function findPoller(model){
+    return _.find(pollers, function(poller){
+        return poller.model === model;
+      });
+  }
+
+  var PollingManager = {
+    
+    // **Backbone.Poller.get(model[, options])**
+    // <pre>
+    // Retuns a singleton instance of a poller for a model
+    // Stops it if running
+    // If options.autostart is true, will start it
+    // Retuns a poller isntance
+    // </pre>
+    get: function(model, options) {
+      var poller = findPoller(model);
+      if( ! poller ) {
+        poller = new Poller(model, options);
+        pollers.push(poller);
+      }
+      else {
+        poller.set(options);
+      }
+      if( options && options.autostart === true ) {
+        poller.start({silent: true});
+      }
+      return poller;
+    },
+
+    // **Backbone.Poller.getPoller()**
+    // <pre>
+    // Deprecated: Use Backbone.Poller.get()
+    // </pre>
+    getPoller: function() {
+      console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
+      return this.get.apply(this, arguments);
+    },
+
+    // **Backbone.Poller.size()**
+    // <pre>
+    // Returns the number of instanciated pollers
+    // </pre>
+    size: function(){
+      return pollers.length;
+    },
+
+    // **Backbone.Poller.reset()**
+    // <pre>
+    // Stops all pollers and removes from the pollers pool
+    // </pre>
+    reset: function(){
+      var poller;
+      while( poller = pollers.pop() ) {
+        poller.stop();
+      }
+    }
+  };
+
   function Poller(model, options) {
     this.model = model;
     this.set(options);
@@ -117,54 +173,12 @@ Backbone.Poller = (function(_, Backbone){
     poller.trigger('fetch', poller.model);
     poller.xhr = poller.model.fetch(options);
   }
-
-  var pollers = [];
-  function findPoller(model){
-    return _.find(pollers, function(poller){
-        return poller.model === model;
-      });
-  }
-
-  var PollingManager = {
-    // **Backbone.Poller.get(model[, options])**
-    // <pre>
-    // Retuns a singleton instance of a poller for a model
-    // Stops it if running
-    // If options.autostart is true, will start it
-    // Retuns a poller isntance
-    // </pre>
-    get: function(model, options) {
-      var poller = findPoller(model);
-      if( ! poller ) {
-        poller = new Poller(model, options);
-        pollers.push(poller);
-      }
-      else {
-        poller.set(options);
-      }
-      if( options && options.autostart === true ) {
-        poller.start({silent: true});
-      }
-      return poller;
-    },
-    // Deprecated: Use Backbone.Poller.get()
-    getPoller: function() {
-      console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
-      return this.get.apply(this, arguments);
-    },
-    size: function(){
-      return pollers.length;
-    },
-    reset: function(){
-      var poller;
-      while( poller = pollers.pop() ) {
-        poller.stop();
-      }
-    }
-  };
-  
-  // Depracted: BC, exposing PollingManager on the global scope.
-  // Please use Backbone.Poller or AMD instead
+  // **window.PollingManager**
+  // <pre>
+  // Depracted
+  // exposing PollingManager on the global scope.
+  // Please use Backbone.Poller
+  // </pre>
   window.PollingManager = PollingManager;
 
   return PollingManager;
