@@ -125,11 +125,6 @@ Backbone.Poller = (function(_, Backbone){
       }
     }
   };
-
-  // Expose AMD
-  if ( typeof define === "function" && define.amd ) {
-    define( function () { return PollingManager; } );
-  }
   
   // Depracted: BC, exposing PollingManager on the global scope.
   // Please use Backbone.Poller or AMD instead
