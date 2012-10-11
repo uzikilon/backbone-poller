@@ -1,7 +1,10 @@
+// <pre>
 // (c) 2012 Uzi Kilon, Splunk Inc.
 // Backbone Poller 0.2
 // https://github.com/uzikilon/backbone-poller
 // Backbone Poller may be freely distributed under the MIT license.
+// See <a href='http://uzikilon.github.com/backbone-poller/test/SpecRunner.html'>test suite</a>
+// </pre>
 
 Backbone.Poller = (function(_, Backbone){
 
@@ -12,15 +15,25 @@ Backbone.Poller = (function(_, Backbone){
     condition: function(){return true;}
   };
 
-  // registered events
-  var events = ['start', 'stop', 'success', 'error', 'complete', 'fetch'];
+  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
 
+  // **Poller constructor**
+  // ***new Poller(model[, options])***
+  // <pre>
+  // Returns a new poller instance
+  // This private method is called via Backbone.Poller.get()
+  // </pre>
   function Poller(model, options) {
     this.model = model;
     this.set(options);
   }
 
   _.extend(Poller.prototype, Backbone.Events, {
+    
+    // **poller.set([options])**
+    // <pre>
+    // Reset poller options and stops the poller
+    // </pre>
     set: function(options) {
       this.off();
       this.options = _.extend({}, defaults, options || {});
@@ -35,6 +48,13 @@ Backbone.Poller = (function(_, Backbone){
 
       return this.stop({silent: true});
     },
+    // 
+    // **poller.start([options])**
+    // <pre>
+    // Start the poller
+    // Returns a poller instance
+    // Triggers a 'start' events unless options.silent is set to true
+    // </pre>
     start: function(options) {
       if( ! this.active() ) {
         options = options || {};
@@ -46,6 +66,12 @@ Backbone.Poller = (function(_, Backbone){
       }
       return this;
     },
+    // **poller.stop([options])**
+    // <pre>
+    // Stops the poller
+    // Returns a poller instance
+    // Triggers a 'stop' events unless options.silent is set to true
+    // </pre>
     stop: function(options){
       options = options || {};
       if( !options.silent ) {
@@ -58,6 +84,10 @@ Backbone.Poller = (function(_, Backbone){
       this.timeoutId = null;
       return this;
     },
+    // **poller.active()**
+    // <pre>
+    // Retunrs a bollean for poller status
+    // </pre>
     active: function(){
       return this.options.active === true;
     }
@@ -96,6 +126,13 @@ Backbone.Poller = (function(_, Backbone){
   }
 
   var PollingManager = {
+    // **Backbone.Poller.get(model[, options])**
+    // <pre>
+    // Retuns a singleton instance of a poller for a model
+    // Stops it if running
+    // If options.autostart is true, will start it
+    // Retuns a poller isntance
+    // </pre>
     get: function(model, options) {
       var poller = findPoller(model);
       if( ! poller ) {
