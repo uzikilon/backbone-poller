@@ -1,22 +1,35 @@
-<!DOCTYPE html>  <html> <head>   <title>backbone.poller.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               backbone.poller.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>(c) 2012 Uzi Kilon, Splunk Inc.
+<!DOCTYPE html>  <html> <head>   <title>backbone.poller.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               backbone.poller.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <pre>
+(c) 2012 Uzi Kilon, Splunk Inc.
 Backbone Poller 0.2
 https://github.com/uzikilon/backbone-poller
-Backbone Poller may be freely distributed under the MIT license.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Poller</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">){</span>
+Backbone Poller may be freely distributed under the MIT license.
+See <a href='http://uzikilon.github.com/backbone-poller/test/SpecRunner.html'>test suite</a>
+</pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Poller</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">){</span>
 
   <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
 
   <span class="kd">var</span> <span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">delay</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
     <span class="nx">condition</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span><span class="k">return</span> <span class="kc">true</span><span class="p">;}</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>registered events</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;complete&#39;</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">];</span>
+  <span class="p">};</span>
 
-  <span class="kd">function</span> <span class="nx">Poller</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;complete&#39;</span> <span class="p">];</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p><strong>Poller constructor</strong>
+<strong><em>new Poller(model[, options])</em></strong></p>
+
+<pre>
+Returns a new poller instance
+This private method is called via Backbone.Poller.get()
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">Poller</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
   <span class="p">}</span>
 
   <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Poller</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Events</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><strong>poller.set([options])</strong></p>
+
+<pre>
+Reset poller options and stops the poller
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">set</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">off</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="nx">defaults</span><span class="p">,</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{});</span>
       <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">events</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
@@ -29,8 +42,13 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">stop</span><span class="p">({</span><span class="nx">silent</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
-    <span class="p">},</span>
-    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p><strong>poller.start([options])</strong></p>
+
+<pre>
+Start the poller
+Returns a poller instance
+Triggers a 'start' events unless options.silent is set to true
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">start</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="k">this</span><span class="p">.</span><span class="nx">active</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
         <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
         <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">silent</span> <span class="p">)</span> <span class="p">{</span>
@@ -40,8 +58,13 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
         <span class="nx">run</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
       <span class="p">}</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-    <span class="p">},</span>
-    <span class="nx">stop</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><strong>poller.stop([options])</strong></p>
+
+<pre>
+Stops the poller
+Returns a poller instance
+Triggers a 'stop' events unless options.silent is set to true
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">stop</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
       <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
       <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">options</span><span class="p">.</span><span class="nx">silent</span> <span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">trigger</span><span class="p">(</span><span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">);</span>
@@ -52,8 +75,11 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
       <span class="nx">clearTimeout</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timeoutId</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">timeoutId</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-    <span class="p">},</span>
-    <span class="nx">active</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><strong>poller.active()</strong></p>
+
+<pre>
+Retunrs a bollean for poller status
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">active</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">active</span> <span class="o">===</span> <span class="kc">true</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">});</span>
@@ -90,8 +116,14 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
       <span class="p">});</span>
   <span class="p">}</span>
 
-  <span class="kd">var</span> <span class="nx">PollingManager</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">PollingManager</span> <span class="o">=</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p><strong>Backbone.Poller.get(model[, options])</strong></p>
+
+<pre>
+Retuns a singleton instance of a poller for a model
+Stops it if running
+If options.autostart is true, will start it
+Retuns a poller isntance
+</pre>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">poller</span> <span class="o">=</span> <span class="nx">findPoller</span><span class="p">(</span><span class="nx">model</span><span class="p">);</span>
       <span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="nx">poller</span> <span class="p">)</span> <span class="p">{</span>
         <span class="nx">poller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Poller</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
@@ -104,7 +136,7 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
         <span class="nx">poller</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span><span class="nx">silent</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
       <span class="p">}</span>
       <span class="k">return</span> <span class="nx">poller</span><span class="p">;</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Deprecated: Use Backbone.Poller.get()</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getPoller</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Deprecated: Use Backbone.Poller.get()</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getPoller</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">console</span> <span class="o">&amp;&amp;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">warn</span><span class="p">(</span><span class="s1">&#39;getPoller() is depreacted, Use Backbone.Poller.get()&#39;</span><span class="p">);</span>
       <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
     <span class="p">},</span>
@@ -117,10 +149,8 @@ Backbone Poller may be freely distributed under the MIT license.</p>            
         <span class="nx">poller</span><span class="p">.</span><span class="nx">stop</span><span class="p">();</span>
       <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Expose AMD</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span> <span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span> <span class="p">)</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">(</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">PollingManager</span><span class="p">;</span> <span class="p">}</span> <span class="p">);</span>
-  <span class="p">}</span>
-  </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Depracted: BC, exposing PollingManager on the global scope.
+  <span class="p">};</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Depracted: BC, exposing PollingManager on the global scope.
 Please use Backbone.Poller or AMD instead</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nb">window</span><span class="p">.</span><span class="nx">PollingManager</span> <span class="o">=</span> <span class="nx">PollingManager</span><span class="p">;</span>
 
   <span class="k">return</span> <span class="nx">PollingManager</span><span class="p">;</span>
