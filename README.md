@@ -9,7 +9,7 @@ Backbone poller helps with these cases:
 
 - Allows you to poll without extending your base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
-- Only 1.17K minified and gzipped
+- Only 1.17kb minified and gzipped
 
 ## Background:
 http://kilon.org/blog/2012/02/backbone-poller/
