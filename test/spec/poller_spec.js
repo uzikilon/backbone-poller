@@ -2,7 +2,7 @@ describe("Base poller operations", function() {
 
   var _sync = function(method, model, options){
     options.success(model.toJSON());
-    return { abort: function(){} };
+    return sinon.stub(jQuery.ajax());
   };
 
   beforeEach(function() {
@@ -98,17 +98,14 @@ describe("Base poller operations", function() {
     expect(this.mPoller.xhr).toBeNull();
     
     this.mPoller.start();
+    var spy = this.mPoller.xhr.abort;
     expect(this.mPoller.xhr).not.toBeNull();
-
-    var spy = sinon.spy(this.mPoller.xhr, 'abort');
     expect(spy.callCount).toEqual(0);
 
     this.mPoller.stop();
     expect(spy.callCount).toEqual(1);
+    expect(this.mPoller.xhr).toBeNull();
     
-    this.mPoller.stop();
-    this.mPoller.stop();
-    this.mPoller.stop();
     this.mPoller.stop();
     expect(spy.callCount).toEqual(1);
   });
