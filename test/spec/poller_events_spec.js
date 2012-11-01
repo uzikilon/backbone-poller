@@ -1,13 +1,16 @@
 describe("Handle events", function(){
-  Backbone.sync = function(method, model, options){
+  
+  var _sync = function(method, model, options){
     options.success(model.toJSON());
   };
 
   beforeEach(function() {
     this.model = new Backbone.Model();
     this.collection = new Backbone.Collection();
-    this.mPoller = Backbone.Poller.get(this.model, {delay: 50});
-    this.cPoller = Backbone.Poller.get(this.collection, {delay: 50});
+    this.model.sync = this.collection.sync = _sync;
+
+    this.mPoller = Backbone.Poller.get(this.model, {delay: 40});
+    this.cPoller = Backbone.Poller.get(this.collection, {delay: 40});
   });
 
   afterEach(function(){

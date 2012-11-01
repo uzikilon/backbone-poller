@@ -3,7 +3,7 @@
 Backbone Poller 0.2
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
-*/
+*///
 
 
 Backbone.Poller = (function(_, Backbone){
