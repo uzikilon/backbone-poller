@@ -1,12 +1,14 @@
 describe("Base poller operations", function() {
 
-  Backbone.sync = function(method, model, options){
+  var _sync = function(method, model, options){
     options.success(model.toJSON());
+    return { abort: function(){} };
   };
 
   beforeEach(function() {
     this.model = new Backbone.Model();
     this.collection = new Backbone.Collection();
+    this.model.sync = this.collection.sync = _sync;
 
     this.mPoller = Backbone.Poller.get(this.model, {delay: 50});
     this.cPoller = Backbone.Poller.get(this.collection, {delay: 50});
@@ -84,9 +86,31 @@ describe("Base poller operations", function() {
 
   it("Should stop when invoking stop()", function() {
     this.mPoller.start();
+
     expect(this.mPoller.active()).toBe(true);
     this.mPoller.stop();
+
     expect(this.mPoller.active()).toBe(false);
+  });
+
+  it("Should abort XHR (only once) when invoking stop()", function() {
+    
+    expect(this.mPoller.xhr).toBeNull();
+    
+    this.mPoller.start();
+    expect(this.mPoller.xhr).not.toBeNull();
+
+    var spy = sinon.spy(this.mPoller.xhr, 'abort');
+    expect(spy.callCount).toEqual(0);
+
+    this.mPoller.stop();
+    expect(spy.callCount).toEqual(1);
+    
+    this.mPoller.stop();
+    this.mPoller.stop();
+    this.mPoller.stop();
+    this.mPoller.stop();
+    expect(spy.callCount).toEqual(1);
   });
 
   it("Should stop when condition is satisfied", function() {
