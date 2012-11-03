@@ -118,5 +118,31 @@ describe("Accept options and invoking in time", function(){
 
   });
 
+  it("Should pass the 'data' option to the fetch call", function() {
+    var mFetchSpy = sinon.spy(this.model, 'fetch');
+    var data = {
+      url: "foo",
+      success: "this will be overwritten",
+      error: "this will be overwritten"
+    };
+    
+    this.mPoller.set({delay: 50, data: data});
+    this.mPoller.start();
+
+    waitsFor(function(){
+      return mFetchSpy.callCount === 3;
+    });
+
+    runs(function () {
+      _.each([0, 1, 2], function (i) {
+        var calledWith = mFetchSpy.getCall(i).args[0];
+        expect(calledWith.url).toEqual(data.url);
+        expect(calledWith.success).not.toEqual(data.success);
+        expect(calledWith.error).not.toEqual(data.success);
+      });
+    });
+
+  });
+
 });
 
