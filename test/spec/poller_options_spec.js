@@ -118,5 +118,31 @@ describe("Accept options and invoking in time", function(){
 
   });
 
+   it("Should pass the 'data' option to the fetch call", function() {
+    var cFetchSpy = sinon.spy(this.collection, 'fetch');
+    var data = {
+      a: Math.random(),
+      b: Math.random()
+    };
+
+    this.cPoller.set({delay: 50, data: data});
+    this.cPoller.start();
+
+    waitsFor(function(){
+      return cFetchSpy.callCount === 3;
+    });
+
+    runs(function () {
+      _.each(_.range(3), function (i) {
+        var calledWith = cFetchSpy.getCall(i).args[0];
+
+        expect(calledWith.data.a).toEqual(data.a);
+        expect(calledWith.data.b).toEqual(data.b);
+        expect(calledWith.data.c).toEqual(data.c);
+      });
+    });
+
+  });
+
 });
 

@@ -154,7 +154,7 @@ Backbone.Poller = (function(_, Backbone){
       poller.stop({silent: true});
       return ;
     }
-    var options = _.extend({}, poller.options, {
+    var options = _.extend({ data: poller.options.data }, {
       success: function() {
         poller.trigger('success', poller.model);
         if( poller.options.condition(poller.model) !== true ) {
