@@ -1,10 +1,9 @@
 /**
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.2
+Backbone Poller 0.2.1
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
-*///
-
+*/
 
 Backbone.Poller = (function(_, Backbone){
 
@@ -95,7 +94,9 @@ Backbone.Poller = (function(_, Backbone){
       this.options = _.extend({}, defaults, options || {});
       _.each(events, function(name){
         var callback = this.options[name];
-        _.isFunction(callback) && this.on(name, callback, this);
+        if ( _.isFunction(callback) ) {
+          this.on(name, callback, this);
+        }
       }, this);
 
       if ( this.model instanceof Backbone.Model ) {
@@ -104,7 +105,7 @@ Backbone.Poller = (function(_, Backbone){
 
       return this.stop({silent: true});
     },
-    // 
+    //
     // **poller.start([options])**
     // <pre>
     // Start the poller
@@ -134,7 +135,9 @@ Backbone.Poller = (function(_, Backbone){
         this.trigger('stop', this.model);
       }
       this.options.active = false;
-      this.xhr && this.xhr.abort && this.xhr.abort();
+      if ( this.xhr && _.isFunction(this.xhr.abort) ){
+        this.xhr.abort();
+      }
       this.xhr = null;
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
