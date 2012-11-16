@@ -10,7 +10,7 @@ Backbone poller helps with these cases:
 - Allows you to poll without extending your base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
 
-The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available, as well as an online [test suite](<http://uzikilon.github.com/backbone-poller/test/SpecRunner.html>).
+The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online, as well as a [test suite](<http://uzikilon.github.com/backbone-poller/test/SpecRunner.html>).
 
 ### Downloads (Right-click, and use "Save As")
 
@@ -32,7 +32,9 @@ poller.stop();
 
 ```
 
-### Advanced Optional Options:
+## Advanced Optional Options:
+
+### Altering default options:
 ``` javascript
 var options = {
   // default delay is 1000ms
@@ -44,10 +46,11 @@ var options = {
    // We can pass data to a fetch request
   data: {fields: "*", sort: "name asc"}
 }
-
 var poller = Backbone.Poller.get(model_or_collection, options);
+```
 
-// We can assign callbacks later on
+### Register event listeners: 
+```
 poller.on('success', function(model){
   console.info('another successful fetch!'); 
 });
@@ -57,27 +60,25 @@ poller.on('complete', function(model){
 poller.on('error', function(model){
   console.error('oops! something went wrong'); 
 }
-
 poller.start()
-
-// to stop
-poller.stop();
-
-// or make the conditional function return false
-model.set('active', false);
-
-// check if poller is running
-if (poller.active()) {
-// ...
-}
-
-// We can alter options
-poller = Backbone.Poller.get(model_or_collection, [other_options]).start();
-// or
-poller.set([other_options]).start();
-// Note: altering options will stop the current runnig poller and will require manual start
-
 ```
+### Stopping the poller:
+To stop we can manually call `poller.stop()` or we can make the conditional function return false:
+```
+model.set('active', false);
+```
+### Check status: 
+``` 
+var isActive = poller.active() // bollean;
+```
+
+### Alter poller options:
+Altering options will stop the current runnig poller and will require manual start
+```
+poller.set([other_options]).start();
+```
+
+
 
 ## Copyrights
 Copyright (c) 2012 Uzi Kilon, Splunk Inc.
