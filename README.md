@@ -32,39 +32,32 @@ poller.stop();
 
 ```
 
-### Advanced Options:
+### Advanced Optional Options:
 ``` javascript
 var options = {
-    // default delay is 1000ms
-    delay: 3000, 
-    // condition for keeping polling active (when this stops being true, polling will stop)
-    condition: function(model){
-        return model.get('active') === true;
-    },
-    // callback to execute when the condition function is not true anymore, or when calling stop()
-    complete: function(model) { 
-        console.info('hurray! we are done!'); 
-    },
-    // callback to execute on every successful fetch
-    success: function(model){ 
-        console.info('another successful fetch!'); 
-    },
-    // callback to execute on fetch error
-    error: function(model){ 
-        console.error('oops! something went wrong'); 
-    },
-    // data to be passed to a collection fetch request
-    data: {fields: "*", sort: "name asc"}
+  // default delay is 1000ms
+  delay: 300, 
+  // condition for keeping polling active (when this stops being true, polling will stop)
+  condition: function(model){
+      return model.get('active') === true;
+  },
+   // We can pass data to a fetch request
+  data: {fields: "*", sort: "name asc"}
 }
+
 var poller = Backbone.Poller.get(model_or_collection, options);
 
 // We can assign callbacks later on
 poller.on('success', function(model){
-    console.info('another successful fetch!'); 
+  console.info('another successful fetch!'); 
 });
 poller.on('complete', function(model){
-    console.info('hurray! we are done!');
+  console.info('hurray! we are done!');
 });
+poller.on('error', function(model){
+  console.error('oops! something went wrong'); 
+}
+
 poller.start()
 
 // to stop
@@ -78,10 +71,11 @@ if (poller.active()) {
 // ...
 }
 
-// alter options
+// We can alter options
 poller = Backbone.Poller.get(model_or_collection, [other_options]).start();
 // or
 poller.set([other_options]).start();
+// Note: altering options will stop the current runnig poller and will require manual start
 
 ```
 
