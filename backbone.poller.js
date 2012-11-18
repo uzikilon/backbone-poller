@@ -7,7 +7,7 @@ Backbone Poller may be freely distributed under the MIT license.
 
 var Backbone, _;
 if ( ! Backbone || ! _ ) {
-  throw new Error('Backbone.js and underscore.js are required dependancies');
+  throw new Error('Backbone.js and underscore.js are required dependencies');
 }
 
 (function(){
