@@ -1,13 +1,14 @@
 {
   "author": "Uzi Kilon",
   "name": "backbone-poller",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/uzikilon/backbone-poller",
   "repository": {
     "type": "git",
     "url": "https://github.com/uzikilon/backbone-poller.git"
   },
   "devDependencies": {
-    "uglify-js" : ">= 1.3.3"
+    "uglify-js" : ">= 1.3.3",
+    "jshint"    : ">= 0.9.1"
   }
 }
