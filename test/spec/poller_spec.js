@@ -53,7 +53,13 @@ describe("Base poller operations", function() {
 
   it('Should delete all polllers when calling reset()', function(){
     expect(Backbone.Poller.size()).toEqual(2);
+
+    this.mPoller.start();
+    expect(this.mPoller.active()).toEqual(true);
+
     Backbone.Poller.reset();
+    expect(this.mPoller.active()).toEqual(false);
+
     expect(Backbone.Poller.size()).toEqual(0);
   });
 
