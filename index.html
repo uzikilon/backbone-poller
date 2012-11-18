@@ -5,7 +5,12 @@
 <span class="cm">Backbone Poller may be freely distributed under the MIT license.</span>
 <span class="cm">*/</span>
 
-<span class="nx">Backbone</span><span class="p">.</span><span class="nx">Poller</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">){</span>
+<span class="kd">var</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">_</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="nx">Backbone</span> <span class="o">||</span> <span class="o">!</span> <span class="nx">_</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Backbone.js and underscore.js are required dependancies&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
 
   <span class="s2">&quot;use strict&quot;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Default settings</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">defaults</span> <span class="o">=</span> <span class="p">{</span>
     <span class="nx">delay</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
@@ -166,8 +171,10 @@ exposing PollingManager on the global scope.
 Please use Backbone.Poller
 </pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nb">window</span><span class="p">.</span><span class="nx">PollingManager</span> <span class="o">=</span> <span class="nx">PollingManager</span><span class="p">;</span>
 
+  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Poller</span> <span class="o">=</span> <span class="nx">PollingManager</span><span class="p">;</span>
+
   <span class="k">return</span> <span class="nx">PollingManager</span><span class="p">;</span>
 
-<span class="p">}(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">));</span>
+<span class="p">}());</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
