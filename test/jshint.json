@@ -1,0 +1,18 @@
+{
+    "white": false,
+    "strict": true,
+    "undef": true,
+    "unused": true,
+    "onecase": true,
+    "browser": true,
+    "curly": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noempty": true,
+    "plusplus": false,
+    "trailing": true,
+    "maxparams": 3,
+    "maxdepth": 2,
+    "maxlen": 100
+}
