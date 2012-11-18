@@ -192,6 +192,4 @@ if ( ! Backbone || ! _ ) {
 
   Backbone.Poller = PollingManager;
 
-  return PollingManager;
-
 }());
