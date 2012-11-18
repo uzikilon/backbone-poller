@@ -2,7 +2,7 @@ describe("Base poller operations", function() {
 
   var _sync = function(method, model, options){
     options.success(model.toJSON());
-    return sinon.stub(jQuery.ajax());
+    return _.clone(jQuery.ajax());
   };
 
   beforeEach(function() {
@@ -77,11 +77,11 @@ describe("Base poller operations", function() {
   });
 
   it("Should start when invoking start()", function() {
-    var spy = sinon.spy(this.model, "fetch");
+    spyOn(this.model, 'fetch');
     expect(this.mPoller.active()).toBe(false);
     this.mPoller.start();
     expect(this.mPoller.active()).toBe(true);
-    expect(spy.calledOnce).toEqual(true);
+    expect(this.model.fetch).toHaveBeenCalled();
   });
 
   it("Should stop when invoking stop()", function() {
@@ -98,8 +98,11 @@ describe("Base poller operations", function() {
     expect(this.mPoller.xhr).toBeNull();
     
     this.mPoller.start();
-    var spy = this.mPoller.xhr.abort;
+
     expect(this.mPoller.xhr).not.toBeNull();
+    spyOn(this.mPoller.xhr, 'abort').andCallThrough();
+    
+    var spy = this.mPoller.xhr.abort;
     expect(spy.callCount).toEqual(0);
 
     this.mPoller.stop();
@@ -127,13 +130,23 @@ describe("Base poller operations", function() {
   });
 
   it("Should fetch more than once when polling a model", function() {
-    var spy = sinon.spy(this.model, "fetch");
+    var counter = 1;
+    var flag = false;
+    
+    spyOn(this.model, "fetch").andCallThrough();
+    var spy = this.model.fetch;
+
     this.mPoller.start();
 
-    waits(160);
+    this.mPoller.on('success', function(){
+      flag = (++counter == 4);
+    });
+    
+    waitsFor(function(){
+      return flag;
+    });
 
     runs(function(){
-      expect(spy.callCount).toEqual(4);
       expect(this.mPoller.active()).toBe(true);
     });
 
@@ -141,15 +154,25 @@ describe("Base poller operations", function() {
   });
 
   it("Should fetch more than once when polling a collection", function() {
-    var spy = sinon.spy(this.collection, "fetch");
+    var counter = 1;
+    var flag = false;
+    
+    spyOn(this.collection, "fetch").andCallThrough();
+    var spy = this.model.collection;
+    
+    this.cPoller.on('success', function(){
+      flag = (++counter == 4);
+    });
     this.cPoller.start();
 
-    waits(160);
+    waitsFor(function(){
+      return flag;
+    });
 
     runs(function () {
-      expect(spy.callCount).toEqual(4);
       expect(this.cPoller.active()).toBe(true);
     });
+
   });
 
   it("Sould have a reset the poller's xhr and timeoutId when stopped", function(){
@@ -175,15 +198,21 @@ describe("Base poller operations", function() {
 
 
   it("Should stop when model is destroyed", function() {
-    var spy = sinon.spy();
-    this.model.on('destroy', spy);
+    spyOn(this.model, "destroy").andCallThrough();
+    var spy = this.model.destroy;
+    var flag = false;
+    this.model.on('destroy', function(){ flag = true; });
+
     this.mPoller.start();
 
-    expect(this.mPoller.active()).toBe(true);
+    expect(spy.callCount).toBe(0);
 
     this.model.destroy();
 
+    waitsFor(function(){ return flag; });
+
     runs(function () {
+      expect(spy.callCount).toBe(1);
       expect(this.mPoller.active()).toBe(false);
     });
   });
