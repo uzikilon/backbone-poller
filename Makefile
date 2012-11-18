@@ -11,4 +11,4 @@ minify:
 
 jshint: 
 	@echo "Running a javascript linter"
-	@node_modules/.bin/jshint --config jshint.json backbone.poller.js
+	@node_modules/.bin/jshint --config test/jshint.json backbone.poller.js

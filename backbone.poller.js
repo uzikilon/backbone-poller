@@ -5,7 +5,12 @@ https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
 
-Backbone.Poller = (function(_, Backbone){
+var Backbone, _;
+if ( ! Backbone || ! _ ) {
+  throw new Error('Backbone.js and underscore.js are required dependancies');
+}
+
+(function(){
 
   "use strict";
 
@@ -185,6 +190,8 @@ Backbone.Poller = (function(_, Backbone){
   // </pre>
   window.PollingManager = PollingManager;
 
+  Backbone.Poller = PollingManager;
+
   return PollingManager;
 
-}(_, Backbone));
+}());
