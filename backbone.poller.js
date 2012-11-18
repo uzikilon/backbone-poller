@@ -54,7 +54,9 @@ Backbone.Poller = (function(_, Backbone){
     // Deprecated: Use Backbone.Poller.get()
     // </pre>
     getPoller: function() {
-      console && console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
+      if ( window.console ) {
+        window.console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
+      }
       return this.get.apply(this, arguments);
     },
 
@@ -71,9 +73,8 @@ Backbone.Poller = (function(_, Backbone){
     // Stops all pollers and removes from the pollers pool
     // </pre>
     reset: function(){
-      var poller;
-      while( poller = pollers.pop() ) {
-        poller.stop();
+      while( pollers.length ) {
+        pollers.pop().stop();
       }
     }
   };
