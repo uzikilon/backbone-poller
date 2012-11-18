@@ -29,7 +29,6 @@ var poller = Backbone.Poller.get(model_or_collection).start()
 
 // to stop:
 poller.stop();
-
 ```
 
 ## Advanced Optional Options:
@@ -46,11 +45,12 @@ var options = {
    // We can pass data to a fetch request
   data: {fields: "*", sort: "name asc"}
 }
-var poller = Backbone.Poller.get(model_or_collection, options);
+var poller = Backbone.Poller.get(model, options);
 ```
 
 ### Register event listeners: 
-```
+``` javascript
+var poller = Backbone.Poller.get(model);
 poller.on('success', function(model){
   console.info('another successful fetch!'); 
 });
@@ -64,20 +64,38 @@ poller.start()
 ```
 ### Stopping the poller:
 To stop we can manually call `poller.stop()` or we can make the conditional function return false:
+``` javascript
+var poller = Backbone.Poller.get(model);
+poller.stop() // manually stops the poller
+
+var options = {
+  condition: function(model){
+      return model.get('active') === true;
+  }
+};
+var poller = Backbone.Poller.get(model, options);
+model.set('active', false); // will programmatically stop the poller
 ```
-model.set('active', false);
-```
+
 ### Check status: 
-``` 
-var isActive = poller.active() // bollean;
+``` javascript
+var isActive = poller.active() // boolean;
 ```
 
 ### Alter poller options:
-Altering options will stop the current runnig poller and will require manual start
-```
-poller.set([other_options]).start();
+Altering options will stop the current running poller and will require manual start.
+This method removes **all** existing options and set the new options assigned.
+``` javascript
+var poller = Backbone.Poller.get(model, {delay: 100}).start();
+
+// stops the poller, replaces the options, and then starts
+poller.set({delay: 300}).start();
 ```
 
+### Stop and destroy all pollers
+``` javascript
+Backbone.poller.reset();
+```
 
 
 ## Copyrights
