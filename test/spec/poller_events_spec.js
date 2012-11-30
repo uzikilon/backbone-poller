@@ -2,6 +2,7 @@ describe("Handle events", function(){
   
   var _sync = function(method, model, options){
     options.success(model.toJSON());
+    model.trigger('sync');
   };
 
   beforeEach(function() {
@@ -192,6 +193,35 @@ describe("Handle events", function(){
       var calls = this.mPoller._callbacks || {};
       expect(_(calls).size()).toBe(0);
     });
+  });
+
+  it('Should fail', function(){
+
+    var ttl = 143;
+    var i = 1, c = true;
+
+    var poller = this.mPoller;
+
+    var spy = sinon.spy();
+    this.model.on('sync', spy);
+
+    poller.on('success', function(){
+      if ( c ) {
+        c = 0;
+        poller.set({delay: ttl}).start();
+      }
+    });
+    poller.start();
+
+    waitsFor(function(){
+      return spy.calledTwice;
+    });
+
+    runs(function(){
+      expect(poller.active()).toBe(true);
+      expect(poller.options.delay).toEqual(ttl);
+    });
+
   });
 
 });
