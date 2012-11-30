@@ -10,7 +10,7 @@
   <script src="lib/jasmine.js"></script>
   <script src="lib/jasmine-html.js"></script>
   
-  <script src="lib/sinon-1.5.0.js"></script>
+  <script src="lib/sinon-1.5.2.js"></script>
 
   <script src="lib/jquery-1.8.2.js"></script>
   <script src="lib/underscore.js"></script>
@@ -28,9 +28,10 @@
   $(function(){
       var jasmineEnv = jasmine.getEnv();
       jasmineEnv.updateInterval = 1000;
+      
+      // jasmineEnv.addReporter(new jasmine.TrivialReporter);
 
       var htmlReporter = new jasmine.HtmlReporter();
-
       jasmineEnv.addReporter(htmlReporter);
 
       jasmineEnv.specFilter = function(spec) {
