@@ -17,7 +17,7 @@ Backbone Poller may be freely distributed under the MIT license.
   }
   else {
     // RequireJS isn't being used.
-    // Assume underscore and backbone are loaded in <script> tags
+    // Assume underscore and backbone are loaded in &lt;script&gt; tags
     root.Backbone.Poller = factory(root._, root.Backbone);
   }
 }(this, function (_, Backbone) {
