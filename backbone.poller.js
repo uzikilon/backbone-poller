@@ -1,21 +1,35 @@
-/**
+/*
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.2.1
+Backbone Poller 0.2.2
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
+/*jshint maxstatements:10 */
+/*global define:false*/
+(function (root, factory) {
+  'use strict';
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['underscore', 'backbone'], function (_, Backbone) {
+      // Use global variables if the locals are undefined.
+      return factory(_ || root._, Backbone || root.Backbone);
+    });
+  }
+  else {
+    // RequireJS isn't being used.
+    // Assume underscore and backbone are loaded in <script> tags
+    root.Backbone.Poller = factory(root._, root.Backbone);
+  }
+}(this, function (_, Backbone) {
 
-(function(w, undefined){
-
-  "use strict";
-
-  var _ = w._,
-    Backbone = w.Backbone;
+  'use strict';
 
   // Default settings
   var defaults = {
     delay: 1000,
-    condition: function(){return true;}
+    condition: function () {
+      return true;
+    }
   };
 
   // Available events
@@ -37,6 +51,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // If options.autostart is true, will start it
     // Retuns a poller isntance
     // </pre>
+    /*jshint maxcomplexity:3 */
     get: function(model, options) {
       var poller = findPoller(model);
       if( ! poller ) {
@@ -180,14 +195,7 @@ Backbone Poller may be freely distributed under the MIT license.
     poller.trigger('fetch', poller.model);
     poller.xhr = poller.model.fetch(options);
   }
-  // **window.PollingManager**
-  // <pre>
-  // Depracted
-  // exposing PollingManager on the global scope.
-  // Please use Backbone.Poller
-  // </pre>
-  window.PollingManager = PollingManager;
+  
+  return PollingManager;
 
-  Backbone.Poller = PollingManager;
-
-}(this));
+}));

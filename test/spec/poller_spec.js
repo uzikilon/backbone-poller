@@ -39,10 +39,8 @@ describe("Base poller operations", function() {
     }
   }
   
-  it('Should have legacy support for PollingManager global object', function(){
-    expect(PollingManager).not.toBeUndefined();
-    expect(PollingManager).toEqual(jasmine.any(Object));
-    hasManagerAPI(PollingManager);
+  it('Should not have legacy support for PollingManager global object', function(){
+    expect(window.PollingManager).toBeUndefined();
   });
 
   it('Should have all supported methods on API', function(){

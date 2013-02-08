@@ -1,4 +1,4 @@
-var isCommonJS = typeof window == "undefined";
+var isCommonJS = typeof window == "undefined" && typeof exports == "object";
 
 /**
  * Top level namespace for Jasmine, a lightweight JavaScript BDD/spec/testing framework.
@@ -37,7 +37,14 @@ jasmine.DEFAULT_UPDATE_INTERVAL = 250;
 /**
  * Default timeout interval in milliseconds for waitsFor() blocks.
  */
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+
+/**
+ * By default exceptions thrown in the context of a test are caught by jasmine so that it can run the remaining tests in the suite.
+ * Set to false to let the exception bubble up in the browser.
+ *
+ */
+jasmine.CATCH_EXCEPTIONS = true;
 
 jasmine.getGlobal = function() {
   function getGlobal() {
@@ -867,6 +874,25 @@ jasmine.Env.prototype.xit = function(desc, func) {
   };
 };
 
+jasmine.Env.prototype.compareRegExps_ = function(a, b, mismatchKeys, mismatchValues) {
+  if (a.source != b.source)
+    mismatchValues.push("expected pattern /" + b.source + "/ is not equal to the pattern /" + a.source + "/");
+
+  if (a.ignoreCase != b.ignoreCase)
+    mismatchValues.push("expected modifier i was" + (b.ignoreCase ? " " : " not ") + "set and does not equal the origin modifier");
+
+  if (a.global != b.global)
+    mismatchValues.push("expected modifier g was" + (b.global ? " " : " not ") + "set and does not equal the origin modifier");
+
+  if (a.multiline != b.multiline)
+    mismatchValues.push("expected modifier m was" + (b.multiline ? " " : " not ") + "set and does not equal the origin modifier");
+
+  if (a.sticky != b.sticky)
+    mismatchValues.push("expected modifier y was" + (b.sticky ? " " : " not ") + "set and does not equal the origin modifier");
+
+  return (mismatchValues.length === 0);
+};
+
 jasmine.Env.prototype.compareObjects_ = function(a, b, mismatchKeys, mismatchValues) {
   if (a.__Jasmine_been_here_before__ === b && b.__Jasmine_been_here_before__ === a) {
     return true;
@@ -953,6 +979,10 @@ jasmine.Env.prototype.equals_ = function(a, b, mismatchKeys, mismatchValues) {
     return (a == b);
   }
 
+  if (a instanceof RegExp && b instanceof RegExp) {
+    return this.compareRegExps_(a, b, mismatchKeys, mismatchValues);
+  }
+
   if (typeof a === "object" && typeof b === "object") {
     return this.compareObjects_(a, b, mismatchKeys, mismatchValues);
   }
@@ -1019,11 +1049,16 @@ jasmine.Block = function(env, func, spec) {
   this.spec = spec;
 };
 
-jasmine.Block.prototype.execute = function(onComplete) {  
-  try {
+jasmine.Block.prototype.execute = function(onComplete) {
+  if (!jasmine.CATCH_EXCEPTIONS) {
     this.func.apply(this.spec);
-  } catch (e) {
-    this.spec.fail(e);
+  }
+  else {
+    try {
+      this.func.apply(this.spec);
+    } catch (e) {
+      this.spec.fail(e);
+    }
   }
   onComplete();
 };
@@ -1282,6 +1317,17 @@ jasmine.Matchers.prototype.toBeNull = function() {
 };
 
 /**
+ * Matcher that compares the actual to NaN.
+ */
+jasmine.Matchers.prototype.toBeNaN = function() {
+	this.message = function() {
+		return [ "Expected " + jasmine.pp(this.actual) + " to be NaN." ];
+	};
+
+	return (this.actual !== this.actual);
+};
+
+/**
  * Matcher that boolean not-nots the actual.
  */
 jasmine.Matchers.prototype.toBeTruthy = function() {
@@ -1433,10 +1479,7 @@ jasmine.Matchers.prototype.toBeCloseTo = function(expected, precision) {
   if (!(precision === 0)) {
     precision = precision || 2;
   }
-  var multiplier = Math.pow(10, precision);
-  var actual = Math.round(this.actual * multiplier);
-  expected = Math.round(expected * multiplier);
-  return expected == actual;
+  return Math.abs(expected - this.actual) < (Math.pow(10, -precision) / 2);
 };
 
 /**
@@ -1952,6 +1995,10 @@ jasmine.StringPrettyPrinter.prototype.append = function(value) {
 };
 jasmine.Queue = function(env) {
   this.env = env;
+
+  // parallel to blocks. each true value in this array means the block will
+  // get executed even if we abort
+  this.ensured = [];
   this.blocks = [];
   this.running = false;
   this.index = 0;
@@ -1959,15 +2006,30 @@ jasmine.Queue = function(env) {
   this.abort = false;
 };
 
-jasmine.Queue.prototype.addBefore = function(block) {
+jasmine.Queue.prototype.addBefore = function(block, ensure) {
+  if (ensure === jasmine.undefined) {
+    ensure = false;
+  }
+
   this.blocks.unshift(block);
+  this.ensured.unshift(ensure);
 };
 
-jasmine.Queue.prototype.add = function(block) {
+jasmine.Queue.prototype.add = function(block, ensure) {
+  if (ensure === jasmine.undefined) {
+    ensure = false;
+  }
+
   this.blocks.push(block);
+  this.ensured.push(ensure);
 };
 
-jasmine.Queue.prototype.insertNext = function(block) {
+jasmine.Queue.prototype.insertNext = function(block, ensure) {
+  if (ensure === jasmine.undefined) {
+    ensure = false;
+  }
+
+  this.ensured.splice((this.index + this.offset + 1), 0, ensure);
   this.blocks.splice((this.index + this.offset + 1), 0, block);
   this.offset++;
 };
@@ -1991,7 +2053,7 @@ jasmine.Queue.prototype.next_ = function() {
   while (goAgain) {
     goAgain = false;
     
-    if (self.index < self.blocks.length && !this.abort) {
+    if (self.index < self.blocks.length && !(this.abort && !this.ensured[self.index])) {
       var calledSynchronously = true;
       var completedSynchronously = false;
 
@@ -2282,7 +2344,7 @@ jasmine.Spec.prototype.finish = function(onComplete) {
 
 jasmine.Spec.prototype.after = function(doAfter) {
   if (this.queue.isRunning()) {
-    this.queue.add(new jasmine.Block(this.env, doAfter, this));
+    this.queue.add(new jasmine.Block(this.env, doAfter, this), true);
   } else {
     this.afterCallbacks.unshift(doAfter);
   }
@@ -2320,15 +2382,15 @@ jasmine.Spec.prototype.addBeforesAndAftersToQueue = function() {
     this.queue.addBefore(new jasmine.Block(this.env, runner.before_[i], this));
   }
   for (i = 0; i < this.afterCallbacks.length; i++) {
-    this.queue.add(new jasmine.Block(this.env, this.afterCallbacks[i], this));
+    this.queue.add(new jasmine.Block(this.env, this.afterCallbacks[i], this), true);
   }
   for (suite = this.suite; suite; suite = suite.parentSuite) {
     for (i = 0; i < suite.after_.length; i++) {
-      this.queue.add(new jasmine.Block(this.env, suite.after_[i], this));
+      this.queue.add(new jasmine.Block(this.env, suite.after_[i], this), true);
     }
   }
   for (i = 0; i < runner.after_.length; i++) {
-    this.queue.add(new jasmine.Block(this.env, runner.after_[i], this));
+    this.queue.add(new jasmine.Block(this.env, runner.after_[i], this), true);
   }
 };
 
@@ -2525,5 +2587,5 @@ jasmine.version_= {
   "major": 1,
   "minor": 2,
   "build": 0,
-  "revision": 1337005947
+  "revision": 1343710612
 };

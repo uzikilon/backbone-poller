@@ -1,14 +1,14 @@
-all: npm jshint minify
+all: npm jshint minify.code
 
 npm: 
-	@echo "Updating node modules"
+	@echo "`date`\tUpdating node modules"
 	@npm install
 	@npm update
 
-minify:
-	@echo "Minifying javascript"
-	@node_modules/.bin/uglifyjs backbone.poller.js > backbone.poller.min.js
+minify.code:
+	@echo "`date`\tMinifying javascript"
+	@node_modules/.bin/uglifyjs --comments="/\(c\)/" backbone.poller.js > backbone.poller.min.js
 
 jshint: 
-	@echo "Running a javascript linter"
+	@echo "`date`\tRunning a javascript linter"
 	@node_modules/.bin/jshint --config test/jshint.json backbone.poller.js
