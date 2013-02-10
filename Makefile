@@ -1,4 +1,4 @@
-all: npm jshint minify.code
+all: npm test.lint test.unit minify.code
 
 npm: 
 	@echo "`date`\tUpdating node modules"
@@ -9,6 +9,16 @@ minify.code:
 	@echo "`date`\tMinifying javascript"
 	@node_modules/.bin/uglifyjs --comments="/\(c\)/" backbone.poller.js > backbone.poller.min.js
 
-jshint: 
+test.lint:
 	@echo "`date`\tRunning a javascript linter"
 	@node_modules/.bin/jshint --config test/jshint.json backbone.poller.js
+
+test.unit:
+	@echo "`date`\tRunning unit tests"
+	@phantomjs test/lib/phantomjs-test-runner.js test/SpecRunner.html
+
+docs:
+	@echo "`date`\tCreating annotated source code"
+	@docco backbone.poller.js
+	@mv docs/backbone.poller.html index.html
+	@rm -rf docs
