@@ -1,4 +1,4 @@
-all: npm test.lint test.unit minify.code
+all: npm test.unit test.lint minify.code
 
 npm: 
 	@echo "`date`\tUpdating node modules"

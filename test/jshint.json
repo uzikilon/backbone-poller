@@ -12,7 +12,7 @@
     "noempty": true,
     "plusplus": false,
     "trailing": true,
-    // "maxparams": 3,
+    "maxparams": 3,
     "maxdepth": 2,
     "maxstatements": 7,
     "maxcomplexity": 2,
