@@ -12,7 +12,26 @@
     "noempty": true,
     "plusplus": false,
     "trailing": true,
-    "maxparams": 3,
+    // "maxparams": 3,
     "maxdepth": 2,
-    "maxlen": 100
+    "maxstatements": 7,
+    "maxcomplexity": 2,
+    "maxlen": 150,
+    "multistr": true,
+    "forin": true,
+    "evil": true,
+    "camelcase": true,
+    "indent": 2,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "quotmark": "single",
+    "regexp": true,
+    "regexdash": true,
+    "wsh": true,
+    "sub": true,
+    "globals": {
+        "define": false,
+        "require": false
+    }
 }
