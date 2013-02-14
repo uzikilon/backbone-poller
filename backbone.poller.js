@@ -8,16 +8,10 @@ Backbone Poller may be freely distributed under the MIT license.
 /*global define:false*/
 (function (root, factory) {
   'use strict';
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['underscore', 'backbone'], function (_, Backbone) {
-      // Use global variables if the locals are undefined.
-      return factory(_ || root._, Backbone || root.Backbone);
-    });
+  if (typeof define == 'function' && define.amd) {
+    define(['underscore', 'backbone'], factory);
   }
   else {
-    // RequireJS isn't being used.
-    // Assume underscore and backbone are loaded in <script> tags
     root.Backbone.Poller = factory(root._, root.Backbone);
   }
 }(this, function (_, Backbone) {

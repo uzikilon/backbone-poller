@@ -268,16 +268,14 @@ describe("Base poller operations", function() {
         return hasRequireJS;
       });
 
-      var hasPoller = false;
       runs(function() {
         require(['../backbone.poller'], function (Poller) {
-          hasPoller = true;
           self.Poller = Poller;
         });
       });
 
       waitsFor(function () {
-        return hasPoller;
+        return !!self.Poller;
       });
 
 
