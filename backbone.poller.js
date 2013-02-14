@@ -30,10 +30,10 @@ Backbone Poller may be freely distributed under the MIT license.
   var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
 
   var pollers = [];
-  function findPoller(model){
-    return _.find(pollers, function(poller){
-        return poller.model === model;
-      });
+  function findPoller(model) {
+    return _.find(pollers, function (poller) {
+      return poller.model === model;
+    });
   }
 
   var PollingManager = {
@@ -46,16 +46,16 @@ Backbone Poller may be freely distributed under the MIT license.
     // Retuns a poller isntance
     // </pre>
     /*jshint maxcomplexity:3 */
-    get: function(model, options) {
+    get: function (model, options) {
       var poller = findPoller(model);
-      if( ! poller ) {
+      if (!poller) {
         poller = new Poller(model, options);
         pollers.push(poller);
       }
       else {
         poller.set(options);
       }
-      if( options && options.autostart === true ) {
+      if (options && options.autostart === true) {
         poller.start({silent: true});
       }
       return poller;
@@ -65,8 +65,8 @@ Backbone Poller may be freely distributed under the MIT license.
     // <pre>
     // Deprecated: Use Backbone.Poller.get()
     // </pre>
-    getPoller: function() {
-      if ( window.console ) {
+    getPoller: function () {
+      if (window.console) {
         window.console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
       }
       return this.get.apply(this, arguments);
@@ -76,7 +76,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // <pre>
     // Returns the number of instanciated pollers
     // </pre>
-    size: function(){
+    size: function () {
       return pollers.length;
     },
 
@@ -84,8 +84,8 @@ Backbone Poller may be freely distributed under the MIT license.
     // <pre>
     // Stops all pollers and removes from the pollers pool
     // </pre>
-    reset: function(){
-      while( pollers.length ) {
+    reset: function () {
+      while (pollers.length) {
         pollers.pop().stop();
       }
     }
@@ -102,17 +102,17 @@ Backbone Poller may be freely distributed under the MIT license.
     // <pre>
     // Reset poller options and stops the poller
     // </pre>
-    set: function(options) {
+    set: function (options) {
       this.off();
       this.options = _.extend({}, defaults, options || {});
-      _.each(events, function(name){
+      _.each(events, function (name) {
         var callback = this.options[name];
-        if ( _.isFunction(callback) ) {
+        if (_.isFunction(callback)) {
           this.on(name, callback, this);
         }
       }, this);
 
-      if ( this.model instanceof Backbone.Model ) {
+      if (this.model instanceof Backbone.Model) {
         this.model.on('destroy', this.stop, this);
       }
 
@@ -125,10 +125,10 @@ Backbone Poller may be freely distributed under the MIT license.
     // Returns a poller instance
     // Triggers a 'start' events unless options.silent is set to true
     // </pre>
-    start: function(options) {
-      if( ! this.active() ) {
+    start: function (options) {
+      if (! this.active()) {
         options = options || {};
-        if( !options.silent ) {
+        if (! options.silent) {
           this.trigger('start', this.model);
         }
         this.options.active = true;
@@ -142,13 +142,13 @@ Backbone Poller may be freely distributed under the MIT license.
     // Returns a poller instance
     // Triggers a 'stop' events unless options.silent is set to true
     // </pre>
-    stop: function(options){
+    stop: function (options) {
       options = options || {};
-      if( !options.silent ) {
+      if (! options.silent) {
         this.trigger('stop', this.model);
       }
       this.options.active = false;
-      if ( this.xhr && _.isFunction(this.xhr.abort) ){
+      if (this.xhr && _.isFunction(this.xhr.abort)) {
         this.xhr.abort();
       }
       this.xhr = null;
@@ -160,20 +160,20 @@ Backbone Poller may be freely distributed under the MIT license.
     // <pre>
     // Retunrs a bollean for poller status
     // </pre>
-    active: function(){
+    active: function () {
       return this.options.active === true;
     }
   });
 
   function run(poller) {
-    if ( poller.active() !== true ) {
+    if (poller.active() !== true) {
       poller.stop({silent: true});
-      return ;
+      return;
     }
     var options = _.extend({ data: poller.options.data }, {
-      success: function() {
+      success: function () {
         poller.trigger('success', poller.model);
-        if( poller.options.condition(poller.model) !== true ) {
+        if (poller.options.condition(poller.model) !== true) {
           poller.stop({silent: true});
           poller.trigger('complete', poller.model);
         }
@@ -181,7 +181,7 @@ Backbone Poller may be freely distributed under the MIT license.
           poller.timeoutId = _.delay(run, poller.options.delay, poller);
         }
       },
-      error: function(){
+      error: function () {
         poller.stop({silent: true});
         poller.trigger('error', poller.model);
       }
