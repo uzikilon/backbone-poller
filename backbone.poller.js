@@ -4,8 +4,6 @@ Backbone Poller 0.2.2
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
-/*jshint maxstatements:10 */
-/*global define:false*/
 (function (root, factory) {
   'use strict';
   if (typeof define == 'function' && define.amd) {
@@ -15,7 +13,6 @@ Backbone Poller may be freely distributed under the MIT license.
     root.Backbone.Poller = factory(root._, root.Backbone);
   }
 }(this, function (_, Backbone) {
-
   'use strict';
 
   // Default settings
@@ -139,6 +136,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // **poller.stop([options])**
     // <pre>
     // Stops the poller
+    // Aborts any running XHR call
     // Returns a poller instance
     // Triggers a 'stop' events unless options.silent is set to true
     // </pre>
