@@ -168,7 +168,7 @@ Backbone Poller may be freely distributed under the MIT license.
       poller.stop({silent: true});
       return;
     }
-    var options = _.extend({ data: poller.options.data }, {
+    var options = _.extend({}, poller.options, {
       success: function () {
         poller.trigger('success', poller.model);
         if (poller.options.condition(poller.model) !== true) {
