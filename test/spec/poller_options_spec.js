@@ -118,6 +118,22 @@ describe("Accept options and invoking in time", function(){
 
   });
 
+  it("Should pass original options to fetch", function () {
+    var cFetchSpy = sinon.spy(this.collection, 'fetch');
+
+    this.cPoller.set({update : true});
+    this.cPoller.start();
+
+    waitsFor(function(){
+      return cFetchSpy.callCount == 1;
+    });
+
+    runs(function () {
+       expect(cFetchSpy.getCall(0).args[0].update).toBe(true);
+    });
+
+  });
+
    it("Should pass the 'data' option to the fetch call", function() {
     var cFetchSpy = sinon.spy(this.collection, 'fetch');
     var data = {
