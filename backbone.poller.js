@@ -34,7 +34,7 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   var PollingManager = {
-    
+
     // **Backbone.Poller.get(model[, options])**
     // <pre>
     // Retuns a singleton instance of a poller for a model
@@ -56,17 +56,6 @@ Backbone Poller may be freely distributed under the MIT license.
         poller.start({silent: true});
       }
       return poller;
-    },
-
-    // **Backbone.Poller.getPoller()**
-    // <pre>
-    // Deprecated: Use Backbone.Poller.get()
-    // </pre>
-    getPoller: function () {
-      if (window.console) {
-        window.console.warn('getPoller() is depreacted, Use Backbone.Poller.get()');
-      }
-      return this.get.apply(this, arguments);
     },
 
     // **Backbone.Poller.size()**
@@ -94,7 +83,7 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   _.extend(Poller.prototype, Backbone.Events, {
-    
+
     // **poller.set([options])**
     // <pre>
     // Reset poller options and stops the poller
@@ -187,7 +176,7 @@ Backbone Poller may be freely distributed under the MIT license.
     poller.trigger('fetch', poller.model);
     poller.xhr = poller.model.fetch(options);
   }
-  
+
   return PollingManager;
 
 }));
