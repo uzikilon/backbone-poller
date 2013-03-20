@@ -31,6 +31,14 @@ var poller = Backbone.Poller.get(model_or_collection).start()
 poller.stop();
 ```
 
+### AMD loader:
+``` javascript
+require(['path/to/backbone.poller', 'path/to/Collection'], function(Poller, Collection) {
+  var collection = new Collection();
+  var poller = Poller.get(collection).start();
+});
+```
+
 ## Advanced Optional Options:
 
 ### Altering default options:
