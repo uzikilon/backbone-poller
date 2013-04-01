@@ -1,8 +1,9 @@
-describe("Base poller operations", function() {
+/*global jasmine, Backbone, _, jQuery */
+describe('Base poller operations', function() {
 
   function hasManagerAPI(manager){
     var method, api = ['get', 'size', 'reset'];
-    while(method = api.shift()) {
+    while((method = api.shift()) !== undefined) {
       expect(manager[method]).toEqual(jasmine.any(Function));
     }
   }
@@ -35,7 +36,7 @@ describe("Base poller operations", function() {
 
     function hasPollerAPI(poller){
       var method, api = ['set', 'active', 'start', 'stop'];
-      while(method = api.shift()) {
+      while((method = api.shift()) !== undefined) {
         expect(poller[method]).toEqual(jasmine.any(Function));
       }
     }
@@ -50,38 +51,36 @@ describe("Base poller operations", function() {
       hasPollerAPI(this.cPoller);
     });
 
-    it('Should delete all polllers when calling reset()', function(){
-      expect(Backbone.Poller.size()).toEqual(2);
-
-      this.mPoller.start();
-      expect(this.mPoller.active()).toEqual(true);
-
+    it('Should delete all pollers when calling reset()', function(){
       Backbone.Poller.reset();
-      expect(this.mPoller.active()).toEqual(false);
-
       expect(Backbone.Poller.size()).toEqual(0);
     });
 
+    it('Should stop all pollers when calling reset()', function(){
+      this.mPoller.start();
+      this.cPoller.start();
+      expect(this.mPoller.active()).toEqual(true);
+      expect(this.cPoller.active()).toEqual(true);
+      Backbone.Poller.reset();
+      expect(this.mPoller.active()).toEqual(false);
+      expect(this.cPoller.active()).toEqual(false);
+    });
 
-    it("Should create one instance per model", function() {
-      expect(Backbone.Poller.size()).toEqual(2);
 
+    it('Should not create more than one instance per model', function() {
       var mPoller1 = Backbone.Poller.get(this.model);
-      var mPoller2 = Backbone.Poller.get(this.model);
-      var mPoller3 = Backbone.Poller.get(this.model);
-
+      expect(mPoller1).toBe(this.mPoller);
       expect(Backbone.Poller.size()).toEqual(2);
+    });
 
-      var newModel = new Backbone.Model();
+    it('Should create a unique instnace per model', function() {
+      var mPoller = Backbone.Poller.get(new Backbone.Model());
 
-      var mPoller4 = Backbone.Poller.get(newModel);
-      expect(Backbone.Poller.size()).toEqual(3);
-
-      var mPoller5 = Backbone.Poller.get(newModel);
+      expect(mPoller).not.toBe(this.mPoller);
       expect(Backbone.Poller.size()).toEqual(3);
     });
 
-    it("Should start when invoking start()", function() {
+    it('Should start when invoking start()', function() {
       spyOn(this.model, 'fetch');
       expect(this.mPoller.active()).toBe(false);
       this.mPoller.start();
@@ -89,7 +88,20 @@ describe("Base poller operations", function() {
       expect(this.model.fetch).toHaveBeenCalled();
     });
 
-    it("Should stop when invoking stop()", function() {
+    it('Should start delayed when invoking start() with a flag', function() {
+      spyOn(this.model, 'fetch');
+      expect(this.mPoller.active()).toBe(false);
+      this.mPoller.set({delay: 100, delayed: true}).start();
+      expect(this.mPoller.active()).toBe(true);
+      expect(this.model.fetch).not.toHaveBeenCalled();
+      waits(101);
+      runs(function () {
+        expect(this.model.fetch).toHaveBeenCalled();
+      });
+    });
+
+
+    it('Should stop when invoking stop()', function() {
       this.mPoller.start();
 
       expect(this.mPoller.active()).toBe(true);
@@ -98,7 +110,7 @@ describe("Base poller operations", function() {
       expect(this.mPoller.active()).toBe(false);
     });
 
-    it("Should abort XHR (only once) when invoking stop()", function() {
+    it('Should abort XHR (only once) when invoking stop()', function() {
 
       expect(this.mPoller.xhr).toBeNull();
 
@@ -118,7 +130,7 @@ describe("Base poller operations", function() {
       expect(spy.callCount).toEqual(1);
     });
 
-    it("Should stop when condition is satisfied", function() {
+    it('Should stop when condition is satisfied', function() {
       var bool = true,
       options = { delay: 50, condition: function(model){ return bool; } },
       poller = Backbone.Poller.get(this.model, options).start();
@@ -134,11 +146,11 @@ describe("Base poller operations", function() {
 
     });
 
-    it("Should fetch more than once when polling a model", function() {
+    it('Should fetch more than once when polling a model', function() {
       var counter = 1;
       var flag = false;
 
-      spyOn(this.model, "fetch").andCallThrough();
+      spyOn(this.model, 'fetch').andCallThrough();
       var spy = this.model.fetch;
 
       this.mPoller.start();
@@ -158,12 +170,11 @@ describe("Base poller operations", function() {
 
     });
 
-    it("Should fetch more than once when polling a collection", function() {
+    it('Should fetch more than once when polling a collection', function() {
       var counter = 1;
       var flag = false;
 
-      spyOn(this.collection, "fetch").andCallThrough();
-      var spy = this.model.collection;
+      spyOn(this.collection, 'fetch').andCallThrough();
 
       this.cPoller.on('success', function(){
         flag = (++counter == 4);
@@ -180,46 +191,42 @@ describe("Base poller operations", function() {
 
     });
 
-    it("Sould have a reset the poller's xhr and timeoutId when stopped", function(){
+    it('should maintain a copy of model fetch promise', function () {
       var poller = this.mPoller;
-
-      expect(poller.active()).toBe(false);
       expect(poller.xhr).toBeNull();
-      expect(poller.timeoutId).toBeNull();
-
       poller.start();
-
-      expect(poller.active()).toBe(true);
       expect(poller.xhr).not.toBeNull();
-      expect(poller.timeoutId).toEqual(jasmine.any(Number));
+    });
 
-      poller.stop();
+    it('should maintain a timeout Id to manage polling', function () {
+      var poller = this.mPoller;
+      expect(poller.timeoutId).toBeNull();
+      poller.start();
+      expect(poller.timeoutId).toEqual(jasmine.any(Number));
+    });
+
+    it('should be active when running', function () {
+      var poller = this.mPoller;
+      expect(poller.active()).toBe(false);
+      poller.start();
+      expect(poller.active()).toBe(true);
+    });
+
+    it('Sould have a reset the poller\'s xhr and timeoutId when stopped', function(){
+      var poller = this.mPoller.start().stop();
 
       expect(poller.active()).toBe(false);
       expect(poller.xhr).toBeNull();
       expect(poller.timeoutId).toBeNull();
-
     });
 
 
-    it("Should stop when model is destroyed", function() {
-      spyOn(this.model, "destroy").andCallThrough();
-      var spy = this.model.destroy;
-      var flag = false;
-      this.model.on('destroy', function(){ flag = true; });
-
+    it('Should stop when model is destroyed', function() {
+      spyOn(this.model, 'destroy').andCallThrough();
       this.mPoller.start();
-
-      expect(spy.callCount).toBe(0);
-
       this.model.destroy();
+      expect(this.mPoller.active()).toBe(false);
 
-      waitsFor(function(){ return flag; });
-
-      runs(function () {
-        expect(spy.callCount).toBe(1);
-        expect(this.mPoller.active()).toBe(false);
-      });
     });
   });
 
