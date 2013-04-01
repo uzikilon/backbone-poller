@@ -1,6 +1,6 @@
 /*
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.2.2
+Backbone Poller 0.2.3
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
@@ -118,7 +118,7 @@ Backbone Poller may be freely distributed under the MIT license.
           this.trigger('start', this.model);
         }
         this.options.active = true;
-        run(this);
+        _.defer(run(this));
       }
       return this;
     },
@@ -153,6 +153,10 @@ Backbone Poller may be freely distributed under the MIT license.
   });
 
   function run(poller) {
+    if(poller.options.delayed) {
+      delayedRun(poller);
+      return;
+    }
     if (poller.active() !== true) {
       poller.stop({silent: true});
       return;
@@ -165,7 +169,7 @@ Backbone Poller may be freely distributed under the MIT license.
           poller.trigger('complete', poller.model);
         }
         else {
-          poller.timeoutId = _.delay(run, poller.options.delay, poller);
+          delayedRun(poller);
         }
       },
       error: function () {
@@ -175,6 +179,11 @@ Backbone Poller may be freely distributed under the MIT license.
     });
     poller.trigger('fetch', poller.model);
     poller.xhr = poller.model.fetch(options);
+  }
+
+  function delayedRun(poller) {
+    poller.options.delayed = false;
+    poller.timeoutId = _.delay(run, poller.options.delay, poller);
   }
 
   return PollingManager;

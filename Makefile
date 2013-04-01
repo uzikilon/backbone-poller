@@ -1,4 +1,4 @@
-all: npm test.unit test.lint minify.code
+all: npm test minify.code
 
 npm: 
 	@echo "`date`\tUpdating node modules"
@@ -16,6 +16,8 @@ test.lint:
 test.unit:
 	@echo "`date`\tRunning unit tests"
 	@phantomjs test/lib/phantomjs-test-runner.js test/SpecRunner.html
+
+test: test.lint test.unit
 
 docs:
 	@echo "`date`\tCreating annotated source code"
