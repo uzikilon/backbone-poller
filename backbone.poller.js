@@ -113,10 +113,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // </pre>
     start: function (options) {
       if (! this.active()) {
-        options = options || {};
-        if (! options.silent) {
-          this.trigger('start', this.model);
-        }
+        options && options.silent || this.trigger('start', this.model);
         this.options.active = true;
         run(this);
       }
@@ -130,14 +127,9 @@ Backbone Poller may be freely distributed under the MIT license.
     // Triggers a 'stop' events unless options.silent is set to true
     // </pre>
     stop: function (options) {
-      options = options || {};
-      if (! options.silent) {
-        this.trigger('stop', this.model);
-      }
+      options && options.silent || this.trigger('stop', this.model);
       this.options.active = false;
-      if (this.xhr && _.isFunction(this.xhr.abort)) {
-        this.xhr.abort();
-      }
+      this.xhr && this.xhr.abort && this.xhr.abort();
       this.xhr = null;
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
