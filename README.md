@@ -44,13 +44,19 @@ require(['path/to/backbone.poller', 'path/to/Collection'], function(Poller, Coll
 ### Altering default options:
 ``` javascript
 var options = {
+  
   // default delay is 1000ms
-  delay: 300, 
+  delay: 300,
+  
+  // run after the first delay. defaults to false
+  delayed: true, 
+  
   // condition for keeping polling active (when this stops being true, polling will stop)
   condition: function(model){
       return model.get('active') === true;
   },
-   // We can pass data to a fetch request
+  
+  // We can pass data to a fetch request
   data: {fields: "*", sort: "name asc"}
 }
 var poller = Backbone.Poller.get(model, options);
