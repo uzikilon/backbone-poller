@@ -156,13 +156,7 @@ Backbone Poller may be freely distributed under the MIT license.
     var options = _.extend({}, poller.options, {
       success: function () {
         poller.trigger('success', poller.model);
-        if (poller.options.condition(poller.model) !== true) {
-          poller.stop({silent: true});
-          poller.trigger('complete', poller.model);
-        }
-        else {
-          delayedRun(poller);
-        }
+        delayedRun(poller);
       },
       error: function () {
         poller.stop({silent: true});
@@ -174,6 +168,11 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   function delayedRun(poller) {
+    if (poller.options.condition(poller.model) !== true) {
+      poller.stop({silent: true});
+      poller.trigger('complete', poller.model);
+      return;
+    }
     poller.options.delayed = false;
     poller.timeoutId = _.delay(run, poller.options.delay, poller);
   }
