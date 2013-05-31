@@ -165,8 +165,10 @@ Backbone Poller may be freely distributed under the MIT license.
         poller.trigger('error', poller.model, xhr);
       }
     });
-    poller.trigger('fetch', poller.model);
-    poller.xhr = poller.model.fetch(options);
+    if (poller.options.condition(poller.model) === true) {
+        poller.trigger('fetch', poller.model);
+        poller.xhr = poller.model.fetch(options);
+    }
   }
 
   function delayedRun(poller) {
