@@ -1,6 +1,6 @@
 /*
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.2.4
+Backbone Poller 0.2.5
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
@@ -42,7 +42,6 @@ Backbone Poller may be freely distributed under the MIT license.
     // If options.autostart is true, will start it
     // Retuns a poller isntance
     // </pre>
-    /*jshint maxcomplexity:3 */
     get: function (model, options) {
       var poller = findPoller(model);
       if (!poller) {
@@ -112,7 +111,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // Triggers a 'start' events unless options.silent is set to true
     // </pre>
     start: function (options) {
-      if (! this.active()) {
+      if (!this.active()) {
         options && options.silent || this.trigger('start', this.model);
         this.options.active = true;
         run(this);
@@ -149,34 +148,38 @@ Backbone Poller may be freely distributed under the MIT license.
       delayedRun(poller);
       return;
     }
-    if (poller.active() !== true) {
-      poller.stop({silent: true});
-      return;
+    if (validate(poller)) {
+      var options = _.extend({}, poller.options, {
+        success: function () {
+          poller.trigger('success', poller.model);
+          delayedRun(poller);
+        },
+        error: function () {
+          // keep a refernce to the XHR object so we can pass it to the error handler
+          var xhr = poller.xhr;
+          poller.stop({silent: true});
+          poller.trigger('error', poller.model, xhr);
+        }
+      });
+      poller.trigger('fetch', poller.model);
+      poller.xhr = poller.model.fetch(options);
     }
-    var options = _.extend({}, poller.options, {
-      success: function () {
-        poller.trigger('success', poller.model);
-        delayedRun(poller);
-      },
-      error: function () {
-        // keep a refernce to the XHR object so we can pass it to the error handler
-        var xhr = poller.xhr;
-        poller.stop({silent: true});
-        poller.trigger('error', poller.model, xhr);
-      }
-    });
-    poller.trigger('fetch', poller.model);
-    poller.xhr = poller.model.fetch(options);
   }
 
   function delayedRun(poller) {
+    if (validate(poller)) {
+      poller.options.delayed = false;
+      poller.timeoutId = _.delay(run, poller.options.delay, poller);
+    }
+  }
+
+  function validate(poller) {
     if (poller.options.condition(poller.model) !== true) {
       poller.stop({silent: true});
       poller.trigger('complete', poller.model);
-      return;
+      return false;
     }
-    poller.options.delayed = false;
-    poller.timeoutId = _.delay(run, poller.options.delay, poller);
+    return true;
   }
 
   return PollingManager;

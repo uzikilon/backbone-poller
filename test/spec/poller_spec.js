@@ -88,17 +88,44 @@ describe('Base poller operations', function() {
       expect(this.model.fetch).toHaveBeenCalled();
     });
 
-    it('Should start delayed when invoking start() with a flag', function() {
-      spyOn(this.model, 'fetch');
-      expect(this.mPoller.active()).toBe(false);
-      this.mPoller.set({delay: 100, delayed: true}).start();
-      expect(this.mPoller.active()).toBe(true);
-      expect(this.model.fetch).not.toHaveBeenCalled();
-      waits(101);
-      runs(function () {
-        expect(this.model.fetch).toHaveBeenCalled();
+    describe('Run delayed', function () {
+
+      beforeEach(function () {
+        this.options = {delay: 100, delayed: true};
+        spyOn(this.model, 'fetch');
+        expect(this.mPoller.active()).toBe(false);
       });
+
+      it('Should start delayed when invoking start() with a flag', function() {
+        this.mPoller.set(this.options).start();
+        expect(this.mPoller.active()).toBe(true);
+        expect(this.model.fetch).not.toHaveBeenCalled();
+        waits(101);
+        runs(function () {
+          expect(this.model.fetch).toHaveBeenCalled();
+        });
+      });
+
+      it('Shouls not run when condition is falsy on run time', function () {
+        var doRun = true;
+        this.options.condition = function () {
+          return doRun;
+        };
+        this.mPoller.set(this.options).start();
+        expect(this.mPoller.active()).toBe(true);
+        expect(this.model.fetch).not.toHaveBeenCalled();
+
+        doRun = false;
+
+        waits(101);
+        runs(function () {
+          expect(this.mPoller.active()).toBe(false);
+          expect(this.model.fetch).not.toHaveBeenCalled();
+        });
+      });
+
     });
+
 
 
     it('Should stop when invoking stop()', function() {
