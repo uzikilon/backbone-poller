@@ -14,8 +14,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.js>)    4.5kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.min.js>)   1.1kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.min.js>)   1.3kb, Minified and Gzipped
 
 
 ## Basic Usage:
