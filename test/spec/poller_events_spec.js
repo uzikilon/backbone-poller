@@ -1,5 +1,5 @@
 describe("Handle events", function(){
-  
+
   var _sync = function(method, model, options){
     options.success(model.toJSON());
     model.trigger('sync');
@@ -192,6 +192,23 @@ describe("Handle events", function(){
     runs(function(){
       var calls = this.mPoller._callbacks || {};
       expect(_(calls).size()).toBe(0);
+    });
+  });
+
+  it('shold stop when stopping on a callback', function () {
+    spyOn(this.model, 'fetch').andCallThrough();
+    this.mPoller.on('success', function () {
+      this.mPoller.stop();
+    }, this);
+
+    this.mPoller.start();
+
+    waitsFor(function () {
+      return this.mPoller.active() === false;
+    });
+
+    runs(function () {
+      expect(this.model.fetch.callCount).toBe(1);
     });
   });
 

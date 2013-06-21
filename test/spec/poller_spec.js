@@ -9,9 +9,13 @@ describe('Base poller operations', function() {
   }
 
   describe('Poller funcionality', function() {
+
     var _sync = function(method, model, options){
       options.success(model.toJSON());
-      return _.clone(jQuery.ajax());
+      model.trigger('sync');
+      return {
+        abort: function () {}
+      };
     };
 
     beforeEach(function() {

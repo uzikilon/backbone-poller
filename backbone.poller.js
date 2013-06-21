@@ -174,6 +174,9 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   function validate(poller) {
+    if (! poller.options.active) {
+      return ;
+    }
     if (poller.options.condition(poller.model) !== true) {
       poller.stop({silent: true});
       poller.trigger('complete', poller.model);
