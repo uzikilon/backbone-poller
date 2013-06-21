@@ -26,3 +26,5 @@ docs:
 	@docco backbone.poller.js
 	@mv docs/backbone.poller.html index.html
 	@rm -rf docs
+	@git add index.html
+	@git ci -m "Updated annotated soucre code"
