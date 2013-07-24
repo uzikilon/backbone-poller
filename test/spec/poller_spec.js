@@ -128,6 +128,10 @@ describe('Base poller operations', function() {
         });
       });
 
+      it('Should not reset delayed flag on start', function(){
+        this.mPoller.set(this.options).start();
+        expect(this.mPoller.options.delayed).toBe(true);
+      });
     });
 
 
