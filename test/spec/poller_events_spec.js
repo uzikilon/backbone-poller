@@ -139,6 +139,30 @@ describe("Handle events", function(){
 
   });
 
+  it("Should pass backbone arguments into success and error callbacks", function() {
+    var successSpy = sinon.spy();
+    var errorSpy = sinon.spy();
+
+    var model = this.model;
+    var dummyResp = { poller : "is awesome"};
+    spyOn(this.model, 'fetch').andCallFake(function(options){
+      options.success(model, dummyResp);
+      options.error(model, dummyResp);
+    });
+
+    this.mPoller.on('success', successSpy);
+    this.mPoller.on('error', errorSpy);
+    this.mPoller.start();
+
+    waitsFor(function(){
+      return successSpy.callCount === 1;
+    });
+
+    runs(function(){
+      expect(successSpy.calledWith(this.mPoller.model, dummyResp)).toBe(true);
+      expect(errorSpy.calledWith(this.mPoller.model, dummyResp)).toBe(true);
+    });
+  });
 
   it("Should fire a complete event when condition is satisfied", function() {
    var bool = true,
