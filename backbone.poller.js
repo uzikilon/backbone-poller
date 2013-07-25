@@ -150,15 +150,13 @@ Backbone Poller may be freely distributed under the MIT license.
   function run(poller) {
     if (validate(poller)) {
       var options = _.extend({}, poller.options, {
-        success: function () {
-          poller.trigger('success', poller.model);
+        success: function (model, resp) {
+          poller.trigger('success', model, resp);
           delayedRun(poller);
         },
-        error: function () {
-          // keep a refernce to the XHR object so we can pass it to the error handler
-          var xhr = poller.xhr;
+        error: function (model, resp) {
           poller.stop({silent: true});
-          poller.trigger('error', poller.model, xhr);
+          poller.trigger('error', model, resp);
         }
       });
       poller.trigger('fetch', poller.model);
