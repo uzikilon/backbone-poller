@@ -88,11 +88,11 @@ Backbone Poller may be freely distributed under the MIT license.
     // Reset poller options and stops the poller
     // </pre>
     set: function (options) {
-      this.off();
       this.options = _.extend({}, defaults, options || {});
       _.each(events, function (name) {
         var callback = this.options[name];
         if (_.isFunction(callback)) {
+          this.off(name, callback, this);
           this.on(name, callback, this);
         }
       }, this);
