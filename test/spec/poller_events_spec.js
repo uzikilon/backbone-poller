@@ -203,7 +203,7 @@ describe("Handle events", function(){
 
   });
 
-  it('Should flush all events when re-setting options', function(){
+  it('Should keep all events when re-setting options', function(){
     this.mPoller.on('foo', function(){});
     this.mPoller.on('bar', function(){});
     this.mPoller.on('baz', function(){});
@@ -215,7 +215,24 @@ describe("Handle events", function(){
 
     runs(function(){
       var calls = this.mPoller._callbacks || {};
-      expect(_(calls).size()).toBe(0);
+      expect(_(calls).size()).toBe(3);
+    });
+  });
+
+  it('Should rebind when re-setting options', function(){
+    var spy = sinon.spy();
+
+    this.mPoller.set({success: spy});
+    this.mPoller.set({success: spy});
+
+    this.mPoller.start();
+
+    waitsFor(function(){
+      return spy.called;
+    });
+
+    runs(function(){
+      expect(spy.calledOnce).toBe(true);
     });
   });
 
