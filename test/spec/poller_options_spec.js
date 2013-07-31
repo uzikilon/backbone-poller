@@ -134,7 +134,22 @@ describe("Accept options and invoking in time", function(){
 
   });
 
-   it("Should pass the 'data' option to the fetch call", function() {
+  it('Should flush all events when passing flush options', function(){
+    this.mPoller.on('backbone', function(){});
+    this.mPoller.on('poller', function(){});
+
+    var calls = this.mPoller._callbacks || {};
+    expect(_(calls).size()).toBe(2);
+
+    this.mPoller.set({flush: true});
+
+    runs(function(){
+      var calls = this.mPoller._callbacks || {};
+      expect(_(calls).size()).toBe(0);
+    });
+  });
+
+  it("Should pass the 'data' option to the fetch call", function() {
     var cFetchSpy = sinon.spy(this.collection, 'fetch');
     var data = {
       a: Math.random(),
