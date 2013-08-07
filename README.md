@@ -108,7 +108,7 @@ poller.set({delay: 300}).start();
 
 ### Stop and destroy all pollers
 ``` javascript
-Backbone.poller.reset();
+Backbone.Poller.reset();
 ```
 
 
