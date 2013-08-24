@@ -1,9 +1,9 @@
 /*
-(c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.2.6
-https://github.com/uzikilon/backbone-poller
-Backbone Poller may be freely distributed under the MIT license.
-*/
+ (c) 2012 Uzi Kilon, Splunk Inc.
+ Backbone Poller 0.2.6
+ https://github.com/uzikilon/backbone-poller
+ Backbone Poller may be freely distributed under the MIT license.
+ */
 (function (root, factory) {
   'use strict';
   if (typeof define == 'function' && define.amd) {
@@ -24,9 +24,10 @@ Backbone Poller may be freely distributed under the MIT license.
   };
 
   // Available events
-  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
+  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete', 'poller_timeout' ];
 
   var pollers = [];
+
   function findPoller(model) {
     return _.find(pollers, function (poller) {
       return poller.model === model;
@@ -92,6 +93,7 @@ Backbone Poller may be freely distributed under the MIT license.
       if (this.options.flush) {
         this.off();
       }
+      this.options.timeout_counter = this.options.total_timeout;
       _.each(events, function (name) {
         var callback = this.options[name];
         if (_.isFunction(callback)) {
@@ -139,6 +141,7 @@ Backbone Poller may be freely distributed under the MIT license.
       this.xhr = null;
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
+      this.options.timeout_counter = this.options.total_timeout;
       return this;
     },
     // **poller.active()**
@@ -162,8 +165,17 @@ Backbone Poller may be freely distributed under the MIT license.
           poller.trigger('error', model, resp);
         }
       });
-      poller.trigger('fetch', poller.model);
-      poller.xhr = poller.model.fetch(options);
+
+      var timeout_counter_left = poller.options.timeout_counter || 1;
+
+      if (timeout_counter_left > 0) {
+        poller.trigger('fetch', poller.model);
+
+        poller.xhr = poller.model.fetch(options);
+        poller.options.timeout_counter -= poller.options.delay;
+      } else {
+        poller.trigger('poller_timeout');
+      }
     }
   }
 
