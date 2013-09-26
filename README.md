@@ -10,12 +10,12 @@ Backbone poller helps with these cases:
 - Allows you to poll without extending your base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
 
-The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online, as well as a [test suite](<http://uzikilon.github.com/backbone-poller/test/SpecRunner.html>).
+The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online.
 
 ### Downloads (Right-click, and use "Save As")
 
 - [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.7/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.7/backbone.poller.min.js>)   1.3kb, Minified and Gzipped
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.7/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 
 ## Basic Usage:
