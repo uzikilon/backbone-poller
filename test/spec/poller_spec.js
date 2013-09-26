@@ -269,9 +269,9 @@ describe('Base poller operations', function() {
 
     window.require = {
       paths: {
-        underscore: 'lib/underscore',
-        jquery: 'lib/jquery-1.8.2',
-        backbone: 'lib/backbone'
+        underscore: 'test/lib/underscore',
+        jquery: 'test/lib/jquery-1.8.2',
+        backbone: 'test/lib/backbone'
       },
       shim: {
         underscore: {
@@ -300,7 +300,7 @@ describe('Base poller operations', function() {
         else {
           node.addEventListener('load', function () { hasRequireJS = true; }, false);
         }
-        node.src = 'lib/require.js';
+        node.src = 'test/lib/require.js';
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(node);
       });
@@ -311,7 +311,7 @@ describe('Base poller operations', function() {
       });
 
       runs(function() {
-        require(['../backbone.poller'], function (Poller) {
+        require(['./backbone.poller'], function (Poller) {
           self.Poller = Poller;
         });
       });

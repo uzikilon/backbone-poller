@@ -1,4 +1,4 @@
-/*
+/**!
 (c) 2012 Uzi Kilon, Splunk Inc.
 Backbone Poller 0.2.7
 https://github.com/uzikilon/backbone-poller

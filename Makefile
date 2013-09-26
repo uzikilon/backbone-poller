@@ -1,30 +1,29 @@
 all: npm minify.code test
 
-npm: 
+npm:
 	@echo "`date`\tUpdating node modules"
 	@npm install
 	@npm update
 
 minify.code:
 	@echo "`date`\tMinifying javascript"
-	@node_modules/.bin/uglifyjs -m -c --comments="/\(c\)/" backbone.poller.js > backbone.poller.min.js
+	@grunt uglify
 
 test.lint:
 	@echo "`date`\tRunning a javascript linter"
-	@node_modules/.bin/jshint --config test/jshint.json backbone.poller.js
+	@grunt jshint
 
 test.unit:
 	@echo "`date`\tRunning unit tests"
-	@phantomjs test/lib/phantomjs-test-runner.js test/SpecRunner.html
-	@echo "`date`\tRunning unit tests on minified code"
-	@phantomjs test/lib/phantomjs-test-runner.js test/SpecRunner.min.html
+	@grunt jasmine
 
 test: test.lint test.unit
 
 docs:
 	@echo "`date`\tCreating annotated source code"
-	@docco backbone.poller.js
+	@grunt docco
 	@mv docs/backbone.poller.html index.html
+	@mv docs/docco.css .
 	@rm -rf docs
-	@git add index.html
+	@git add index.html docco.css
 	@git ci -m "Updated annotated soucre code"

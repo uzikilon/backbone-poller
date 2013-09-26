@@ -1,10 +1,12 @@
 {
+  "es3": true,
+  "es5": false,
   "undef": true,
   "unused": true,
   "asi": false,
-  "white": false,
+  "white": true,
   "smarttabs": true,
-  "strict": true,
+  "strict": false,
   "onecase": true,
   "browser": true,
   "curly": true,
@@ -14,7 +16,7 @@
   "noempty": true,
   "plusplus": false,
   "trailing": true,
-  "maxparams": 3,
+  "maxparams": 5,
   "maxdepth": 2,
   "maxstatements": 11,
   "maxcomplexity": 4,
@@ -36,12 +38,16 @@
     "define": false,
     "require": false,
     "describe": false,
+    "xdescribe": false,
     "expect": false,
     "it": false,
     "xit": false,
     "beforeEach": false,
     "afterEach": false,
     "waitsFor": false,
-    "runs": false
+    "waits": false,
+    "spyOn": false,
+    "runs": false,
+    "jasmine": false
   }
 }

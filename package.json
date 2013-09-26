@@ -8,7 +8,11 @@
     "url": "https://github.com/uzikilon/backbone-poller.git"
   },
   "devDependencies": {
-    "uglify-js" : ">= 2.1.10",
-    "jshint"    : ">= 0.9.1"
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-jasmine": "~0.5.2",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-docco": "~0.2.0"
   }
 }
