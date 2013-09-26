@@ -17,7 +17,7 @@
   "maxparams": 3,
   "maxdepth": 2,
   "maxstatements": 11,
-  "maxcomplexity": 3,
+  "maxcomplexity": 4,
   "maxlen": 120,
   "multistr": true,
   "forin": true,
