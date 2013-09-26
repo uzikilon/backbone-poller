@@ -10,7 +10,7 @@ Backbone poller helps with these cases:
 - Allows you to poll without extending your base backbone models or collections
 - Is 100% compliant with any Backbone model or collection.
 
-The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online, as well as a [test suite](<http://uzikilon.github.com/backbone-poller/SpecRunner.html>).
+The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online.
 
 ### Downloads (Right-click, and use "Save As")
 

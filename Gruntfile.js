@@ -4,6 +4,12 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    connect: {
+      test: {
+        port: 8000
+      }
+    },
+
     jshint: {
       options: {
         jshintrc: 'test/jshint.json'
@@ -22,8 +28,21 @@ module.exports = function (grunt) {
             'test/lib/sinon-1.5.2.js'
           ],
           specs: 'test/spec/**/*.js',
-          keepRunner: true,
-          outfile: 'SpecRunner.html'
+          junit: {
+            path: 'build/junit'
+          },
+          template: require('grunt-template-jasmine-istanbul'),
+          templateOptions: {
+            coverage: 'build/coverage/coverage.json',
+            report: 'build/coverage',
+            thresholds: {
+              lines: 95,
+              statements: 95,
+              branches: 85,
+              functions: 90
+            }
+          }
+
         }
       },
       'poller-min': {
@@ -35,9 +54,7 @@ module.exports = function (grunt) {
             'test/lib/backbone.js',
             'test/lib/sinon-1.5.2.js'
           ],
-          specs: 'test/spec/**/*.js',
-          keepRunner: true,
-          outfile: 'SpecRunner.min.html'
+          specs: 'test/spec/**/*.js'
         }
       }
     },
@@ -68,7 +85,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-docco');
-
 
   grunt.registerTask('default', ['jshint', 'uglify', 'jasmine']);
 
