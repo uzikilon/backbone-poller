@@ -14,8 +14,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/master/backbone.poller.min.js>)   1.3kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.7/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.7/backbone.poller.min.js>)   1.3kb, Minified and Gzipped
 
 
 ## Basic Usage:
@@ -44,35 +44,35 @@ require(['path/to/backbone.poller', 'path/to/Collection'], function(Poller, Coll
 ### Altering default options:
 ``` javascript
 var options = {
-  
+
   // default delay is 1000ms
   delay: 300,
-  
+
   // run after the first delay. defaults to false
-  delayed: true, 
-  
+  delayed: true,
+
   // condition for keeping polling active (when this stops being true, polling will stop)
   condition: function(model){
       return model.get('active') === true;
   },
-  
+
   // We can pass data to a fetch request
   data: {fields: "*", sort: "name asc"}
 }
 var poller = Backbone.Poller.get(model, options);
 ```
 
-### Register event listeners: 
+### Register event listeners:
 ``` javascript
 var poller = Backbone.Poller.get(model);
 poller.on('success', function(model){
-  console.info('another successful fetch!'); 
+  console.info('another successful fetch!');
 });
 poller.on('complete', function(model){
   console.info('hurray! we are done!');
 });
 poller.on('error', function(model){
-  console.error('oops! something went wrong'); 
+  console.error('oops! something went wrong');
 }
 poller.start()
 ```
@@ -91,7 +91,7 @@ var poller = Backbone.Poller.get(model, options);
 model.set('active', false); // will programmatically stop the poller
 ```
 
-### Check status: 
+### Check status:
 ``` javascript
 var isActive = poller.active() // boolean;
 ```
