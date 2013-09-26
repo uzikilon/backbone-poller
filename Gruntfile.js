@@ -1,7 +1,5 @@
-/*global module, process */
-/* jshint maxstatements: 15 */
+/*global module */
 module.exports = function (grunt) {
-
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -23,7 +21,23 @@ module.exports = function (grunt) {
             'test/lib/backbone.js',
             'test/lib/sinon-1.5.2.js'
           ],
-          specs: 'test/spec/**/*.js'
+          specs: 'test/spec/**/*.js',
+          keepRunner: true,
+          outfile: 'SpecRunner.html'
+        }
+      },
+      'poller-min': {
+        src: ['backbone.poller.min.js'],
+        options: {
+          vendor: [
+            'test/lib/jquery-1.8.2.js',
+            'test/lib/underscore.js',
+            'test/lib/backbone.js',
+            'test/lib/sinon-1.5.2.js'
+          ],
+          specs: 'test/spec/**/*.js',
+          keepRunner: true,
+          outfile: 'SpecRunner.min.html'
         }
       }
     },
