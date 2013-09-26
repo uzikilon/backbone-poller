@@ -270,7 +270,7 @@ describe('Base poller operations', function() {
     window.require = {
       paths: {
         underscore: 'test/lib/underscore',
-        jquery: 'test/lib/jquery-1.8.2',
+        jquery: 'test/lib/jquery-1.10.2',
         backbone: 'test/lib/backbone'
       },
       shim: {
