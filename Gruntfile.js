@@ -31,6 +31,7 @@ module.exports = function (grunt) {
           junit: {
             path: 'build/junit'
           },
+          keepRunner: true,
           template: require('grunt-template-jasmine-istanbul'),
           templateOptions: {
             coverage: 'build/coverage/coverage.json',
@@ -38,8 +39,8 @@ module.exports = function (grunt) {
             thresholds: {
               lines: 95,
               statements: 95,
-              branches: 85,
-              functions: 90
+              branches: 90,
+              functions: 95
             }
           }
 

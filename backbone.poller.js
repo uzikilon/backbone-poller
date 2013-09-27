@@ -185,6 +185,8 @@ Backbone Poller may be freely distributed under the MIT license.
     return true;
   }
 
+  PollingManager.prototype = Poller.prototype; // test hook
+
   return PollingManager;
 
 }));
