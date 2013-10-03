@@ -10,8 +10,8 @@ describe('Accept options and invoking in time', function () {
     this.collection = new Backbone.Collection();
     this.model.sync = this.collection.sync = _sync;
 
-    this.mPoller = Backbone.Poller.get(this.model, {delay: 40});
-    this.cPoller = Backbone.Poller.get(this.collection, {delay: 40});
+    this.mPoller = Backbone.Poller.get(this.model, {delay: 16});
+    this.cPoller = Backbone.Poller.get(this.collection, {delay: 16});
   });
 
   afterEach(function () {
@@ -55,7 +55,7 @@ describe('Accept options and invoking in time', function () {
     var pFetchSpy = sinon.spy();
     var mFetchSpy = sinon.spy(this.model, 'fetch');
 
-    this.mPoller.set({fetch: pFetchSpy, delay: 50});
+    this.mPoller.set({fetch: pFetchSpy, delay: 16});
     this.mPoller.start();
 
     waitsFor(function () {
@@ -71,7 +71,7 @@ describe('Accept options and invoking in time', function () {
   it('Should run the "success" option after each successfull fetch', function () {
     var spy = sinon.spy();
 
-    this.mPoller.set({fetch: spy, delay: 50});
+    this.mPoller.set({fetch: spy, delay: 16});
     this.mPoller.start();
 
     waitsFor(function () {
@@ -89,10 +89,10 @@ describe('Accept options and invoking in time', function () {
     var bool = true,
         spy = sinon.spy();
 
-    this.mPoller.set({ delay: 50, complete: spy, condition: function () { return bool; } }).start();
+    this.mPoller.set({ delay: 16, complete: spy, condition: function () { return bool; } }).start();
 
     bool = false;
-    waits(50);
+    waits(32);
 
     runs(function () {
       expect(this.mPoller.active()).toBe(false);
@@ -186,7 +186,7 @@ describe('Accept options and invoking in time', function () {
       b: Math.random()
     };
 
-    this.cPoller.set({delay: 50, data: data});
+    this.cPoller.set({delay: 16, data: data});
     this.cPoller.start();
 
     waitsFor(function () {

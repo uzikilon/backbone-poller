@@ -12,8 +12,8 @@ describe('Handle events', function () {
     };
 
 
-    this.mPoller = Backbone.Poller.get(this.model, {delay: 40});
-    this.cPoller = Backbone.Poller.get(this.collection, {delay: 40});
+    this.mPoller = Backbone.Poller.get(this.model, {delay: 16});
+    this.cPoller = Backbone.Poller.get(this.collection, {delay: 16});
   });
 
   afterEach(function () {
@@ -170,7 +170,7 @@ describe('Handle events', function () {
     var bool = true,
     spy = sinon.spy();
 
-    this.mPoller.set({ delay: 50, condition: function () { return bool; } });
+    this.mPoller.set({ delay: 16, condition: function () { return bool; } });
     this.mPoller.on('complete', spy);
     this.mPoller.start();
 
