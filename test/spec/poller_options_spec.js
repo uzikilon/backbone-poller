@@ -140,13 +140,13 @@ describe('Accept options and invoking in time', function () {
     this.mPoller.on('backbone', function () {});
     this.mPoller.on('poller', function () {});
 
-    var calls = this.mPoller._callbacks || {};
+    var calls = this.mPoller._events || {};
     expect(_(calls).size()).toBe(2);
 
     this.mPoller.set({flush: true});
 
     runs(function () {
-      var calls = this.mPoller._callbacks || {};
+      var calls = this.mPoller._events || {};
       expect(_(calls).size()).toBe(0);
     });
   });
@@ -161,7 +161,7 @@ describe('Accept options and invoking in time', function () {
     expect(poller.active()).toBe(true);
   });
 
-  it('shouldnt trigger start event when starting with silent:true', function () {
+  it('shouldnt trigger "start" event when calling with silent:true', function () {
     this.mPoller.stop();
 
     var startSpy = jasmine.createSpy();
@@ -169,6 +169,14 @@ describe('Accept options and invoking in time', function () {
 
     this.mPoller.start({silent: true});
     expect(startSpy).not.toHaveBeenCalled();
+  });
+
+  it('shouldnt trigger "stop" event when calling with silent:true', function () {
+    var stopSpy = jasmine.createSpy();
+    this.mPoller.on('stop', stopSpy);
+
+    this.mPoller.stop({silent: true});
+    expect(stopSpy).not.toHaveBeenCalled();
   });
 
   it('Should pass the "data" option to the fetch call', function () {

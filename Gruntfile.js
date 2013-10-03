@@ -1,6 +1,13 @@
 /*global module */
 module.exports = function (grunt) {
 
+  var vendorLibs = [
+    'test/lib/jquery-1.10.2.js',
+    'test/lib/underscore.js',
+    'test/lib/backbone.js',
+    'test/lib/sinon-1.7.3.js'
+  ];
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -21,17 +28,11 @@ module.exports = function (grunt) {
       poller: {
         src: ['backbone.poller.js'],
         options: {
-          vendor: [
-            'test/lib/jquery-1.8.2.js',
-            'test/lib/underscore.js',
-            'test/lib/backbone.js',
-            'test/lib/sinon-1.5.2.js'
-          ],
+          vendor: vendorLibs,
           specs: 'test/spec/**/*.js',
           junit: {
             path: 'build/junit'
           },
-          keepRunner: true,
           template: require('grunt-template-jasmine-istanbul'),
           templateOptions: {
             coverage: 'build/coverage/coverage.json',
@@ -49,12 +50,7 @@ module.exports = function (grunt) {
       'poller-min': {
         src: ['backbone.poller.min.js'],
         options: {
-          vendor: [
-            'test/lib/jquery-1.8.2.js',
-            'test/lib/underscore.js',
-            'test/lib/backbone.js',
-            'test/lib/sinon-1.5.2.js'
-          ],
+          vendor: vendorLibs,
           specs: 'test/spec/**/*.js'
         }
       }
