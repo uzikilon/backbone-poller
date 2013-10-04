@@ -14,5 +14,8 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-docco": "~0.2.0",
     "grunt-template-jasmine-istanbul": "~0.2.5"
+  },
+  "scripts": {
+    "test": "grunt"
   }
 }
