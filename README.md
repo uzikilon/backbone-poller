@@ -1,4 +1,6 @@
 # Backbone Poller
+[![Build Status](https://travis-ci.org/uzikilon/backbone-poller.png?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
+
 Backbone poller is a simple utility that allows polling on any Backbone model or collection.
 
 Some modern browsers and servers support Web Sockets or long polling (comet) and allow advanced polling models.
