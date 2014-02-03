@@ -37,10 +37,10 @@ Backbone Poller may be freely distributed under the MIT license.
 
     // **Backbone.Poller.get(model[, options])**
     // <pre>
-    // Retuns a singleton instance of a poller for a model
+    // Returns a singleton instance of a poller for a model
     // Stops it if running
     // If options.autostart is true, will start it
-    // Retuns a poller isntance
+    // Returns a poller instance
     // </pre>
     get: function (model, options) {
       var poller = findPoller(model);
@@ -59,7 +59,7 @@ Backbone Poller may be freely distributed under the MIT license.
 
     // **Backbone.Poller.size()**
     // <pre>
-    // Returns the number of instanciated pollers
+    // Returns the number of instantiated pollers
     // </pre>
     size: function () {
       return pollers.length;
@@ -143,7 +143,7 @@ Backbone Poller may be freely distributed under the MIT license.
     },
     // **poller.active()**
     // <pre>
-    // Retunrs a bollean for poller status
+    // Returns a boolean for poller status
     // </pre>
     active: function () {
       return this.options.active === true;
