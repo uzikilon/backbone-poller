@@ -101,7 +101,7 @@ describe('Accept options and invoking in time', function () {
 
   });
 
-  it('Should run the "error" option when fetch fails', function () {
+  it('Should run the "error" option by default when fetch fails', function () {
 
     this.model.sync = function (method, model, options) {
       options.error('ERROR');
@@ -112,10 +112,67 @@ describe('Accept options and invoking in time', function () {
 
     waitsFor(function () {
       return spy.calledOnce;
+    }, 'error option to be called', this.mPoller.options.delay + 1);
+
+    runs(function () {
+      expect(spy.callCount).toEqual(1);
     });
+
+  });
+
+  it('Should run the "error" option event if continueOnError is set to true when fetch fails', function () {
+
+    this.model.sync = function (method, model, options) {
+      options.error('ERROR');
+    };
+
+    var spy = sinon.spy();
+    var poller = this.mPoller.set({continueOnError: true, error: spy}).start();
+
+    waitsFor(function () {
+      return spy.calledOnce;
+    }, 'error option to be called', this.mPoller.options.delay + 1);
+
+    runs(function () {
+      expect(spy.callCount).toEqual(1);
+    });
+
+  });
+
+  it('Should stop polling by default when fetch fails', function () {
+
+    this.model.sync = function (method, model, options) {
+      options.error('ERROR');
+    };
+
+    var spy = sinon.spy();
+    var poller = this.mPoller.set({error: spy}).start();
+
+    waitsFor(function () {
+      return spy.calledOnce;
+    }, 'error option to be called', this.mPoller.options.delay + 1);
 
     runs(function () {
       expect(poller.active()).toBe(false);
+    });
+
+  });
+
+  it('Should continue polling when continueOnError option is set to true when fetch fails', function () {
+
+    this.model.sync = function (method, model, options) {
+      options.error('ERROR');
+    };
+
+    var spy = sinon.spy();
+    var poller = this.mPoller.set({continueOnError: true, error: spy}).start();
+
+    waitsFor(function () {
+      return spy.calledOnce;
+    }, 'error option to be called', this.mPoller.options.delay + 1);
+
+    runs(function () {
+      expect(poller.active()).toBe(true);
     });
 
   });
