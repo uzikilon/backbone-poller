@@ -18,5 +18,10 @@
   },
   "scripts": {
     "test": "node_modules/.bin/grunt"
-  }
+  },
+  "dependencies": {
+    "underscore": "*",
+    "backbone": "*"
+  },
+  "main": "backbone.poller.js"
 }
