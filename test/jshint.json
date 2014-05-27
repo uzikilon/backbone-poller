@@ -37,6 +37,7 @@
   "globals": {
     "define": false,
     "require": false,
+    "module": false,
     "describe": false,
     "xdescribe": false,
     "expect": false,

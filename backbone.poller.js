@@ -9,6 +9,9 @@ Backbone Poller may be freely distributed under the MIT license.
   if (typeof define == 'function' && define.amd) {
     define(['underscore', 'backbone'], factory);
   }
+  else if (typeof require === 'function' && typeof exports === 'object') {
+    module.exports = factory(require('underscore'), require('backbone'));
+  }
   else {
     root.Backbone.Poller = factory(root._, root.Backbone);
   }
