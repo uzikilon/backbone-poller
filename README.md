@@ -53,6 +53,10 @@ var options = {
   // run after the first delay. defaults to false
   delayed: true,
 
+  // do not stop the poller on error. defaults to false
+  // `error` event is always fired even with this option on.
+  continueOnError: true,
+
   // condition for keeping polling active (when this stops being true, polling will stop)
   condition: function(model){
       return model.get('active') === true;

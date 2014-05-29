@@ -161,8 +161,13 @@ Backbone Poller may be freely distributed under the MIT license.
           delayedRun(poller);
         },
         error: function (model, resp) {
-          poller.stop({silent: true});
-          poller.trigger('error', model, resp);
+          if (poller.options.continueOnError) {
+            poller.trigger('error', model, resp);
+            delayedRun(poller);
+          } else {
+            poller.stop({silent: true});
+            poller.trigger('error', model, resp);
+          }
         }
       });
       poller.trigger('fetch', poller.model);
