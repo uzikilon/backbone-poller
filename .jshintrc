@@ -4,9 +4,9 @@
   "undef": true,
   "unused": true,
   "asi": false,
-  "white": true,
-  "smarttabs": true,
-  "strict": false,
+  "white": false,
+  "smarttabs": false,
+  "strict": true,
   "onecase": true,
   "browser": true,
   "curly": true,
@@ -18,8 +18,8 @@
   "trailing": true,
   "maxparams": 5,
   "maxdepth": 2,
-  "maxstatements": 12,
-  "maxcomplexity": 4,
+  "maxstatements": 14,
+  "maxcomplexity": 6,
   "maxlen": 120,
   "multistr": true,
   "forin": true,
@@ -37,7 +37,6 @@
   "globals": {
     "define": false,
     "require": false,
-    "module": false,
     "describe": false,
     "xdescribe": false,
     "expect": false,
@@ -49,6 +48,7 @@
     "waits": false,
     "spyOn": false,
     "runs": false,
-    "jasmine": false
+    "jasmine": false,
+    "module": false
   }
 }

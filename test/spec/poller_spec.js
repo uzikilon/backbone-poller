@@ -263,6 +263,42 @@ describe('Base poller operations', function() {
       expect(this.mPoller.active()).toBe(false);
 
     });
+
+
+    describe('backoff and getDelay', function() {
+
+      it('return a constanct delay when backoff is undefined', function () {
+        this.mPoller.set({delay: 1000});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
+      });
+
+      it('return a constanct delay when backoff is turned off', function () {
+        this.mPoller.set({delay: 1000, backoff: false});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
+      });
+
+      it('multiples by 1.1 when backoff is turned on', function () {
+        this.mPoller.set({delay: 100, backoff: true});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(110);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(121);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(133);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(146);
+      });
+
+      it('stops at 10x the original delay value', function () {
+        this.mPoller.set({delay: 100, backoff: true});
+
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
+        this.mPoller._backoff = 500;
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(3000);
+      });
+
+    });
+
+
   });
 
   describe('AMD support', function() {

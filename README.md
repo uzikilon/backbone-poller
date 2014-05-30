@@ -57,6 +57,12 @@ var options = {
   // `error` event is always fired even with this option on.
   continueOnError: true,
 
+  // A poor man's implementation of Exponential Backoff that will add 0.1% of delay for each run until
+  // hitting deay * 30. Good for long running jobs that you want very responsive on the beginning but want
+  // to avoid server and network load as time goes
+  // defaults to false
+  backoff: true,
+
   // condition for keeping polling active (when this stops being true, polling will stop)
   condition: function(model){
       return model.get('active') === true;

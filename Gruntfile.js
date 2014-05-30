@@ -1,6 +1,8 @@
 /*global module */
 module.exports = function (grunt) {
 
+  'use strict';
+
   var vendorLibs = [
     'test/lib/jquery-1.10.2.js',
     'test/lib/underscore.js',
@@ -19,7 +21,7 @@ module.exports = function (grunt) {
 
     jshint: {
       options: {
-        jshintrc: 'test/jshint.json'
+        jshintrc: '.jshintrc'
       },
       all: 'backbone.poller.js'
     },
@@ -28,6 +30,7 @@ module.exports = function (grunt) {
       poller: {
         src: ['backbone.poller.js'],
         options: {
+          keepRunner: true,
           vendor: vendorLibs,
           specs: 'test/spec/**/*.js',
           junit: {
@@ -38,9 +41,9 @@ module.exports = function (grunt) {
             coverage: 'build/coverage/coverage.json',
             report: 'build/coverage',
             thresholds: {
-              lines: 95,
-              statements: 95,
-              branches: 88,
+              lines: 92,
+              statements: 92,
+              branches: 84,
               functions: 95
             }
           }

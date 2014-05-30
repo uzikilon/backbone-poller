@@ -21,6 +21,7 @@ Backbone Poller may be freely distributed under the MIT license.
   // Default settings
   var defaults = {
     delay: 1000,
+    backoff: false,
     condition: function () {
       return true;
     }
@@ -175,9 +176,17 @@ Backbone Poller may be freely distributed under the MIT license.
     }
   }
 
+  function getDelay(poller) {
+    if (!poller.options.backoff) {
+      return poller.options.delay;
+    }
+    poller._backoff = poller._backoff ? Math.min(poller._backoff * 1.1, 30) : 1;
+    return Math.round(poller.options.delay * poller._backoff);
+  }
+
   function delayedRun(poller) {
     if (validate(poller)) {
-      poller.timeoutId = _.delay(run, poller.options.delay, poller);
+      poller.timeoutId = _.delay(run, getDelay(poller), poller);
     }
   }
 
@@ -193,7 +202,8 @@ Backbone Poller may be freely distributed under the MIT license.
     return true;
   }
 
-  PollingManager.prototype = Poller.prototype; // test hook
+  PollingManager.getDelay   = getDelay;         // test hook
+  PollingManager.prototype  = Poller.prototype; // test hook
 
   return PollingManager;
 
