@@ -16,9 +16,10 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.8/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.8/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.9/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.2.9/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
+----
 
 ## Basic Usage:
 ``` javascript
@@ -123,6 +124,41 @@ poller.set({delay: 300}).start();
 Backbone.Poller.reset();
 ```
 
+----
+
+## Change Log
+
+### 0.2.9
+Jun 6, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.8...0.2.9)
+
+- Added Bower support
+- Added Support to node-style module.exports for browserify
+- Added `continueOnError` option
+- Added [Exponential Backoff](http://en.wikipedia.org/wiki/Exponential_backoff) support
+
+### 0.2.8
+ Oct 28, 2013 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.7...0.2.8)
+
+- Cleanup
+
+### 0.2.7
+Sep 25, 2013 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.6...0.2.7)
+
+- Added `flush` option to `set` - defaults to false
+- Moved delayed run to start function
+
+### 0.2.6
+Jun 21, 2013 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.5...0.2.6)
+
+- Bugfix: Stop pollings correctly
+- Minification tweaks
+
+### 0.2.5
+- cleanup
+- delayed option bugfix
+- Passing the xhr object along with the error event
+
+----
 
 ## Copyrights
 Copyright (c) 2012 Uzi Kilon, Splunk Inc.
