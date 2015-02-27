@@ -13,5 +13,10 @@
   "dependencies": {
     "underscore": "*",
     "backbone": "*"
+  },
+  "devDependencies": {
+    "requirejs": "*",
+    "jquery": "*",
+    "sinon": "http://sinonjs.org/releases/sinon-1.12.2.js"
   }
 }

@@ -305,18 +305,9 @@ describe('Base poller operations', function() {
 
     window.require = {
       paths: {
-        underscore: 'test/lib/underscore',
-        jquery: 'test/lib/jquery-1.10.2',
-        backbone: 'test/lib/backbone'
-      },
-      shim: {
-        underscore: {
-          exports: '_'
-        },
-        backbone: {
-          deps: ['underscore', 'jquery'],
-          exports: 'Backbone'
-        }
+        underscore: 'bower_components/underscore/underscore',
+        jquery: 'bower_components/jquery/dist/jquery',
+        backbone: 'bower_components/backbone/backbone'
       }
     };
 
@@ -336,7 +327,7 @@ describe('Base poller operations', function() {
         else {
           node.addEventListener('load', function () { hasRequireJS = true; }, false);
         }
-        node.src = 'test/lib/require.js';
+        node.src = 'bower_components/requirejs/require.js';
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(node);
       });
