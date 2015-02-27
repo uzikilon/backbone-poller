@@ -1,6 +1,8 @@
 # Backbone Poller
 [![Build Status](https://travis-ci.org/uzikilon/backbone-poller.png?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
 [![Build Status](https://drone.io/github.com/uzikilon/backbone-poller/status.png)](https://drone.io/github.com/uzikilon/backbone-poller/latest)
+[![Dependency Status](https://david-dm.org/uzikilon/backbone-poller.svg)](https://david-dm.org/uzikilon/backbone-poller)
+[![devDependency Status](https://david-dm.org/uzikilon/backbone-poller/dev-status.svg)](https://david-dm.org/uzikilon/backbone-poller#info=devDependencies)
 
 Backbone poller is a simple utility that allows polling on any Backbone model or collection.
 
