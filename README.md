@@ -19,8 +19,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.3.0/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.3.0/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 ----
 
@@ -157,6 +157,11 @@ Backbone.Poller.reset();
 ----
 
 ## Change Log
+
+### 1.0.0
+Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
+
+- Better [Exponential Backoff](http://en.wikipedia.org/wiki/Exponential_backoff) support
 
 ### 0.3.0
 Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.9...0.3.0)
