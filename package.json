@@ -18,7 +18,7 @@
     "grunt-template-jasmine-istanbul": "^0.2.5"
   },
   "scripts": {
-    "pretest": "npm install && node_modules/.bin/bower install",
+    "postinstall": "node_modules/.bin/bower install",
     "test": "node_modules/.bin/grunt"
   },
   "dependencies": {
