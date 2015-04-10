@@ -1,5 +1,7 @@
 # Backbone Poller
+[![npm version](https://badge.fury.io/js/backbone-poller.svg)](http://badge.fury.io/js/backbone-poller)
 [![Build Status](https://travis-ci.org/uzikilon/backbone-poller.png?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
+[![Dependency Status](https://david-dm.org/uzikilon/backbone-poller.svg)](https://david-dm.org/uzikilon/backbone-poller)
 
 Backbone poller is a simple utility that allows polling on any Backbone model or collection.
 
@@ -16,8 +18,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/0.3.0/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/0.3.0/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 ----
 
@@ -58,12 +60,6 @@ var options = {
   // `error` event is always fired even with this option on.
   continueOnError: true,
 
-  // A poor man's implementation of Exponential Backoff that will add 0.1% of delay for each run until
-  // hitting deay * 30. Good for long running jobs that you want very responsive on the beginning but want
-  // to avoid server and network load as time goes
-  // defaults to false
-  backoff: true,
-
   // condition for keeping polling active (when this stops being true, polling will stop)
   condition: function(model){
       return model.get('active') === true;
@@ -73,6 +69,39 @@ var options = {
   data: {fields: "*", sort: "name asc"}
 }
 var poller = Backbone.Poller.get(model, options);
+```
+
+### Exponential Backoff
+in order to apply Exponential Backoff on the poller we can set the delay option as an array.
+- The values are of `[startDelay[, maxDelay[, multiplier]]]`
+- The default multiplier is 2
+- The multiplier can be used as a function that gets the current delay as a parameter and returns the next one.
+
+##### Examples:
+```javascript
+// basic
+Backbone.Poller.get(model, {delay: [100]}).start();
+// 100, 200, 400, 800, 1600, 3200 ...
+
+// with maxDelay
+Backbone.Poller.get(model, {delay: [100, 1000]}).start();
+// 100, 200, 400, 800, 1000, 1000 ...
+
+// another multiplier
+Backbone.Poller.get(model, {delay: [100, 1000, 3]}).start();
+// 100, 300, 900, 1000, 1000 ...
+
+// custom multiplier function
+Backbone.Poller.get(model, {
+  delay: [
+    100,
+    2000,
+    function (n) {
+      return n * 4
+    }
+  ]
+}).start();
+// 100, 400, 1600, 2000, 2000 ...
 ```
 
 ### Register event listeners:
@@ -127,6 +156,11 @@ Backbone.Poller.reset();
 ----
 
 ## Change Log
+
+### 1.0.0
+Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
+
+- Better [Exponential Backoff](http://en.wikipedia.org/wiki/Exponential_backoff) support
 
 ### 0.3.0
 Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.2.9...0.3.0)

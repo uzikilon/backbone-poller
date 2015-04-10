@@ -1,4 +1,5 @@
-/*global jasmine, Backbone, _, jQuery */
+/*global jasmine, Backbone */
+/* jshint strict:false, maxstatements: false*/
 describe('Base poller operations', function() {
 
   function hasManagerAPI(manager){
@@ -167,7 +168,7 @@ describe('Base poller operations', function() {
 
     it('Should stop when condition is satisfied', function() {
       var bool = true,
-      options = { delay: 50, condition: function(model){ return bool; } },
+      options = { delay: 50, condition: function() { return bool; } },
       poller = Backbone.Poller.get(this.model, options).start();
 
       expect(poller.active()).toBe(true);
@@ -186,7 +187,6 @@ describe('Base poller operations', function() {
       var flag = false;
 
       spyOn(this.model, 'fetch').andCallThrough();
-      var spy = this.model.fetch;
 
       this.mPoller.start();
 
@@ -279,16 +279,39 @@ describe('Base poller operations', function() {
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
       });
 
-      it('multiples by 1.1 when backoff is turned on', function () {
-        this.mPoller.set({delay: 100, backoff: true});
+      it('backoff multiples by 2 by default when enabled', function () {
+        this.mPoller.set({delay: [100, 1600]});
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(110);
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(121);
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(133);
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(146);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(200);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(400);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(800);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1600);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1600);
       });
 
-      it('stops at 10x the original delay value', function () {
+      it('backoff multiples by n when specified', function () {
+        this.mPoller.set({delay: [100, 2700, 3]});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(300);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(900);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(2700);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(2700);
+      });
+
+      it('backoff multiples by custom function when provided', function () {
+        this.mPoller.set({delay: [100, 550, function (n) {
+          return n * 1.5;
+        }]});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(150);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(225);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(338);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(506);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(550);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(550);
+      });
+
+      xit('stops at 10x the original delay value', function () {
         this.mPoller.set({delay: 100, backoff: true});
 
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
@@ -305,18 +328,9 @@ describe('Base poller operations', function() {
 
     window.require = {
       paths: {
-        underscore: 'test/lib/underscore',
-        jquery: 'test/lib/jquery-1.10.2',
-        backbone: 'test/lib/backbone'
-      },
-      shim: {
-        underscore: {
-          exports: '_'
-        },
-        backbone: {
-          deps: ['underscore', 'jquery'],
-          exports: 'Backbone'
-        }
+        underscore: 'bower_components/underscore/underscore',
+        jquery: 'bower_components/jquery/dist/jquery',
+        backbone: 'bower_components/backbone/backbone'
       }
     };
 
@@ -336,7 +350,7 @@ describe('Base poller operations', function() {
         else {
           node.addEventListener('load', function () { hasRequireJS = true; }, false);
         }
-        node.src = 'test/lib/require.js';
+        node.src = 'bower_components/requirejs/require.js';
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(node);
       });

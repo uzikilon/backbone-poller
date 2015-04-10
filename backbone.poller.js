@@ -1,6 +1,6 @@
 /*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 0.3.0
+Backbone Poller 1.0.0
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
@@ -21,7 +21,6 @@ Backbone Poller may be freely distributed under the MIT license.
   // Default settings
   var defaults = {
     delay: 1000,
-    backoff: false,
     condition: function () {
       return true;
     }
@@ -82,6 +81,7 @@ Backbone Poller may be freely distributed under the MIT license.
 
   function Poller(model, options) {
     this.model = model;
+    this.cid = _.uniqueId('poller');
     this.set(options);
   }
 
@@ -176,12 +176,33 @@ Backbone Poller may be freely distributed under the MIT license.
     }
   }
 
+  var backoff = {};
   function getDelay(poller) {
-    if (!poller.options.backoff) {
+    if (_.isNumber(poller.options.delay)) {
       return poller.options.delay;
     }
-    poller._backoff = poller._backoff ? Math.min(poller._backoff * 1.1, 30) : 1;
-    return Math.round(poller.options.delay * poller._backoff);
+
+    var min = poller.options.delay[0],
+        max = poller.options.delay[1],
+        interval = poller.options.delay[2] || 2;
+
+    if (backoff[poller.cid]) {
+      if (_.isFunction(interval)) {
+        backoff[poller.cid] = interval(backoff[poller.cid]);
+      }
+      else {
+        backoff[poller.cid] = backoff[poller.cid] * interval;
+      }
+    }
+    else {
+      backoff[poller.cid] = 1;
+    }
+
+    var res = Math.round(min * backoff[poller.cid]);
+    if (max && max > 0) {
+      res = Math.min(res, max);
+    }
+    return res;
   }
 
   function delayedRun(poller) {

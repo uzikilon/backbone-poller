@@ -4,20 +4,14 @@ module.exports = function (grunt) {
   'use strict';
 
   var vendorLibs = [
-    'test/lib/jquery-1.10.2.js',
-    'test/lib/underscore.js',
-    'test/lib/backbone.js',
-    'test/lib/sinon-1.7.3.js'
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/underscore/underscore.js',
+    'bower_components/backbone/backbone.js',
+    'bower_components/sinon/index.js'
   ];
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-
-    connect: {
-      test: {
-        port: 8000
-      }
-    },
 
     jshint: {
       options: {
@@ -41,10 +35,10 @@ module.exports = function (grunt) {
             coverage: 'build/coverage/coverage.json',
             report: 'build/coverage',
             thresholds: {
-              lines: 92,
-              statements: 92,
-              branches: 84,
-              functions: 95
+              lines: 96,
+              statements: 96,
+              branches: 88,
+              functions: 100
             }
           }
 
