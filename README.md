@@ -158,7 +158,7 @@ Backbone.Poller.reset();
 ## Change Log
 
 ### 1.0.0
-Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
+April 9, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
 
 - Better [Exponential Backoff](http://en.wikipedia.org/wiki/Exponential_backoff) support
 
