@@ -18,8 +18,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.0/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.1/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.1/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 ----
 
@@ -53,8 +53,9 @@ var options = {
   // default delay is 1000ms
   delay: 300,
 
-  // run after the first delay. defaults to false
-  delayed: true,
+  // run after a delayed interval. defaults to false
+  // can be a boolean `true` to wait `delay` ms before starting or a number to override the wait period
+  delayed: 1000,
 
   // do not stop the poller on error. defaults to false
   // `error` event is always fired even with this option on.
@@ -157,8 +158,13 @@ Backbone.Poller.reset();
 
 ## Change Log
 
+### 1.0.1
+April 18, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.0.0...1.0.1)
+
+- Set the delayed parameter to be a number (as well as a boolean)
+
 ### 1.0.0
-Jun 24, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
+April 9, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/0.3.0...1.0.0)
 
 - Better [Exponential Backoff](http://en.wikipedia.org/wiki/Exponential_backoff) support
 

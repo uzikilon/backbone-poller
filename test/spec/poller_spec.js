@@ -9,15 +9,17 @@ describe('Base poller operations', function() {
     }
   }
 
+  var _sync = function(method, model, options){
+    options.success(model.toJSON());
+    model.trigger('sync');
+    return {
+      abort: function () {}
+    };
+  };
+
   describe('Poller funcionality', function() {
 
-    var _sync = function(method, model, options){
-      options.success(model.toJSON());
-      model.trigger('sync');
-      return {
-        abort: function () {}
-      };
-    };
+
 
     beforeEach(function() {
       this.model = new Backbone.Model();
@@ -101,6 +103,10 @@ describe('Base poller operations', function() {
         expect(this.mPoller.active()).toBe(false);
       });
 
+      afterEach(function () {
+        this.mPoller.stop();
+      });
+
       it('Should start delayed when invoking start() with a flag', function() {
         this.mPoller.set(this.options).start();
         expect(this.mPoller.active()).toBe(true);
@@ -133,6 +139,29 @@ describe('Base poller operations', function() {
         this.mPoller.set(this.options).start();
         expect(this.mPoller.options.delayed).toBe(true);
       });
+
+      it('accepts delayed as a number', function () {
+        this.mPoller.set( {delay: 15, delayed: 100}).start();
+        this.model.fetch.andCallThrough();
+        waits(15);
+        runs(function () {
+          expect(this.model.fetch).not.toHaveBeenCalled();
+        });
+        waits(85);
+        runs(function () {
+          expect(this.model.fetch).toHaveBeenCalled();
+          expect(this.model.fetch.callCount).toBe(1);
+        });
+        waits(15);
+        runs(function () {
+          expect(this.model.fetch.callCount).toBe(2);
+        });
+        waits(15);
+        runs(function () {
+          expect(this.model.fetch.callCount).toBe(3);
+        });
+      });
+
     });
 
 
