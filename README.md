@@ -1,6 +1,6 @@
 # Backbone Poller
 [![npm version](https://badge.fury.io/js/backbone-poller.svg)](http://badge.fury.io/js/backbone-poller)
-[![Build Status](https://travis-ci.org/uzikilon/backbone-poller.png?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
+[![Build Status](https://travis-ci.org/uzikilon/backbone-poller.svg?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
 [![Dependency Status](https://david-dm.org/uzikilon/backbone-poller.svg)](https://david-dm.org/uzikilon/backbone-poller)
 
 Backbone poller is a simple utility that allows polling on any Backbone model or collection.
