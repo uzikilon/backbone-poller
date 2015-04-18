@@ -122,7 +122,7 @@ Backbone Poller may be freely distributed under the MIT license.
         options && options.silent || this.trigger('start', this.model);
         this.options.active = true;
         if (this.options.delayed) {
-          delayedRun(this);
+          delayedRun(this, _.isNumber(this.options.delayed) && this.options.delayed);
         } else {
           run(this);
         }
@@ -205,9 +205,9 @@ Backbone Poller may be freely distributed under the MIT license.
     return res;
   }
 
-  function delayedRun(poller) {
+  function delayedRun(poller, delay) {
     if (validate(poller)) {
-      poller.timeoutId = _.delay(run, getDelay(poller), poller);
+      poller.timeoutId = _.delay(run, delay || getDelay(poller), poller);
     }
   }
 

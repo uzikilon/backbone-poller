@@ -53,8 +53,9 @@ var options = {
   // default delay is 1000ms
   delay: 300,
 
-  // run after the first delay. defaults to false
-  delayed: true,
+  // run after a delayed interval. defaults to false
+  // can be a boolean `true` to wait `delay` ms before starting or a number to override the wait period
+  delayed: 1000,
 
   // do not stop the poller on error. defaults to false
   // `error` event is always fired even with this option on.
