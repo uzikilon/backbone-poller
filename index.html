@@ -32,7 +32,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 1.0.0
+Backbone Poller 1.0.1
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */</span>
@@ -238,7 +238,7 @@ Triggers a 'start' events unless options.silent is set to true
         options &amp;&amp; options.silent || <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">'start'</span>, <span class="hljs-keyword">this</span>.model);
         <span class="hljs-keyword">this</span>.options.active = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.delayed) {
-          delayedRun(<span class="hljs-keyword">this</span>);
+          delayedRun(<span class="hljs-keyword">this</span>, _.isNumber(<span class="hljs-keyword">this</span>.options.delayed) &amp;&amp; <span class="hljs-keyword">this</span>.options.delayed);
         } <span class="hljs-keyword">else</span> {
           run(<span class="hljs-keyword">this</span>);
         }
@@ -347,9 +347,9 @@ Returns a boolean for poller status
     <span class="hljs-keyword">return</span> res;
   }
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">delayedRun</span><span class="hljs-params">(poller)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">delayedRun</span><span class="hljs-params">(poller, delay)</span> </span>{
     <span class="hljs-keyword">if</span> (validate(poller)) {
-      poller.timeoutId = _.delay(run, getDelay(poller), poller);
+      poller.timeoutId = _.delay(run, delay || getDelay(poller), poller);
     }
   }
 
