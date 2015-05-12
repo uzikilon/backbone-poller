@@ -105,7 +105,7 @@ Backbone Poller may be freely distributed under the MIT license.
       }, this);
 
       if (this.model instanceof Backbone.Model) {
-        this.model.on('destroy', this.stop, this);
+        this.listenTo(this.model, 'destroy', this.stop);
       }
 
       return this.stop({silent: true});
