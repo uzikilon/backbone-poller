@@ -134,6 +134,12 @@ var poller = Backbone.Poller.get(model, options);
 model.set('active', false); // will programmatically stop the poller
 ```
 
+### Destroying the poller
+Stop the poller, remove all event listeners, and clear all references
+```javasctipt
+poller.destroy();
+```
+
 ### Check status:
 ``` javascript
 var isActive = poller.active() // boolean;
