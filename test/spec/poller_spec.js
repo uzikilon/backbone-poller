@@ -73,6 +73,14 @@ describe('Base poller operations', function() {
       expect(this.cPoller.active()).toEqual(false);
     });
 
+    it('pass through on start when already running', function () {
+      this.mPoller.start();
+      var spy = jasmine.createSpy();
+      this.mPoller.on('start', spy);
+      this.mPoller.start();
+      expect(spy).not.toHaveBeenCalled();
+    });
+
 
     it('Should not create more than one instance per model', function() {
       var mPoller1 = Backbone.Poller.get(this.model);
@@ -164,7 +172,33 @@ describe('Base poller operations', function() {
 
     });
 
+    describe('.destroy', function () {
+      it('calls this.stop', function () {
+        spyOn(this.mPoller, 'stop');
+        this.mPoller.destroy();
+        expect(this.mPoller.stop).toHaveBeenCalled();
+      });
 
+      it('calls this.stopListening', function () {
+        spyOn(this.mPoller, 'stopListening');
+        this.mPoller.destroy();
+        expect(this.mPoller.stopListening).toHaveBeenCalled();
+      });
+
+      it('calls this.off', function () {
+        spyOn(this.mPoller, 'off');
+        this.mPoller.destroy();
+        expect(this.mPoller.off).toHaveBeenCalled();
+      });
+
+      it('removes poller from registry', function () {
+        expect(Backbone.Poller.size()).toBe(2);
+        this.mPoller.destroy();
+        expect(Backbone.Poller.size()).toBe(1);
+        this.cPoller.destroy();
+        expect(Backbone.Poller.size()).toBe(0);
+      });
+    });
 
     it('Should stop when invoking stop()', function() {
       this.mPoller.start();
@@ -309,13 +343,22 @@ describe('Base poller operations', function() {
       });
 
       it('backoff multiples by 2 by default when enabled', function () {
-        this.mPoller.set({delay: [100, 1600]});
+        this.mPoller.set({delay: [100]});
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(200);
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(400);
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(800);
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1600);
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1600);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(3200);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(6400);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(12800);
+      });
+
+      it('backoff stops at the defined value', function () {
+        this.mPoller.set({delay: [100, 150]});
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(150);
+        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(150);
       });
 
       it('backoff multiples by n when specified', function () {

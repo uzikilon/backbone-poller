@@ -74,7 +74,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // </pre>
     reset: function () {
       while (pollers.length) {
-        pollers.pop().stop();
+        pollers[0].destroy();
       }
     }
   };
@@ -83,6 +83,10 @@ Backbone Poller may be freely distributed under the MIT license.
     this.model = model;
     this.cid = _.uniqueId('poller');
     this.set(options);
+
+    if (this.model instanceof Backbone.Model) {
+      this.listenTo(this.model, 'destroy', this.destroy);
+    }
   }
 
   _.extend(Poller.prototype, Backbone.Events, {
@@ -103,10 +107,6 @@ Backbone Poller may be freely distributed under the MIT license.
           this.on(name, callback, this);
         }
       }, this);
-
-      if (this.model instanceof Backbone.Model) {
-        this.model.on('destroy', this.stop, this);
-      }
 
       return this.stop({silent: true});
     },
@@ -151,6 +151,15 @@ Backbone Poller may be freely distributed under the MIT license.
     // </pre>
     active: function () {
       return this.options.active === true;
+    },
+
+    destroy: function () {
+      this.stop();
+      this.stopListening();
+      this.off();
+      pollers = _.filter(pollers, function (poller) {
+        return poller !== this;
+      }, this);
     }
   });
 
