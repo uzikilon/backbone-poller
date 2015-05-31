@@ -27,7 +27,7 @@ Backbone Poller may be freely distributed under the MIT license.
   };
 
   // Available events
-  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
+  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete'];
 
   var pollers = [];
   function findPoller(model) {
@@ -123,7 +123,8 @@ Backbone Poller may be freely distributed under the MIT license.
         this.options.active = true;
         if (this.options.delayed) {
           delayedRun(this, _.isNumber(this.options.delayed) && this.options.delayed);
-        } else {
+        }
+        else {
           run(this);
         }
       }
@@ -174,7 +175,8 @@ Backbone Poller may be freely distributed under the MIT license.
           if (poller.options.continueOnError) {
             poller.trigger('error', model, resp);
             delayedRun(poller);
-          } else {
+          }
+          else {
             poller.stop({silent: true});
             poller.trigger('error', model, resp);
           }
@@ -200,7 +202,7 @@ Backbone Poller may be freely distributed under the MIT license.
         backoff[poller.cid] = interval(backoff[poller.cid]);
       }
       else {
-        backoff[poller.cid] = backoff[poller.cid] * interval;
+        backoff[poller.cid] *= interval;
       }
     }
     else {
@@ -221,7 +223,7 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   function validate(poller) {
-    if (! poller.options.active) {
+    if (!poller.options.active) {
       return false;
     }
     if (poller.options.condition(poller.model) !== true) {
@@ -232,9 +234,9 @@ Backbone Poller may be freely distributed under the MIT license.
     return true;
   }
 
-  PollingManager.getDelay   = getDelay;         // test hook
-  PollingManager.prototype  = Poller.prototype; // test hook
+  /* Test hooks */
+  PollingManager.getDelay = getDelay;
+  PollingManager.prototype = Poller.prototype;
 
   return PollingManager;
-
 }));

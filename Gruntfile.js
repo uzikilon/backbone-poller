@@ -1,6 +1,4 @@
-/*global module */
 module.exports = function (grunt) {
-
   'use strict';
 
   var vendorLibs = [
@@ -17,7 +15,11 @@ module.exports = function (grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: 'backbone.poller.js'
+      all: ['Gruntfile.js', 'backbone.poller.js']
+    },
+
+    eslint: {
+      target: ['Gruntfile.js', 'backbone.poller.js']
     },
 
     jasmine: {
@@ -79,7 +81,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-eslint');
 
-  grunt.registerTask('default', ['jshint', 'uglify', 'jasmine']);
-
+  grunt.registerTask('lint', ['jshint', 'eslint']);
+  grunt.registerTask('default', ['lint', 'uglify', 'jasmine']);
 };
