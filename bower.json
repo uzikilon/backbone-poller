@@ -1,6 +1,6 @@
 {
   "name": "backbone-poller",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "homepage": "https://github.com/uzikilon/backbone-poller",
   "description": "Backbone poller is a simple utility that allows polling on any backbone model or collection.",
   "main": "backbone.poller.js",
