@@ -12,6 +12,9 @@ However, in many cases it is sufficient to run a standard http request every few
 Backbone poller helps with these cases:
 
 - Allows you to poll without extending your base backbone models or collections
+- Guarantees one poller per model/collection instance
+- Aborts running connections on stop/destroy
+- Prevents from running conflicting requests
 - Is 100% compliant with any Backbone model or collection.
 
 The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online.
