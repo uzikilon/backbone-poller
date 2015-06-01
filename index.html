@@ -32,11 +32,11 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 1.0.1
+Backbone Poller 1.1.1
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */</span>
-(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(root, factory)</span> </span>{
+(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">root, factory</span>) </span>{
 <span class="hljs-pi">  'use strict'</span>;
   <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define == <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {
     define([<span class="hljs-string">'underscore'</span>, <span class="hljs-string">'backbone'</span>], factory);
@@ -47,7 +47,7 @@ Backbone Poller may be freely distributed under the MIT license.
   <span class="hljs-keyword">else</span> {
     root.Backbone.Poller = factory(root._, root.Backbone);
   }
-}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Backbone)</span> </span>{
+}(<span class="hljs-keyword">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">_, Backbone</span>) </span>{
 <span class="hljs-pi">  'use strict'</span>;</pre></div></div>
             
         </li>
@@ -65,7 +65,7 @@ Backbone Poller may be freely distributed under the MIT license.
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> defaults = {
     delay: <span class="hljs-number">1000</span>,
-    condition: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    condition: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
       <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
     }
   };</pre></div></div>
@@ -83,11 +83,11 @@ Backbone Poller may be freely distributed under the MIT license.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> events = [<span class="hljs-string">'start'</span>, <span class="hljs-string">'stop'</span>, <span class="hljs-string">'fetch'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>, <span class="hljs-string">'complete'</span> ];
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> events = [<span class="hljs-string">'start'</span>, <span class="hljs-string">'stop'</span>, <span class="hljs-string">'fetch'</span>, <span class="hljs-string">'success'</span>, <span class="hljs-string">'error'</span>, <span class="hljs-string">'complete'</span>];
 
   <span class="hljs-keyword">var</span> pollers = [];
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPoller</span><span class="hljs-params">(model)</span> </span>{
-    <span class="hljs-keyword">return</span> _.find(pollers, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(poller)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPoller</span>(<span class="hljs-params">model</span>) </span>{
+    <span class="hljs-keyword">return</span> _.find(pollers, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">poller</span>) </span>{
       <span class="hljs-keyword">return</span> poller.model === model;
     });
   }
@@ -113,7 +113,7 @@ Returns a poller instance
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    get: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(model, options)</span> </span>{
+            <div class="content"><div class='highlight'><pre>    get: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">model, options</span>) </span>{
       <span class="hljs-keyword">var</span> poller = findPoller(model);
       <span class="hljs-keyword">if</span> (!poller) {
         poller = <span class="hljs-keyword">new</span> Poller(model, options);
@@ -144,7 +144,7 @@ Returns the number of instantiated pollers
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    size: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>    size: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
       <span class="hljs-keyword">return</span> pollers.length;
     },</pre></div></div>
             
@@ -164,17 +164,21 @@ Stops all pollers and removes from the pollers pool
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    reset: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>    reset: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
       <span class="hljs-keyword">while</span> (pollers.length) {
-        pollers.pop().stop();
+        pollers[<span class="hljs-number">0</span>].destroy();
       }
     }
   };
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Poller</span><span class="hljs-params">(model, options)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Poller</span>(<span class="hljs-params">model, options</span>) </span>{
     <span class="hljs-keyword">this</span>.model = model;
     <span class="hljs-keyword">this</span>.cid = _.uniqueId(<span class="hljs-string">'poller'</span>);
     <span class="hljs-keyword">this</span>.set(options);
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.model <span class="hljs-keyword">instanceof</span> Backbone.Model) {
+      <span class="hljs-keyword">this</span>.listenTo(<span class="hljs-keyword">this</span>.model, <span class="hljs-string">'destroy'</span>, <span class="hljs-keyword">this</span>.destroy);
+    }
   }
 
   _.extend(Poller.prototype, Backbone.Events, {</pre></div></div>
@@ -195,22 +199,18 @@ Reset poller options and stops the poller
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    set: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(options)</span> </span>{
+            <div class="content"><div class='highlight'><pre>    set: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
       <span class="hljs-keyword">this</span>.options = _.extend({}, defaults, options || {});
       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.flush) {
         <span class="hljs-keyword">this</span>.off();
       }
-      _.each(events, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(name)</span> </span>{
+      _.each(events, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{
         <span class="hljs-keyword">var</span> callback = <span class="hljs-keyword">this</span>.options[name];
         <span class="hljs-keyword">if</span> (_.isFunction(callback)) {
           <span class="hljs-keyword">this</span>.off(name, callback, <span class="hljs-keyword">this</span>);
           <span class="hljs-keyword">this</span>.on(name, callback, <span class="hljs-keyword">this</span>);
         }
       }, <span class="hljs-keyword">this</span>);
-
-      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.model <span class="hljs-keyword">instanceof</span> Backbone.Model) {
-        <span class="hljs-keyword">this</span>.model.on(<span class="hljs-string">'destroy'</span>, <span class="hljs-keyword">this</span>.stop, <span class="hljs-keyword">this</span>);
-      }
 
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.stop({silent: <span class="hljs-literal">true</span>});
     },</pre></div></div>
@@ -233,13 +233,14 @@ Triggers a 'start' events unless options.silent is set to true
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    start: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(options)</span> </span>{
+            <div class="content"><div class='highlight'><pre>    start: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
       <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.active()) {
         options &amp;&amp; options.silent || <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">'start'</span>, <span class="hljs-keyword">this</span>.model);
         <span class="hljs-keyword">this</span>.options.active = <span class="hljs-literal">true</span>;
         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.options.delayed) {
           delayedRun(<span class="hljs-keyword">this</span>, _.isNumber(<span class="hljs-keyword">this</span>.options.delayed) &amp;&amp; <span class="hljs-keyword">this</span>.options.delayed);
-        } <span class="hljs-keyword">else</span> {
+        }
+        <span class="hljs-keyword">else</span> {
           run(<span class="hljs-keyword">this</span>);
         }
       }
@@ -265,7 +266,7 @@ Triggers a 'stop' events unless options.silent is set to true
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    stop: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(options)</span> </span>{
+            <div class="content"><div class='highlight'><pre>    stop: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options</span>) </span>{
       options &amp;&amp; options.silent || <span class="hljs-keyword">this</span>.trigger(<span class="hljs-string">'stop'</span>, <span class="hljs-keyword">this</span>.model);
       <span class="hljs-keyword">this</span>.options.active = <span class="hljs-literal">false</span>;
       <span class="hljs-keyword">this</span>.xhr &amp;&amp; <span class="hljs-keyword">this</span>.xhr.abort &amp;&amp; <span class="hljs-keyword">this</span>.xhr.abort();
@@ -291,23 +292,33 @@ Returns a boolean for poller status
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    active: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <div class="content"><div class='highlight'><pre>    active: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.options.active === <span class="hljs-literal">true</span>;
+    },
+
+    destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">this</span>.stop();
+      <span class="hljs-keyword">this</span>.stopListening();
+      <span class="hljs-keyword">this</span>.off();
+      pollers = _.filter(pollers, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">poller</span>) </span>{
+        <span class="hljs-keyword">return</span> poller !== <span class="hljs-keyword">this</span>;
+      }, <span class="hljs-keyword">this</span>);
     }
   });
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span><span class="hljs-params">(poller)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span>(<span class="hljs-params">poller</span>) </span>{
     <span class="hljs-keyword">if</span> (validate(poller)) {
       <span class="hljs-keyword">var</span> options = _.extend({}, poller.options, {
-        success: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(model, resp)</span> </span>{
+        success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">model, resp</span>) </span>{
           poller.trigger(<span class="hljs-string">'success'</span>, model, resp);
           delayedRun(poller);
         },
-        error: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(model, resp)</span> </span>{
+        error: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">model, resp</span>) </span>{
           <span class="hljs-keyword">if</span> (poller.options.continueOnError) {
             poller.trigger(<span class="hljs-string">'error'</span>, model, resp);
             delayedRun(poller);
-          } <span class="hljs-keyword">else</span> {
+          }
+          <span class="hljs-keyword">else</span> {
             poller.stop({silent: <span class="hljs-literal">true</span>});
             poller.trigger(<span class="hljs-string">'error'</span>, model, resp);
           }
@@ -319,7 +330,7 @@ Returns a boolean for poller status
   }
 
   <span class="hljs-keyword">var</span> backoff = {};
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDelay</span><span class="hljs-params">(poller)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDelay</span>(<span class="hljs-params">poller</span>) </span>{
     <span class="hljs-keyword">if</span> (_.isNumber(poller.options.delay)) {
       <span class="hljs-keyword">return</span> poller.options.delay;
     }
@@ -333,7 +344,7 @@ Returns a boolean for poller status
         backoff[poller.cid] = interval(backoff[poller.cid]);
       }
       <span class="hljs-keyword">else</span> {
-        backoff[poller.cid] = backoff[poller.cid] * interval;
+        backoff[poller.cid] *= interval;
       }
     }
     <span class="hljs-keyword">else</span> {
@@ -347,14 +358,14 @@ Returns a boolean for poller status
     <span class="hljs-keyword">return</span> res;
   }
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">delayedRun</span><span class="hljs-params">(poller, delay)</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">delayedRun</span>(<span class="hljs-params">poller, delay</span>) </span>{
     <span class="hljs-keyword">if</span> (validate(poller)) {
       poller.timeoutId = _.delay(run, delay || getDelay(poller), poller);
     }
   }
 
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">validate</span><span class="hljs-params">(poller)</span> </span>{
-    <span class="hljs-keyword">if</span> (! poller.options.active) {
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">validate</span>(<span class="hljs-params">poller</span>) </span>{
+    <span class="hljs-keyword">if</span> (!poller.options.active) {
       <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
     }
     <span class="hljs-keyword">if</span> (poller.options.condition(poller.model) !== <span class="hljs-literal">true</span>) {
@@ -365,11 +376,11 @@ Returns a boolean for poller status
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
   }
 
-  PollingManager.getDelay   = getDelay;         <span class="hljs-comment">// test hook</span>
-  PollingManager.prototype  = Poller.prototype; <span class="hljs-comment">// test hook</span>
+  <span class="hljs-comment">/* Test hooks */</span>
+  PollingManager.getDelay = getDelay;
+  PollingManager.prototype = Poller.prototype;
 
   <span class="hljs-keyword">return</span> PollingManager;
-
 }));</pre></div></div>
             
         </li>
