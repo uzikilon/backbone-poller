@@ -300,9 +300,7 @@ Returns a boolean for poller status
       <span class="hljs-keyword">this</span>.stop();
       <span class="hljs-keyword">this</span>.stopListening();
       <span class="hljs-keyword">this</span>.off();
-      pollers = _.filter(pollers, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">poller</span>) </span>{
-        <span class="hljs-keyword">return</span> poller !== <span class="hljs-keyword">this</span>;
-      }, <span class="hljs-keyword">this</span>);
+      pollers.splice(_.indexOf(pollers, <span class="hljs-keyword">this</span>), <span class="hljs-number">1</span>);
     }
   });
 
