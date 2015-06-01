@@ -158,9 +158,7 @@ Backbone Poller may be freely distributed under the MIT license.
       this.stop();
       this.stopListening();
       this.off();
-      pollers = _.filter(pollers, function (poller) {
-        return poller !== this;
-      }, this);
+      pollers.splice(_.indexOf(pollers, this), 1);
     }
   });
 
