@@ -1,6 +1,6 @@
 /*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 1.0.1
+Backbone Poller 1.1.1
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
@@ -27,7 +27,7 @@ Backbone Poller may be freely distributed under the MIT license.
   };
 
   // Available events
-  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete' ];
+  var events = ['start', 'stop', 'fetch', 'success', 'error', 'complete'];
 
   var pollers = [];
   function findPoller(model) {
@@ -74,7 +74,7 @@ Backbone Poller may be freely distributed under the MIT license.
     // </pre>
     reset: function () {
       while (pollers.length) {
-        pollers.pop().stop();
+        pollers[0].destroy();
       }
     }
   };
@@ -83,6 +83,10 @@ Backbone Poller may be freely distributed under the MIT license.
     this.model = model;
     this.cid = _.uniqueId('poller');
     this.set(options);
+
+    if (this.model instanceof Backbone.Model) {
+      this.listenTo(this.model, 'destroy', this.destroy);
+    }
   }
 
   _.extend(Poller.prototype, Backbone.Events, {
@@ -104,10 +108,6 @@ Backbone Poller may be freely distributed under the MIT license.
         }
       }, this);
 
-      if (this.model instanceof Backbone.Model) {
-        this.model.on('destroy', this.stop, this);
-      }
-
       return this.stop({silent: true});
     },
     //
@@ -123,7 +123,8 @@ Backbone Poller may be freely distributed under the MIT license.
         this.options.active = true;
         if (this.options.delayed) {
           delayedRun(this, _.isNumber(this.options.delayed) && this.options.delayed);
-        } else {
+        }
+        else {
           run(this);
         }
       }
@@ -151,6 +152,15 @@ Backbone Poller may be freely distributed under the MIT license.
     // </pre>
     active: function () {
       return this.options.active === true;
+    },
+
+    destroy: function () {
+      this.stop();
+      this.stopListening();
+      this.off();
+      pollers = _.filter(pollers, function (poller) {
+        return poller !== this;
+      }, this);
     }
   });
 
@@ -165,7 +175,8 @@ Backbone Poller may be freely distributed under the MIT license.
           if (poller.options.continueOnError) {
             poller.trigger('error', model, resp);
             delayedRun(poller);
-          } else {
+          }
+          else {
             poller.stop({silent: true});
             poller.trigger('error', model, resp);
           }
@@ -191,7 +202,7 @@ Backbone Poller may be freely distributed under the MIT license.
         backoff[poller.cid] = interval(backoff[poller.cid]);
       }
       else {
-        backoff[poller.cid] = backoff[poller.cid] * interval;
+        backoff[poller.cid] *= interval;
       }
     }
     else {
@@ -212,7 +223,7 @@ Backbone Poller may be freely distributed under the MIT license.
   }
 
   function validate(poller) {
-    if (! poller.options.active) {
+    if (!poller.options.active) {
       return false;
     }
     if (poller.options.condition(poller.model) !== true) {
@@ -223,9 +234,9 @@ Backbone Poller may be freely distributed under the MIT license.
     return true;
   }
 
-  PollingManager.getDelay   = getDelay;         // test hook
-  PollingManager.prototype  = Poller.prototype; // test hook
+  /* Test hooks */
+  PollingManager.getDelay = getDelay;
+  PollingManager.prototype = Poller.prototype;
 
   return PollingManager;
-
 }));

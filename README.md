@@ -1,6 +1,6 @@
 # Backbone Poller
 [![npm version](https://badge.fury.io/js/backbone-poller.svg)](http://badge.fury.io/js/backbone-poller)
-[![Build Status](https://travis-ci.org/uzikilon/backbone-poller.png?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
+[![Build Status](https://travis-ci.org/uzikilon/backbone-poller.svg?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
 [![Dependency Status](https://david-dm.org/uzikilon/backbone-poller.svg)](https://david-dm.org/uzikilon/backbone-poller)
 
 Backbone poller is a simple utility that allows polling on any Backbone model or collection.
@@ -18,8 +18,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.1/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.0.1/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.1/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.1/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 ----
 
@@ -134,6 +134,12 @@ var poller = Backbone.Poller.get(model, options);
 model.set('active', false); // will programmatically stop the poller
 ```
 
+### Destroying the poller
+Stop the poller, remove all event listeners, and clear all references
+```javasctipt
+poller.destroy();
+```
+
 ### Check status:
 ``` javascript
 var isActive = poller.active() // boolean;
@@ -158,8 +164,13 @@ Backbone.Poller.reset();
 
 ## Change Log
 
+### 1.1.1
+May 31, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.0.1...1.1.1)
+
+- Added a `destroy` method for better garbage collection
+
 ### 1.0.1
-April 18, 2014 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.0.0...1.0.1)
+April 18, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.0.0...1.0.1)
 
 - Set the delayed parameter to be a number (as well as a boolean)
 
