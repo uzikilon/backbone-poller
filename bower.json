@@ -17,6 +17,6 @@
   "devDependencies": {
     "requirejs": "*",
     "jquery": "*",
-    "sinon": "http://sinonjs.org/releases/sinon-1.14.1.js"
+    "sinon": "http://sinonjs.org/releases/sinon-1.15.0.js"
   }
 }

@@ -174,19 +174,19 @@ describe('Base poller operations', function() {
 
     describe('.destroy', function () {
       it('calls this.stop', function () {
-        spyOn(this.mPoller, 'stop');
+        spyOn(this.mPoller, 'stop').andCallThrough();
         this.mPoller.destroy();
         expect(this.mPoller.stop).toHaveBeenCalled();
       });
 
       it('calls this.stopListening', function () {
-        spyOn(this.mPoller, 'stopListening');
+        spyOn(this.mPoller, 'stopListening').andCallThrough();
         this.mPoller.destroy();
         expect(this.mPoller.stopListening).toHaveBeenCalled();
       });
 
       it('calls this.off', function () {
-        spyOn(this.mPoller, 'off');
+        spyOn(this.mPoller, 'off').andCallThrough();
         this.mPoller.destroy();
         expect(this.mPoller.off).toHaveBeenCalled();
       });
@@ -198,6 +198,18 @@ describe('Base poller operations', function() {
         this.cPoller.destroy();
         expect(Backbone.Poller.size()).toBe(0);
       });
+
+      it('doesnt destroy the same poller twice', function () {
+        this.mPoller.destroy();
+        expect(Backbone.Poller.size()).toBe(1);
+
+        this.mPoller.destroy();
+        expect(Backbone.Poller.size()).toBe(1);
+
+        this.mPoller.destroy();
+        expect(Backbone.Poller.size()).toBe(1);
+      });
+
     });
 
     it('Should stop when invoking stop()', function() {
