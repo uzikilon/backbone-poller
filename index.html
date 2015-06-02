@@ -32,7 +32,7 @@
             
             <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 1.1.1
+Backbone Poller 1.1.2
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */</span>
@@ -297,10 +297,11 @@ Returns a boolean for poller status
     },
 
     destroy: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-      <span class="hljs-keyword">this</span>.stop();
-      <span class="hljs-keyword">this</span>.stopListening();
-      <span class="hljs-keyword">this</span>.off();
-      pollers.splice(_.indexOf(pollers, <span class="hljs-keyword">this</span>), <span class="hljs-number">1</span>);
+      <span class="hljs-keyword">var</span> index = _.indexOf(pollers, <span class="hljs-keyword">this</span>);
+      <span class="hljs-keyword">if</span> (index &gt; -<span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">this</span>.stop().stopListening().off();
+        pollers.splice(index, <span class="hljs-number">1</span>);
+      }
     }
   });
 
