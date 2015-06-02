@@ -21,8 +21,8 @@ The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is av
 
 ### Downloads (Right-click, and use "Save As")
 
-- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.1/backbone.poller.js>)    4.6kb, Uncompressed with Comments
-- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.1/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
+- [Development Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.2/backbone.poller.js>)    4.6kb, Uncompressed with Comments
+- [Production Version](<https://raw.github.com/uzikilon/backbone-poller/1.1.2/backbone.poller.min.js>)   1.8kb, Minified and Gzipped
 
 ----
 
@@ -166,6 +166,11 @@ Backbone.Poller.reset();
 ----
 
 ## Change Log
+
+### 1.1.2
+June 1st, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.1.1...1.1.2)
+
+- Bugfix: prevent poller from being destroyed twice
 
 ### 1.1.1
 May 31, 2015 - [Diff](https://github.com/uzikilon/backbone-poller/compare/1.0.1...1.1.1)

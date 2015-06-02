@@ -1,6 +1,6 @@
 /*!
 (c) 2012 Uzi Kilon, Splunk Inc.
-Backbone Poller 1.1.1
+Backbone Poller 1.1.2
 https://github.com/uzikilon/backbone-poller
 Backbone Poller may be freely distributed under the MIT license.
 */
