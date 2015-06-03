@@ -11,7 +11,7 @@ minify.code:
 
 test.lint:
 	@echo "`date`\tRunning a javascript linter"
-	@grunt jshint
+	@grunt lint
 
 test.unit:
 	@echo "`date`\tRunning unit tests"

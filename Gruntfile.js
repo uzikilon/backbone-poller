@@ -11,13 +11,6 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      all: ['Gruntfile.js', 'backbone.poller.js', 'test/**/*_spec.js']
-    },
-
     eslint: {
       target: ['Gruntfile.js', 'backbone.poller.js', 'test/**/*_spec.js']
     },
@@ -77,12 +70,11 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-eslint');
 
-  grunt.registerTask('lint', ['jshint', 'eslint']);
+  grunt.registerTask('lint', ['eslint']);
   grunt.registerTask('default', ['lint', 'uglify', 'jasmine']);
 };

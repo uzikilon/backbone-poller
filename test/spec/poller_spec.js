@@ -1,5 +1,4 @@
 /*global jasmine, Backbone, _ */
-/* jshint strict:false, maxstatements: false*/
 describe('Base poller operations', function () {
   'use strict';
 

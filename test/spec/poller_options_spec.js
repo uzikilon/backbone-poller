@@ -1,5 +1,4 @@
 /*global _,Backbone,sinon */
-/*jshint maxstatements: 19 */
 /*eslint max-statements: [2, 19] */
 describe('Accept options and invoking in time', function () {
   'use strict';
