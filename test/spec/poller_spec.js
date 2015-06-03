@@ -257,7 +257,7 @@ describe('Base poller operations', function () {
         expect(this.cPoller.active()).toBe(true);
         expect(this.collection.fetch.calls.count()).toBe(4);
         done();
-      }.bind(this), 33);
+      }.bind(this), 39);
     });
 
     it('should maintain a copy of model fetch promise', function () {

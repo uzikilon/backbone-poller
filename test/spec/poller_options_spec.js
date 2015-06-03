@@ -68,13 +68,13 @@ describe('Accept options and invoking in time', function () {
   it('Should run the "success" option after each successfull fetch', function (done) {
     var spy = sinon.spy();
 
-    this.mPoller.set({fetch: spy, delay: 16});
+    this.mPoller.set({fetch: spy, delay: 10});
     this.mPoller.start();
 
     setTimeout(function () {
       expect(spy.callCount).toEqual(3);
       done();
-    }, 35);
+    }, 29);
   });
 
   it('Should run the "complete" option when condition is satisfied', function (done) {
