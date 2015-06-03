@@ -1,21 +1,18 @@
-# Backbone Poller
 [![npm version](https://badge.fury.io/js/backbone-poller.svg)](http://badge.fury.io/js/backbone-poller)
 [![Build Status](https://travis-ci.org/uzikilon/backbone-poller.svg?branch=master)](https://travis-ci.org/uzikilon/backbone-poller)
 [![Dependency Status](https://david-dm.org/uzikilon/backbone-poller.svg)](https://david-dm.org/uzikilon/backbone-poller)
 
-Backbone poller is a simple utility that allows polling on any Backbone model or collection.
+# Backbone Poller
 
-Some modern browsers and servers support Web Sockets or long polling (comet) and allow advanced polling models.
+Backbone poller is a small and simple utility that allows polling on any Backbone model or collection:
 
-However, in many cases it is sufficient to run a standard http request every few seconds to keep the client synced with the server. For instance, basic operations such as checking for new messages in a mailbox.
-
-Backbone poller helps with these cases:
-
+- Is 100% compliant with any Backbone model or collection.
 - Allows you to poll without extending your base backbone models or collections
 - Guarantees one poller per model/collection instance
+- Supports advanced features like delayed run and exponential backoff
+- Event driven to be compliant with Backbone's API
 - Aborts running connections on stop/destroy
 - Prevents from running conflicting requests
-- Is 100% compliant with any Backbone model or collection.
 
 The [annotated source code](<http://uzikilon.github.com/backbone-poller/>) is available online.
 

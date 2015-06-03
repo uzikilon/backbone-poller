@@ -1,69 +1,60 @@
-/*global jasmine, Backbone */
-/* jshint strict:false, maxstatements: false*/
-describe('Base poller operations', function() {
+/*global jasmine, Backbone, _ */
+describe('Base poller operations', function () {
+  'use strict';
 
-  function hasManagerAPI(manager){
+  function hasManagerAPI(manager) {
     var method, api = ['get', 'size', 'reset'];
-    while((method = api.shift()) !== undefined) {
+    while (!_.isUndefined(method = api.shift())) {
       expect(manager[method]).toEqual(jasmine.any(Function));
     }
   }
 
-  var _sync = function(method, model, options){
+  function hasPollerAPI(poller) {
+    var method, api = ['set', 'active', 'start', 'stop'];
+    while (!_.isUndefined(method = api.shift())) {
+      expect(poller[method]).toEqual(jasmine.any(Function));
+    }
+  }
+
+  function sync(method, model, options) {
     options.success(model.toJSON());
     model.trigger('sync');
     return {
       abort: function () {}
     };
-  };
+  }
 
-  describe('Poller funcionality', function() {
-
-
-
-    beforeEach(function() {
+  describe('Poller funcionality', function () {
+    /*eslint max-statements: 0 */
+    beforeEach(function () {
       this.model = new Backbone.Model();
       this.collection = new Backbone.Collection();
-      this.model.sync = this.collection.sync = _sync;
+      this.model.sync = this.collection.sync = sync;
 
       this.mPoller = Backbone.Poller.get(this.model, {delay: 50});
       this.cPoller = Backbone.Poller.get(this.collection, {delay: 50});
     });
 
-    afterEach(function(){
-      this.model.destroy();
-      this.collection.reset();
-
-      delete this.model;
-      delete this.collection;
-
+    afterEach(function () {
       Backbone.Poller.reset();
     });
 
-
-    function hasPollerAPI(poller){
-      var method, api = ['set', 'active', 'start', 'stop'];
-      while((method = api.shift()) !== undefined) {
-        expect(poller[method]).toEqual(jasmine.any(Function));
-      }
-    }
-
-    it('Should not have legacy support for PollingManager global object', function(){
+    it('Should not have legacy support for PollingManager global object', function () {
       expect(window.PollingManager).toBeUndefined();
     });
 
-    it('Should have all supported methods on API', function(){
+    it('Should have all supported methods on API', function () {
       hasManagerAPI(Backbone.Poller);
       hasPollerAPI(this.mPoller);
       hasPollerAPI(this.cPoller);
     });
 
-    it('Should delete all pollers when calling reset()', function(){
+    it('Should delete all pollers when calling reset()', function () {
       Backbone.Poller.reset();
       expect(Backbone.Poller.size()).toEqual(0);
     });
 
-    it('Should stop all pollers when calling reset()', function(){
+    it('Should stop all pollers when calling reset()', function () {
       this.mPoller.start();
       this.cPoller.start();
       expect(this.mPoller.active()).toEqual(true);
@@ -81,21 +72,20 @@ describe('Base poller operations', function() {
       expect(spy).not.toHaveBeenCalled();
     });
 
-
-    it('Should not create more than one instance per model', function() {
+    it('Should not create more than one instance per model', function () {
       var mPoller1 = Backbone.Poller.get(this.model);
       expect(mPoller1).toBe(this.mPoller);
       expect(Backbone.Poller.size()).toEqual(2);
     });
 
-    it('Should create a unique instnace per model', function() {
+    it('Should create a unique instnace per model', function () {
       var mPoller = Backbone.Poller.get(new Backbone.Model());
 
       expect(mPoller).not.toBe(this.mPoller);
       expect(Backbone.Poller.size()).toEqual(3);
     });
 
-    it('Should start when invoking start()', function() {
+    it('Should start when invoking start()', function () {
       spyOn(this.model, 'fetch');
       expect(this.mPoller.active()).toBe(false);
       this.mPoller.start();
@@ -104,7 +94,6 @@ describe('Base poller operations', function() {
     });
 
     describe('Run delayed', function () {
-
       beforeEach(function () {
         this.options = {delay: 100, delayed: true};
         spyOn(this.model, 'fetch');
@@ -115,17 +104,17 @@ describe('Base poller operations', function() {
         this.mPoller.stop();
       });
 
-      it('Should start delayed when invoking start() with a flag', function() {
+      it('Should start delayed when invoking start() with a flag', function (done) {
         this.mPoller.set(this.options).start();
         expect(this.mPoller.active()).toBe(true);
         expect(this.model.fetch).not.toHaveBeenCalled();
-        waits(101);
-        runs(function () {
+        setTimeout(function () {
           expect(this.model.fetch).toHaveBeenCalled();
-        });
+          done();
+        }.bind(this), 101);
       });
 
-      it('Shouls not run when condition is falsy on run time', function () {
+      it('Shouls not run when condition is falsy on run time', function (done) {
         var doRun = true;
         this.options.condition = function () {
           return doRun;
@@ -136,57 +125,54 @@ describe('Base poller operations', function() {
 
         doRun = false;
 
-        waits(101);
-        runs(function () {
+        setTimeout(function () {
           expect(this.mPoller.active()).toBe(false);
           expect(this.model.fetch).not.toHaveBeenCalled();
-        });
+          done();
+        }.bind(this), 101);
       });
 
-      it('Should not reset delayed flag on start', function(){
+      it('Should not reset delayed flag on start', function () {
         this.mPoller.set(this.options).start();
         expect(this.mPoller.options.delayed).toBe(true);
       });
 
-      it('accepts delayed as a number', function () {
-        this.mPoller.set( {delay: 15, delayed: 100}).start();
-        this.model.fetch.andCallThrough();
-        waits(15);
-        runs(function () {
-          expect(this.model.fetch).not.toHaveBeenCalled();
-        });
-        waits(85);
-        runs(function () {
-          expect(this.model.fetch).toHaveBeenCalled();
-          expect(this.model.fetch.callCount).toBe(1);
-        });
-        waits(15);
-        runs(function () {
-          expect(this.model.fetch.callCount).toBe(2);
-        });
-        waits(15);
-        runs(function () {
-          expect(this.model.fetch.callCount).toBe(3);
-        });
-      });
+      it('accepts delayed as a number', function (done) {
+        this.mPoller.set({delay: 10, delayed: 50}).start();
+        this.model.fetch.and.callThrough();
 
+        setTimeout(function () {
+          expect(this.model.fetch).not.toHaveBeenCalled();
+          setTimeout(function () {
+            expect(this.model.fetch).toHaveBeenCalled();
+            expect(this.model.fetch.calls.count()).toBe(1);
+            setTimeout(function () {
+              expect(this.model.fetch.calls.count()).toBe(2);
+              setTimeout(function () {
+                expect(this.model.fetch.calls.count()).toBe(3);
+                done();
+              }.bind(this), 11);
+            }.bind(this), 11);
+          }.bind(this), 41);
+        }.bind(this), 11);
+      });
     });
 
     describe('.destroy', function () {
       it('calls this.stop', function () {
-        spyOn(this.mPoller, 'stop').andCallThrough();
+        spyOn(this.mPoller, 'stop').and.callThrough();
         this.mPoller.destroy();
         expect(this.mPoller.stop).toHaveBeenCalled();
       });
 
       it('calls this.stopListening', function () {
-        spyOn(this.mPoller, 'stopListening').andCallThrough();
+        spyOn(this.mPoller, 'stopListening').and.callThrough();
         this.mPoller.destroy();
         expect(this.mPoller.stopListening).toHaveBeenCalled();
       });
 
       it('calls this.off', function () {
-        spyOn(this.mPoller, 'off').andCallThrough();
+        spyOn(this.mPoller, 'off').and.callThrough();
         this.mPoller.destroy();
         expect(this.mPoller.off).toHaveBeenCalled();
       });
@@ -209,10 +195,9 @@ describe('Base poller operations', function() {
         this.mPoller.destroy();
         expect(Backbone.Poller.size()).toBe(1);
       });
-
     });
 
-    it('Should stop when invoking stop()', function() {
+    it('Should stop when invoking stop()', function () {
       this.mPoller.start();
 
       expect(this.mPoller.active()).toBe(true);
@@ -221,84 +206,58 @@ describe('Base poller operations', function() {
       expect(this.mPoller.active()).toBe(false);
     });
 
-    it('Should abort XHR (only once) when invoking stop()', function() {
-
+    it('Should abort XHR (only once) when invoking stop()', function () {
       expect(this.mPoller.xhr).toBeNull();
 
       this.mPoller.start();
 
       expect(this.mPoller.xhr).not.toBeNull();
-      spyOn(this.mPoller.xhr, 'abort').andCallThrough();
+      spyOn(this.mPoller.xhr, 'abort').and.callThrough();
 
       var spy = this.mPoller.xhr.abort;
-      expect(spy.callCount).toEqual(0);
+      expect(spy.calls.count()).toEqual(0);
 
       this.mPoller.stop();
-      expect(spy.callCount).toEqual(1);
+      expect(spy.calls.count()).toEqual(1);
       expect(this.mPoller.xhr).toBeNull();
 
       this.mPoller.stop();
-      expect(spy.callCount).toEqual(1);
+      expect(spy.calls.count()).toEqual(1);
     });
 
-    it('Should stop when condition is satisfied', function() {
+    it('Should stop when condition is satisfied', function (done) {
       var bool = true,
-      options = { delay: 50, condition: function() { return bool; } },
-      poller = Backbone.Poller.get(this.model, options).start();
+          options = {delay: 10, condition: function () { return bool; }},
+          poller = Backbone.Poller.get(this.model, options).start();
 
       expect(poller.active()).toBe(true);
 
       bool = false;
-      waits(50);
 
-      runs(function(){
+      setTimeout(function () {
         expect(poller.active()).toBe(false);
-      });
-
+        done();
+      }, 16);
     });
 
-    it('Should fetch more than once when polling a model', function() {
-      var counter = 1;
-      var flag = false;
-
-      spyOn(this.model, 'fetch').andCallThrough();
-
-      this.mPoller.start();
-
-      this.mPoller.on('success', function(){
-        flag = (++counter == 4);
-      });
-
-      waitsFor(function(){
-        return flag;
-      });
-
-      runs(function(){
+    it('Should fetch more than once when polling a model', function (done) {
+      spyOn(this.model, 'fetch').and.callThrough();
+      this.mPoller.set({delay: 10}).start();
+      setTimeout(function () {
         expect(this.mPoller.active()).toBe(true);
-      });
-
-
+        expect(this.model.fetch.calls.count()).toBe(2);
+        done();
+      }.bind(this), 12);
     });
 
-    it('Should fetch more than once when polling a collection', function() {
-      var counter = 1;
-      var flag = false;
-
-      spyOn(this.collection, 'fetch').andCallThrough();
-
-      this.cPoller.on('success', function(){
-        flag = (++counter == 4);
-      });
-      this.cPoller.start();
-
-      waitsFor(function(){
-        return flag;
-      });
-
-      runs(function () {
+    it('Should fetch more than once when polling a collection', function (done) {
+      spyOn(this.collection, 'fetch').and.callThrough();
+      this.cPoller.set({delay: 10}).start();
+      setTimeout(function () {
         expect(this.cPoller.active()).toBe(true);
-      });
-
+        expect(this.collection.fetch.calls.count()).toBe(4);
+        done();
+      }.bind(this), 39);
     });
 
     it('should maintain a copy of model fetch promise', function () {
@@ -322,7 +281,7 @@ describe('Base poller operations', function() {
       expect(poller.active()).toBe(true);
     });
 
-    it('Sould have a reset the poller\'s xhr and timeoutId when stopped', function(){
+    it('Sould have a reset the poller\'s xhr and timeoutId when stopped', function () {
       var poller = this.mPoller.start().stop();
 
       expect(poller.active()).toBe(false);
@@ -330,18 +289,14 @@ describe('Base poller operations', function() {
       expect(poller.timeoutId).toBeNull();
     });
 
-
-    it('Should stop when model is destroyed', function() {
-      spyOn(this.model, 'destroy').andCallThrough();
+    it('Should stop when model is destroyed', function () {
+      spyOn(this.model, 'destroy').and.callThrough();
       this.mPoller.start();
       this.model.destroy();
       expect(this.mPoller.active()).toBe(false);
-
     });
 
-
-    describe('backoff and getDelay', function() {
-
+    describe('backoff and getDelay', function () {
       it('return a constanct delay when backoff is undefined', function () {
         this.mPoller.set({delay: 1000});
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(1000);
@@ -394,22 +349,10 @@ describe('Base poller operations', function() {
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(550);
         expect(Backbone.Poller.getDelay(this.mPoller)).toBe(550);
       });
-
-      xit('stops at 10x the original delay value', function () {
-        this.mPoller.set({delay: 100, backoff: true});
-
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(100);
-        this.mPoller._backoff = 500;
-        expect(Backbone.Poller.getDelay(this.mPoller)).toBe(3000);
-      });
-
     });
-
-
   });
 
-  describe('AMD support', function() {
-
+  describe('AMD support', function () {
     window.require = {
       paths: {
         underscore: 'bower_components/underscore/underscore',
@@ -418,43 +361,27 @@ describe('Base poller operations', function() {
       }
     };
 
-    beforeEach(function () {
-
+    beforeEach(function (done) {
       var self = this;
-      var hasRequireJS = false;
-
-      runs(function () {
-        var node = document.createElement('script');
-        node.type = 'text/javascript';
-        node.charset = 'utf-8';
-        node.async = 'true';
-        if ( node.attachEvent ) {
-          node.attachEvent('onreadystatechange', function() { hasRequireJS = true; });
-        }
-        else {
-          node.addEventListener('load', function () { hasRequireJS = true; }, false);
-        }
-        node.src = 'bower_components/requirejs/require.js';
-        var head = document.getElementsByTagName('head')[0];
-        head.appendChild(node);
-      });
-
-
-      waitsFor(function () {
-        return hasRequireJS;
-      });
-
-      runs(function() {
+      function setupPoller() {
         require(['./backbone.poller'], function (Poller) {
           self.Poller = Poller;
         });
-      });
-
-      waitsFor(function () {
-        return !!self.Poller;
-      });
-
-
+        done();
+      }
+      var node = document.createElement('script');
+      node.type = 'text/javascript';
+      node.charset = 'utf-8';
+      node.async = 'true';
+      if (node.attachEvent) {
+        node.attachEvent('onreadystatechange', setupPoller);
+      }
+      else {
+        node.addEventListener('load', setupPoller, false);
+      }
+      node.src = 'bower_components/requirejs/require.js';
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(node);
     });
 
     afterEach(function () {
@@ -463,17 +390,11 @@ describe('Base poller operations', function() {
       window.Backbone.Poller = this.Poller;
     });
 
-
-    it('should load as an AMD module', function() {
-      var self = this;
-      runs(function () {
-        hasManagerAPI(self.Poller);
-      });
-
+    it('should load as an AMD module', function (done) {
+      setTimeout(function () {
+        hasManagerAPI(this.Poller);
+        done();
+      }.bind(this), 100);
     });
-
-
-
   });
-
 });

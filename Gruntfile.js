@@ -11,24 +11,21 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      all: ['Gruntfile.js', 'backbone.poller.js']
-    },
-
     eslint: {
-      target: ['Gruntfile.js', 'backbone.poller.js']
+      target: ['Gruntfile.js', 'backbone.poller.js', 'test/**/*_spec.js']
     },
 
     jasmine: {
+      options: {
+        vendor: vendorLibs,
+        summary: true,
+        display: 'short',
+        specs: 'test/spec/**/*.js'
+      },
       poller: {
         src: ['backbone.poller.js'],
         options: {
           keepRunner: true,
-          vendor: vendorLibs,
-          specs: 'test/spec/**/*.js',
           junit: {
             path: 'build/junit'
           },
@@ -47,11 +44,7 @@ module.exports = function (grunt) {
         }
       },
       'poller-min': {
-        src: ['backbone.poller.min.js'],
-        options: {
-          vendor: vendorLibs,
-          specs: 'test/spec/**/*.js'
-        }
+        src: ['backbone.poller.min.js']
       }
     },
 
@@ -77,12 +70,11 @@ module.exports = function (grunt) {
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-docco');
   grunt.loadNpmTasks('grunt-eslint');
 
-  grunt.registerTask('lint', ['jshint', 'eslint']);
+  grunt.registerTask('lint', ['eslint']);
   grunt.registerTask('default', ['lint', 'uglify', 'jasmine']);
 };
