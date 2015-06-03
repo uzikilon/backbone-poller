@@ -2,7 +2,7 @@
   "ecmaFeatures": {},
   "parser": "espree",
   "env": {
-    "browser": false,
+    "browser": true,
     "node": true,
     "amd": true,
     "mocha": false,

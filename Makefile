@@ -21,9 +21,13 @@ test: test.lint test.unit
 
 docs:
 	@echo "`date`\tCreating annotated source code"
+	@git checkout gh-pages
+	@git merge master
 	@grunt docco
 	@mv docs/backbone.poller.html index.html
 	@mv docs/docco.css .
 	@rm -rf docs
 	@git add index.html docco.css
-	@git ci -m "Updated annotated soucre code"
+	@git commit -m "Updated annotated soucre code"
+	@git push
+	@git checkout master

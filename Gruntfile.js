@@ -15,20 +15,24 @@ module.exports = function (grunt) {
       options: {
         jshintrc: '.jshintrc'
       },
-      all: ['Gruntfile.js', 'backbone.poller.js']
+      all: ['Gruntfile.js', 'backbone.poller.js', 'test/**/*_spec.js']
     },
 
     eslint: {
-      target: ['Gruntfile.js', 'backbone.poller.js']
+      target: ['Gruntfile.js', 'backbone.poller.js', 'test/**/*_spec.js']
     },
 
     jasmine: {
+      options: {
+        vendor: vendorLibs,
+        summary: true,
+        display: 'short',
+        specs: 'test/spec/**/*.js'
+      },
       poller: {
         src: ['backbone.poller.js'],
         options: {
           keepRunner: true,
-          vendor: vendorLibs,
-          specs: 'test/spec/**/*.js',
           junit: {
             path: 'build/junit'
           },
@@ -47,11 +51,7 @@ module.exports = function (grunt) {
         }
       },
       'poller-min': {
-        src: ['backbone.poller.min.js'],
-        options: {
-          vendor: vendorLibs,
-          specs: 'test/spec/**/*.js'
-        }
+        src: ['backbone.poller.min.js']
       }
     },
 
