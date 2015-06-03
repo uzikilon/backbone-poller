@@ -28,6 +28,6 @@ docs:
 	@mv docs/docco.css .
 	@rm -rf docs
 	@git add index.html docco.css
-	@git commit -m "Updated annotated soucre code"
+	@git commit -m "Updated annotated soucre code" --amend
 	@git push
 	@git checkout master
