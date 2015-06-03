@@ -22,7 +22,7 @@ test: test.lint test.unit
 docs:
 	@echo "`date`\tCreating annotated source code"
 	@git checkout gh-pages
-	@git merge master
+	@git merge --no-ff master
 	@grunt docco
 	@mv docs/backbone.poller.html index.html
 	@mv docs/docco.css .
