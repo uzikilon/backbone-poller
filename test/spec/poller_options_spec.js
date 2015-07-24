@@ -1,5 +1,5 @@
 /*global _,Backbone,sinon */
-/*eslint max-statements: [2, 19] */
+/*eslint max-statements: 0 */
 describe('Accept options and invoking in time', function () {
   'use strict';
 
@@ -17,12 +17,6 @@ describe('Accept options and invoking in time', function () {
   });
 
   afterEach(function () {
-    this.model.destroy();
-    this.collection.reset();
-
-    delete this.model;
-    delete this.collection;
-
     Backbone.Poller.reset();
   });
 
@@ -77,6 +71,15 @@ describe('Accept options and invoking in time', function () {
     }, 29);
   });
 
+  it('runs original success callback', function (done) {
+    var spy = jasmine.createSpy('success');
+    this.mPoller.set({success: spy, delay: 100}).start();
+    setTimeout(function () {
+      expect(spy.calls.count()).toBe(1);
+      done();
+    }, 0);
+  });
+
   it('Should run the "complete" option when condition is satisfied', function (done) {
     var bool = true,
         spy = sinon.spy();
@@ -89,7 +92,7 @@ describe('Accept options and invoking in time', function () {
       expect(this.mPoller.active()).toBe(false);
       expect(spy.calledOnce).toBe(true);
       done();
-    }.bind(this), 35);
+    }.bind(this), 39);
   });
 
   it('Should run the "error" option by default when fetch fails', function (done) {
