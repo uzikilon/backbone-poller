@@ -116,7 +116,7 @@ poller.on('complete', function(model){
 });
 poller.on('error', function(model){
   console.error('oops! something went wrong');
-}
+});
 poller.start()
 ```
 ### Stopping the poller:
