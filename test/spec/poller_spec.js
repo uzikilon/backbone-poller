@@ -227,8 +227,8 @@ describe('Base poller operations', function () {
 
     it('Should stop when condition is satisfied', function (done) {
       var bool = true,
-        options = {delay: 10, condition: function () { return bool; }},
-        poller = Backbone.Poller.get(this.model, options).start();
+          options = {delay: 10, condition: function () { return bool; }},
+          poller = Backbone.Poller.get(this.model, options).start();
 
       expect(poller.active()).toBe(true);
 

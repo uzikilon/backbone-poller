@@ -122,7 +122,7 @@ describe('Handle events', function () {
 
   it('Should fire a complete event when condition is satisfied', function (done) {
     var bool = true,
-      spy = sinon.spy();
+        spy = sinon.spy();
 
     this.mPoller.set({delay: 16, condition: function () { return bool; }});
     this.mPoller.on('complete', spy);

@@ -82,7 +82,7 @@ describe('Accept options and invoking in time', function () {
 
   it('Should run the "complete" option when condition is satisfied', function (done) {
     var bool = true,
-      spy = sinon.spy();
+        spy = sinon.spy();
 
     this.mPoller.set({delay: 16, complete: spy, condition: function () { return bool; }}).start();
 
