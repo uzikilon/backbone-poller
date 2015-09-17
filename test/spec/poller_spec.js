@@ -1,4 +1,4 @@
-/*global jasmine, Backbone, _ */
+/* global jasmine, Backbone, _ */
 describe('Base poller operations', function () {
   'use strict';
 
@@ -25,7 +25,7 @@ describe('Base poller operations', function () {
   }
 
   describe('Poller funcionality', function () {
-    /*eslint max-statements: 0 */
+    /* eslint max-statements: 0 */
     beforeEach(function () {
       this.model = new Backbone.Model();
       this.collection = new Backbone.Collection();
@@ -227,8 +227,8 @@ describe('Base poller operations', function () {
 
     it('Should stop when condition is satisfied', function (done) {
       var bool = true,
-          options = {delay: 10, condition: function () { return bool; }},
-          poller = Backbone.Poller.get(this.model, options).start();
+        options = {delay: 10, condition: function () { return bool; }},
+        poller = Backbone.Poller.get(this.model, options).start();
 
       expect(poller.active()).toBe(true);
 

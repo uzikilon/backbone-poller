@@ -193,8 +193,8 @@ Backbone Poller may be freely distributed under the MIT license.
     }
 
     var min = poller.options.delay[0],
-        max = poller.options.delay[1],
-        interval = poller.options.delay[2] || 2;
+      max = poller.options.delay[1],
+      interval = poller.options.delay[2] || 2;
 
     if (backoff[poller.cid]) {
       if (_.isFunction(interval)) {

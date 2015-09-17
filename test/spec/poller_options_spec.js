@@ -1,5 +1,5 @@
-/*global _,Backbone,sinon */
-/*eslint max-statements: 0 */
+/* global _,Backbone,sinon */
+/* eslint max-statements: 0 */
 describe('Accept options and invoking in time', function () {
   'use strict';
 
@@ -82,7 +82,7 @@ describe('Accept options and invoking in time', function () {
 
   it('Should run the "complete" option when condition is satisfied', function (done) {
     var bool = true,
-        spy = sinon.spy();
+      spy = sinon.spy();
 
     this.mPoller.set({delay: 16, complete: spy, condition: function () { return bool; }}).start();
 
@@ -167,7 +167,7 @@ describe('Accept options and invoking in time', function () {
     this.mPoller.on('backbone', function () {});
     this.mPoller.on('poller', function () {});
 
-    /*eslint no-underscore-dangle: 0 */
+    /* eslint no-underscore-dangle: 0 */
     var calls = this.mPoller._events || {};
     expect(_(calls).size()).toBe(2);
 
