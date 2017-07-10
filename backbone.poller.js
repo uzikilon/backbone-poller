@@ -100,13 +100,13 @@ Backbone Poller may be freely distributed under the MIT license.
       if (this.options.flush) {
         this.off();
       }
-      _.each(events, function (name) {
+      _.each(events, _.bind(function (name) {
         var callback = this.options[name];
         if (_.isFunction(callback)) {
           this.off(name, callback, this);
           this.on(name, callback, this);
         }
-      }, this);
+      }, this));
 
       return this.stop({silent: true});
     },
